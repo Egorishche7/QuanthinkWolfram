@@ -4,9 +4,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import jakarta.persistence.*;
-import org.apache.logging.log4j.core.tools.picocli.CommandLine;
-//import static logger.JPALogger.logException;
-
+import static by.quantumquartet.quanthink.services.LoggerManager.logException;
 
 public class ConnectionPool {
     private static BlockingQueue<EntityManager> pool;
@@ -22,7 +20,7 @@ public class ConnectionPool {
                 pool.put(factory.createEntityManager());
         } catch (InterruptedException e) {
         	RuntimeException ex = new RuntimeException(e);
-//            logException(ex);
+            logException(ex);
             throw ex;
         }
     }

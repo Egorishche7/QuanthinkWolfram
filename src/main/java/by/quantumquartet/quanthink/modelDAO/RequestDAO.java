@@ -12,6 +12,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static by.quantumquartet.quanthink.services.LoggerManager.logException;
+
 public class RequestDAO {
     public static List<Request> readAllRequests() throws DAOException {
         List<Request> requests = new ArrayList<>();
@@ -29,7 +31,7 @@ public class RequestDAO {
                 try {
                     ConnectionPool.releaseConnection(em);
                 } catch(ConnectionPoolException e) {
-                    // logException(e);
+                     logException(e);
                 }
             }
         }
@@ -53,7 +55,7 @@ public class RequestDAO {
                 try {
                     ConnectionPool.releaseConnection(em);
                 } catch(ConnectionPoolException e) {
-                    //logException(e);
+                    logException(e);
                 }
             }
         }
@@ -81,7 +83,7 @@ public class RequestDAO {
                 try {
                     ConnectionPool.releaseConnection(em);
                 } catch(ConnectionPoolException e) {
-                    //logException(e);
+                    logException(e);
                 }
             }
         }
@@ -108,7 +110,7 @@ public class RequestDAO {
                 try {
                     ConnectionPool.releaseConnection(em);
                 } catch(ConnectionPoolException e) {
-                    // logException(e);
+                     logException(e);
                 }
             }
         }
@@ -132,7 +134,7 @@ public class RequestDAO {
                 try {
                     ConnectionPool.releaseConnection(em);
                 } catch(ConnectionPoolException e) {
-                    // logException(e);
+                     logException(e);
                 }
             }
         }

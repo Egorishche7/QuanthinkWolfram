@@ -14,6 +14,8 @@ import by.quantumquartet.quanthink.connection.ConnectionPool;
 import by.quantumquartet.quanthink.connection.ConnectionPoolException;
 import by.quantumquartet.quanthink.model.User;
 
+import static by.quantumquartet.quanthink.services.LoggerManager.logException;
+
 public class UserDAO {
     @SuppressWarnings("unchecked")
     public static List<User> readAllUsers() throws DAOException {
@@ -32,7 +34,7 @@ public class UserDAO {
                 try {
                     ConnectionPool.releaseConnection(em);
                 } catch(ConnectionPoolException e) {
-                    // logException(e);
+                     logException(e);
                 }
             }
         }
@@ -56,7 +58,7 @@ public class UserDAO {
                 try {
                     ConnectionPool.releaseConnection(em);
                 } catch(ConnectionPoolException e) {
-                    //logException(e);
+                    logException(e);
                 }
             }
         }
@@ -84,7 +86,7 @@ public class UserDAO {
                 try {
                     ConnectionPool.releaseConnection(em);
                 } catch(ConnectionPoolException e) {
-                    //logException(e);
+                    logException(e);
                 }
             }
         }
@@ -111,7 +113,7 @@ public class UserDAO {
                 try {
                     ConnectionPool.releaseConnection(em);
                 } catch(ConnectionPoolException e) {
-                    // logException(e);
+                     logException(e);
                 }
             }
         }
@@ -135,7 +137,7 @@ public class UserDAO {
                 try {
                     ConnectionPool.releaseConnection(em);
                 } catch(ConnectionPoolException e) {
-                    // logException(e);
+                     logException(e);
                 }
             }
         }
