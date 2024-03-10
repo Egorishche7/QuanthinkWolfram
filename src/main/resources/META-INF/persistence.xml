@@ -16,10 +16,10 @@
 			<property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
 
 			<property name="jakarta.persistence.jdbc.url"
-					  value="jdbc:mysql://localhost:3306/quanthink_db"/>
-			<property name="jakarta.persistence.jdbc.user" value="root"/>
+					  value="jdbc:mysql://sql11.freesqldatabase.com:3306/sql11690136"/>
+			<property name="jakarta.persistence.jdbc.user" value="sql11690136"/>
 
-			<property name="jakarta.persistence.jdbc.password" value="4qq1357think3ex"/>
+			<property name="jakarta.persistence.jdbc.password" value="STZZGvHT7n"/>
 
 		</properties>
 	</persistence-unit>
