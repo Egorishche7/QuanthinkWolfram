@@ -1,4 +1,4 @@
--- Create a user table
+-- Create a users table
 CREATE TABLE user
 (
     u_id       BIGINT PRIMARY KEY AUTO_INCREMENT,
