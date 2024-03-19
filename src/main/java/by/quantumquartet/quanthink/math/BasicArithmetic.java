@@ -47,9 +47,10 @@ public class BasicArithmetic {
                     tmp = SolveSumSub(tmp);
                     break;
             }
+            tmp = ReduceSubSum(tmp);
         }
         if (checkDouble(Double.parseDouble(tmp)))
-            return tmp;
+            return String.valueOf(Double.parseDouble(tmp));
         else
             return String.valueOf((int)Double.parseDouble(tmp));
     }
@@ -225,6 +226,37 @@ public class BasicArithmetic {
 
             }
         }
+        return tmp;
+    }
+
+    private static String ReduceSubSum(String expr){
+        String tmp = expr;
+        while (true) {
+            int ind = tmp.indexOf("--");
+            if (ind == -1)
+                break;
+            tmp = tmp.substring(0, ind) + "+" + tmp.substring(ind + 2);
+        }
+        while (true) {
+            int ind = tmp.indexOf("++");
+            if (ind == -1)
+                break;
+            tmp = tmp.substring(0, ind) + "+" + tmp.substring(ind + 2);
+        }
+        while (true) {
+            int ind = tmp.indexOf("-+");
+            if (ind == -1)
+                break;
+            tmp = tmp.substring(0, ind) + "-" + tmp.substring(ind + 2);
+        }
+        while (true) {
+            int ind = tmp.indexOf("+-");
+            if (ind == -1)
+                break;
+            tmp = tmp.substring(0, ind) + "-" + tmp.substring(ind + 2);
+        }
+        if(tmp.charAt(0) == '+')
+            tmp = tmp.substring(1);
         return tmp;
     }
 }
