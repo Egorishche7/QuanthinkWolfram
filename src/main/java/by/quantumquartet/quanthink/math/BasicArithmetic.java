@@ -2,11 +2,13 @@ package by.quantumquartet.quanthink.math;
 
 public class BasicArithmetic {
 
+    private static final double delta = 1e-8;
     private final static String[] order = {"e","(", "^", "*", "+"};
     private final static char PI = 'π';
     private final static char EXP = 'e';
+
     private static Boolean checkDouble(double value){
-        return Math.floor(value) - value != 0;
+        return Math.abs(Math.round(value) - value) > delta;
     }
 
     public static String SolveExpression(String expr){
@@ -47,12 +49,13 @@ public class BasicArithmetic {
                     tmp = SolveSumSub(tmp);
                     break;
             }
-            tmp = ReduceSubSum(tmp);
+            tmp = ReduceSumSub(tmp);
         }
-        if (checkDouble(Double.parseDouble(tmp)))
+        if (checkDouble(Double.parseDouble(tmp))) {
             return String.valueOf(Double.parseDouble(tmp));
+        }
         else
-            return String.valueOf((int)Double.parseDouble(tmp));
+            return String.valueOf(Math.round(Double.parseDouble(tmp)));
     }
 
     private static String ConvertConstToValues(String expr){
@@ -98,8 +101,8 @@ public class BasicArithmetic {
             if (check_mul_del == 0)
                 break;
             else{
-                for (int i = check_mul_del; i < tmp.length(); i++) {
-                    if((tmp.charAt(i) == '+' || tmp.charAt(i) == '-')) {
+                for (int i = check_mul_del + 1; i < tmp.length(); i++) {
+                    if(tmp.charAt(i) == '+' || tmp.charAt(i) == '-' || tmp.charAt(i) == '*' || tmp.charAt(i) == '/') {
                         if (i - 1 == check_mul_del)
                             continue;
                         ind_operation_end = i;
@@ -118,12 +121,19 @@ public class BasicArithmetic {
                 double right = Double.parseDouble(tmp.substring(check_mul_del + 1, ind_operation_end));
                 if (tmp.charAt(check_mul_del) == '*')
                 {
+                    if ((left * right) > Integer.MAX_VALUE || (left * right) < Integer.MIN_VALUE)
+                        throw new StackOverflowError("Stack overflow");
                     tmp = tmp.substring(0,ind_operation_begin) + (left * right)
                             + tmp.substring(ind_operation_end);
                 }
                 else {
-                    tmp = tmp.substring(0,ind_operation_begin) + (left / right)
-                            + tmp.substring(ind_operation_end);
+                    if (right == 0)
+                        throw new ArithmeticException("Can't divide by zero");
+                    if ((left / right) > Integer.MAX_VALUE || (left / right) < Integer.MIN_VALUE)
+                        throw new StackOverflowError("Stack overflow");
+                    tmp = tmp.substring(0, ind_operation_begin) + (left / right)
+                                + tmp.substring(ind_operation_end);
+
                 }
 
             }
@@ -174,6 +184,8 @@ public class BasicArithmetic {
                 else
                     basis = Double.parseDouble(tmp.substring(ind_operation_begin, check_pow));
                 double degree = Double.parseDouble(tmp.substring(check_pow + 1, ind_operation_end));
+                if (Math.pow(basis, degree) > Integer.MAX_VALUE || Math.pow(basis, degree) < Integer.MIN_VALUE)
+                    throw new StackOverflowError("Stack overflow");
                 tmp = tmp.substring(0,ind_operation_begin) + Math.pow(basis, degree)
                         + tmp.substring(ind_operation_end);
             }
@@ -211,15 +223,18 @@ public class BasicArithmetic {
                 }
                 if (ind_operation_end == 0)
                     ind_operation_end = tmp.length();
-                double left;
-                left = Double.parseDouble(tmp.substring(ind_operation_begin, check_sum_sub));
-                double right = Double.parseDouble(tmp.substring(check_sum_sub + 1));
+                double left = Double.parseDouble(tmp.substring(ind_operation_begin, check_sum_sub));
+                double right = Double.parseDouble(tmp.substring(check_sum_sub + 1, ind_operation_end));
                 if (tmp.charAt(check_sum_sub) == '+')
                 {
+                    if ((left + right) > Integer.MAX_VALUE || (left + right) < Integer.MIN_VALUE)
+                        throw new StackOverflowError("Stack overflow");
                     tmp = tmp.substring(0,ind_operation_begin) + (left + right)
                             + tmp.substring(ind_operation_end);
                 }
                 else {
+                    if ((left - right) > Integer.MAX_VALUE || (left - right) < Integer.MIN_VALUE)
+                        throw new StackOverflowError("Stack overflow");
                     tmp = tmp.substring(0,ind_operation_begin) + (left - right)
                             + tmp.substring(ind_operation_end);
                 }
@@ -229,7 +244,7 @@ public class BasicArithmetic {
         return tmp;
     }
 
-    private static String ReduceSubSum(String expr){
+    private static String ReduceSumSub(String expr){
         String tmp = expr;
         while (true) {
             int ind = tmp.indexOf("--");
