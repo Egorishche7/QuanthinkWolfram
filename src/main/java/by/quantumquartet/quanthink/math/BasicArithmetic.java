@@ -1,5 +1,7 @@
 package by.quantumquartet.quanthink.math;
 
+import java.util.Objects;
+
 public class BasicArithmetic {
 
     private static final double delta = 1e-8;
@@ -13,12 +15,18 @@ public class BasicArithmetic {
 
     public static String SolveExpression(String expr){
         String tmp = expr;
+        if (Objects.equals(tmp, ""))
+            return "0";
         for (String s : order) {
             switch (s) {
+                case "e":
+                    tmp = ConvertConstToValues(tmp);
+                    tmp = checkFloatPoints(tmp);
+                    break;
                 case "(":
                     while (true) {
-                        int begin = 0;
-                        int end = 0;
+                        int begin = -1;
+                        int end = -1;
                         for (int i = 0; i < tmp.length(); i++) {
                             if (tmp.charAt(i) == '(') {
                                 begin = i;
@@ -29,15 +37,14 @@ public class BasicArithmetic {
                                 break;
                             }
                         }
+                        if ((begin != -1 && end == -1) || (begin == -1 && end != -1))
+                            throw new IllegalArgumentException("Numbers of left and right brackets must be equal");
                         if (begin == end)
                             break;
                         else
                             tmp = tmp.substring(0, begin) + SolveExpression(tmp.substring(begin + 1, end))
                                     + tmp.substring(end + 1);
                     }
-                    break;
-                case "e":
-                    tmp = ConvertConstToValues(tmp);
                     break;
                 case "^":
                     tmp = SolvePow(tmp);
@@ -77,19 +84,61 @@ public class BasicArithmetic {
         return tmp;
     }
 
+    private static String checkFloatPoints(String expr){
+        String tmp = expr;
+        int previous = -1;
+        while (true)
+        {
+            int index = tmp.indexOf('.',previous + 1);
+            if (index == -1)
+                break;
+            if (index == tmp.length() - 1 || !Character.isDigit(tmp.charAt(index + 1)))
+                tmp = tmp.substring(0, index + 1) + '0' + tmp.substring(index + 1);
+            previous = index + 1;
+        }
+        previous = -1;
+        while (true)
+        {
+            int index = tmp.indexOf('.',previous + 1);
+            if (index == -1)
+                break;
+            if (index == 0)
+                tmp = '0' + tmp.substring(index);
+            else if (!Character.isDigit(tmp.charAt(index - 1)))
+                tmp = tmp.substring(0, index) + '0' + tmp.substring(index);
+            previous = index + 1;
+        }
+        previous = tmp.indexOf('.');
+        while (true)
+        {
+            int index = tmp.indexOf('.',previous + 1);
+            if (index == -1)
+                break;
+            boolean check = false;
+            for (int i = previous + 1; i < index; i++){
+                if (!Character.isDigit(tmp.charAt(i)))
+                {
+                    check = true;
+                    break;
+                }
+            }
+            if (!check)
+                throw new IllegalArgumentException("Error");
+            previous = index;
+        }
+        return tmp;
+    }
     private static String SolveMulDiv(String expr) {
         String tmp = expr;
         while (true)
         {
-            int ind_operation_begin = 0;
-            boolean operation_begin = false;
-            int ind_operation_end = 0;
-            int check_mul_del = 0;
+            int ind_operation_begin = -1;
+            int ind_operation_end = -1;
+            int check_mul_del = -1;
             for (int i = 0; i < tmp.length(); i++) {
                 if (tmp.charAt(i) == '+' || tmp.charAt(i) == '-' )
                 {
                     ind_operation_begin = i;
-                    operation_begin = true;
                     continue;
                 }
                 if (tmp.charAt(i) == '*' || tmp.charAt(i) == '/'){
@@ -98,40 +147,37 @@ public class BasicArithmetic {
                 }
 
             }
-            if (check_mul_del == 0)
+            if (check_mul_del == -1)
                 break;
             else{
                 for (int i = check_mul_del + 1; i < tmp.length(); i++) {
                     if(tmp.charAt(i) == '+' || tmp.charAt(i) == '-' || tmp.charAt(i) == '*' || tmp.charAt(i) == '/') {
-                        if (i - 1 == check_mul_del)
+                        if (i - 1 == check_mul_del  && !(tmp.charAt(i) == '*' || tmp.charAt(i) == '/'))
                             continue;
                         ind_operation_end = i;
                         break;
                     }
                 }
-                if (ind_operation_end == 0)
+                if (ind_operation_end == -1)
                     ind_operation_end = tmp.length();
-                double left;
-                if (operation_begin) {
-                    left = Double.parseDouble(tmp.substring(ind_operation_begin + 1, check_mul_del));
-                    ind_operation_begin++;
-                }
-                else
-                    left = Double.parseDouble(tmp.substring(ind_operation_begin, check_mul_del));
+                if (ind_operation_end == check_mul_del + 1 || ind_operation_begin == check_mul_del - 1)
+                    throw new ArithmeticException("Error");
+                double left = Double.parseDouble(tmp.substring(ind_operation_begin + 1, check_mul_del));
                 double right = Double.parseDouble(tmp.substring(check_mul_del + 1, ind_operation_end));
                 if (tmp.charAt(check_mul_del) == '*')
                 {
-                    if ((left * right) > Integer.MAX_VALUE || (left * right) < Integer.MIN_VALUE)
+
+                    if (Math.abs(left * right) - 1 > (double)Integer.MAX_VALUE)
                         throw new StackOverflowError("Stack overflow");
-                    tmp = tmp.substring(0,ind_operation_begin) + (left * right)
+                    tmp = tmp.substring(0,ind_operation_begin + 1) + (left * right)
                             + tmp.substring(ind_operation_end);
                 }
                 else {
                     if (right == 0)
                         throw new ArithmeticException("Can't divide by zero");
-                    if ((left / right) > Integer.MAX_VALUE || (left / right) < Integer.MIN_VALUE)
+                    if (Math.abs(left / right) - 1 > (double)Integer.MAX_VALUE)
                         throw new StackOverflowError("Stack overflow");
-                    tmp = tmp.substring(0, ind_operation_begin) + (left / right)
+                    tmp = tmp.substring(0, ind_operation_begin + 1) + (left / right)
                                 + tmp.substring(ind_operation_end);
 
                 }
@@ -145,15 +191,13 @@ public class BasicArithmetic {
         String tmp = expr;
         while (true)
         {
-            int ind_operation_begin = 0;
-            boolean operation_begin = false;
-            int ind_operation_end = 0;
-            int check_pow = 0;
+            int ind_operation_begin = -1;
+            int ind_operation_end = -1;
+            int check_pow = -1;
             for (int i = 0; i < tmp.length(); i++) {
                 if (tmp.charAt(i) == '+' || tmp.charAt(i) == '-' || tmp.charAt(i) == '*' || tmp.charAt(i) == '/')
                 {
                     ind_operation_begin = i;
-                    operation_begin = true;
                     continue;
                 }
                 if (tmp.charAt(i) == '^'){
@@ -162,11 +206,11 @@ public class BasicArithmetic {
                 }
 
             }
-            if (check_pow == 0)
+            if (check_pow == -1)
                 break;
             else{
-                for (int i = check_pow; i < tmp.length(); i++) {
-                    if (tmp.charAt(i) == '+' || tmp.charAt(i) == '-' || tmp.charAt(i) == '*' || tmp.charAt(i) == '/')
+                for (int i = check_pow + 1; i < tmp.length(); i++) {
+                    if (tmp.charAt(i) == '+' || tmp.charAt(i) == '-' || tmp.charAt(i) == '*' || tmp.charAt(i) == '/' || tmp.charAt(i) == '^')
                     {
                         if((tmp.charAt(i) == '+' || tmp.charAt(i) == '-') && i - 1 == check_pow)
                             continue;
@@ -174,19 +218,15 @@ public class BasicArithmetic {
                         break;
                     }
                 }
-                if (ind_operation_end == 0)
+                if (ind_operation_end == -1)
                     ind_operation_end = tmp.length();
-                double basis;
-                if (operation_begin) {
-                    basis = Double.parseDouble(tmp.substring(ind_operation_begin + 1, check_pow));
-                    ind_operation_begin++;
-                }
-                else
-                    basis = Double.parseDouble(tmp.substring(ind_operation_begin, check_pow));
+                if (ind_operation_end == check_pow + 1 || ind_operation_begin == check_pow - 1)
+                    throw new ArithmeticException("Error");
+                double basis = Double.parseDouble(tmp.substring(ind_operation_begin + 1, check_pow));
                 double degree = Double.parseDouble(tmp.substring(check_pow + 1, ind_operation_end));
-                if (Math.pow(basis, degree) > Integer.MAX_VALUE || Math.pow(basis, degree) < Integer.MIN_VALUE)
+                if (Math.abs(Math.pow(basis, degree)) - 1 > Integer.MAX_VALUE)
                     throw new StackOverflowError("Stack overflow");
-                tmp = tmp.substring(0,ind_operation_begin) + Math.pow(basis, degree)
+                tmp = tmp.substring(0,ind_operation_begin + 1) + Math.pow(basis, degree)
                         + tmp.substring(ind_operation_end);
             }
         }
@@ -198,8 +238,8 @@ public class BasicArithmetic {
         while (true)
         {
             int ind_operation_begin = 0;
-            int ind_operation_end = 0;
-            int check_sum_sub = 0;
+            int ind_operation_end = -1;
+            int check_sum_sub = -1;
             for (int i = 0; i < tmp.length(); i++) {
                 if (tmp.charAt(i) == '+' || tmp.charAt(i) == '-' )
                 {
@@ -210,7 +250,7 @@ public class BasicArithmetic {
                 }
 
             }
-            if (check_sum_sub == 0)
+            if (check_sum_sub == -1)
                 break;
             else{
                 for (int i = check_sum_sub + 1; i < tmp.length(); i++) {
@@ -221,19 +261,19 @@ public class BasicArithmetic {
                         break;
                     }
                 }
-                if (ind_operation_end == 0)
+                if (ind_operation_end == -1)
                     ind_operation_end = tmp.length();
                 double left = Double.parseDouble(tmp.substring(ind_operation_begin, check_sum_sub));
                 double right = Double.parseDouble(tmp.substring(check_sum_sub + 1, ind_operation_end));
                 if (tmp.charAt(check_sum_sub) == '+')
                 {
-                    if ((left + right) > Integer.MAX_VALUE || (left + right) < Integer.MIN_VALUE)
+                    if (Math.abs(left + right) - 1  > Integer.MAX_VALUE)
                         throw new StackOverflowError("Stack overflow");
                     tmp = tmp.substring(0,ind_operation_begin) + (left + right)
                             + tmp.substring(ind_operation_end);
                 }
                 else {
-                    if ((left - right) > Integer.MAX_VALUE || (left - right) < Integer.MIN_VALUE)
+                    if (Math.abs(left - right) - 1 > Integer.MAX_VALUE)
                         throw new StackOverflowError("Stack overflow");
                     tmp = tmp.substring(0,ind_operation_begin) + (left - right)
                             + tmp.substring(ind_operation_end);
