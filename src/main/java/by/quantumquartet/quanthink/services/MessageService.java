@@ -33,7 +33,7 @@ public class MessageService {
         Optional<Message> messageData = messageRepository.findById(id);
         if (messageData.isPresent()) {
             Message existingMessage = messageData.get();
-            existingMessage.setSender(message.getSender());
+            existingMessage.setSenderId(message.getSenderId());
             existingMessage.setContent(message.getContent());
             existingMessage.setDate(message.getDate());
             return messageRepository.save(existingMessage);

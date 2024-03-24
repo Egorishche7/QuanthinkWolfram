@@ -13,9 +13,8 @@ public class Calculation {
     @Column(name = "c_id")
     private long id;
 
-    @ManyToOne
-    @JoinColumn(name = "c_user_id", nullable = false)
-    private User user;
+    @Column(name = "c_user_id", nullable = false)
+    private long userId;
 
     @Column(name = "c_type", nullable = false)
     private String type;
@@ -33,7 +32,7 @@ public class Calculation {
     private int threadsUsed;
 
     public Calculation() {
-        this.user = null;
+        this.userId = 0;
         this.type = "";
         this.expression = "";
         this.result = "";
@@ -41,8 +40,8 @@ public class Calculation {
         this.threadsUsed = 0;
     }
 
-    public Calculation(User user, String type, String expression, String result, Date date, int threadsUsed) {
-        this.user = user;
+    public Calculation(long userId, String type, String expression, String result, Date date, int threadsUsed) {
+        this.userId = userId;
         this.type = type;
         this.expression = expression;
         this.result = result;
@@ -58,12 +57,12 @@ public class Calculation {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public long getUserId() {
+        return userId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
     public String getType() {
@@ -110,7 +109,7 @@ public class Calculation {
     public String toString() {
         return "Calculation{" +
                 "id=" + id +
-                ", user=" + user +
+                ", userId=" + userId +
                 ", type='" + type + '\'' +
                 ", expression='" + expression + '\'' +
                 ", result='" + result + '\'' +
