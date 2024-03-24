@@ -25,6 +25,10 @@ public class UserService {
         return userRepository.findById(id);
     }
 
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
     public User createUser(User user) {
         return userRepository.save(user);
     }
@@ -39,7 +43,6 @@ public class UserService {
             existingUser.setRole(user.getRole());
             return userRepository.save(existingUser);
         } else {
-            // Обработка ошибки, если пользователь не найден
             return null;
         }
     }
