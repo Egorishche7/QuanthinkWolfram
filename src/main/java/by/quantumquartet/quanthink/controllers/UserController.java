@@ -28,6 +28,7 @@ public class UserController {
 
     /**
      * Endpoint to retrieve all users.
+     *
      * @return List of users if found, otherwise 404 NOT FOUND.
      */
     @GetMapping("/users")
@@ -41,6 +42,7 @@ public class UserController {
 
     /**
      * Endpoint to retrieve a user by ID.
+     *
      * @param id The ID of the user to retrieve.
      * @return User if found, otherwise 404 NOT FOUND.
      */
@@ -53,10 +55,11 @@ public class UserController {
 
     /**
      * Endpoint to create a new user.
+     *
      * @param user The user object to be created.
      * @return Newly created user with HTTP status 201 CREATED, or 400 BAD REQUEST if email already exists.
      */
-    @PostMapping(value = {"/users", "/signup"})
+    @PostMapping("/users")
     public ResponseEntity<?> createUser(@RequestBody User user) {
         try {
             Optional<User> existingUser = userService.findByEmail(user.getEmail());
@@ -74,6 +77,7 @@ public class UserController {
 
     /**
      * Endpoint to authenticate a user.
+     *
      * @param authenticationRequest The authentication request containing email and password.
      * @return Authenticated user with HTTP status 200 OK if successful, otherwise 401 UNAUTHORIZED.
      */
@@ -98,7 +102,8 @@ public class UserController {
 
     /**
      * Endpoint to update a user.
-     * @param id The ID of the user to update.
+     *
+     * @param id   The ID of the user to update.
      * @param user The updated user object.
      * @return Updated user with HTTP status 200 OK if successful, otherwise 404 NOT FOUND.
      */
@@ -114,6 +119,7 @@ public class UserController {
 
     /**
      * Endpoint to delete a user by ID.
+     *
      * @param id The ID of the user to delete.
      * @return HTTP status 204 NO CONTENT if successful, otherwise 500 INTERNAL SERVER ERROR.
      */

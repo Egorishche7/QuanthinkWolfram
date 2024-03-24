@@ -41,7 +41,6 @@ public class CalculationService {
             existingCalculation.setThreadsUsed(calculation.getThreadsUsed());
             return calculationRepository.save(existingCalculation);
         } else {
-            // Обработка ошибки, если вычисление не найдено
             return null;
         }
     }

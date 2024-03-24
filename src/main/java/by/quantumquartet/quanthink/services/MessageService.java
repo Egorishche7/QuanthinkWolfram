@@ -38,7 +38,6 @@ public class MessageService {
             existingMessage.setDate(message.getDate());
             return messageRepository.save(existingMessage);
         } else {
-            // Обработка ошибки, если сообщение не найдено
             return null;
         }
     }
