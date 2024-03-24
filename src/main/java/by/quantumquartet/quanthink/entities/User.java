@@ -25,10 +25,10 @@ public class User {
     @Column(name = "u_role", nullable = false, columnDefinition = "VARCHAR(10) DEFAULT 'user'")
     private String role;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Transient
     private List<Calculation> calculations;
 
-    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
+    @Transient
     private List<Message> messages;
 
     public User() {
