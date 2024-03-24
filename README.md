@@ -1,9 +1,9 @@
 # QuanthinkWolfram
 
 # Cреды разработки:
-
+IntelliJ IDEA, Visual Studio, VSCode
 # Языки программирования:
-
+Java, C++
 
 # Схема БД:
 
