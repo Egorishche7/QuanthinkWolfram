@@ -1,7 +1,7 @@
 package by.quantumquartet.quanthink.controllers;
 
 import by.quantumquartet.quanthink.entities.Calculation;
-import by.quantumquartet.quanthink.repositories.CalculationRepository;
+import by.quantumquartet.quanthink.services.CalculationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,28 +10,26 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-//TODO: сервисы
-
 @RestController
-//@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/calculations")
 public class CalculationController {
-    private final CalculationRepository calculationRepository;
+    private final CalculationService calculationService;
 
     @Autowired
-    public CalculationController(CalculationRepository calculationRepository) {
-        this.calculationRepository = calculationRepository;
+    public CalculationController(CalculationService calculationService) {
+        this.calculationService = calculationService;
     }
 
     @GetMapping
     public ResponseEntity<List<Calculation>> getAllCalculations() {
-        List<Calculation> calculations = (List<Calculation>) calculationRepository.findAll();
+        List<Calculation> calculations = calculationService.getAllCalculations();
         return new ResponseEntity<>(calculations, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Calculation> getCalculationById(@PathVariable("id") long id) {
-        Optional<Calculation> calculationData = calculationRepository.findById(id);
+        Optional<Calculation> calculationData = calculationService.getCalculationById(id);
         return calculationData.map(calculation -> new ResponseEntity<>(calculation, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -39,7 +37,7 @@ public class CalculationController {
     @PostMapping
     public ResponseEntity<Calculation> createCalculation(@RequestBody Calculation calculation) {
         try {
-            Calculation newCalculation = calculationRepository.save(calculation);
+            Calculation newCalculation = calculationService.createCalculation(calculation);
             return new ResponseEntity<>(newCalculation, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -49,16 +47,9 @@ public class CalculationController {
     @PutMapping("/{id}")
     public ResponseEntity<Calculation> updateCalculation(@PathVariable("id") long id,
                                                          @RequestBody Calculation calculation) {
-        Optional<Calculation> calculationData = calculationRepository.findById(id);
-        if (calculationData.isPresent()) {
-            Calculation existingCalculation = calculationData.get();
-            existingCalculation.setUser(calculation.getUser());
-            existingCalculation.setType(calculation.getType());
-            existingCalculation.setExpression(calculation.getExpression());
-            existingCalculation.setResult(calculation.getResult());
-            existingCalculation.setDate(calculation.getDate());
-            existingCalculation.setThreadsUsed(calculation.getThreadsUsed());
-            return new ResponseEntity<>(calculationRepository.save(existingCalculation), HttpStatus.OK);
+        Calculation updatedCalculation = calculationService.updateCalculation(id, calculation);
+        if (updatedCalculation != null) {
+            return new ResponseEntity<>(updatedCalculation, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -67,7 +58,7 @@ public class CalculationController {
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteCalculation(@PathVariable("id") long id) {
         try {
-            calculationRepository.deleteById(id);
+            calculationService.deleteCalculation(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
