@@ -1,6 +1,7 @@
 package by.quantumquartet.quanthink.services;
 
 import by.quantumquartet.quanthink.entities.Calculation;
+import by.quantumquartet.quanthink.math.BasicArithmetic;
 import by.quantumquartet.quanthink.repositories.CalculationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,9 @@ public class CalculationService {
     }
 
     public Calculation createCalculation(Calculation calculation) {
+        String expression = calculation.getExpression();
+        String result = BasicArithmetic.SolveExpression(expression);
+        calculation.setResult(result);
         return calculationRepository.save(calculation);
     }
 
@@ -33,7 +37,7 @@ public class CalculationService {
         Optional<Calculation> calculationData = calculationRepository.findById(id);
         if (calculationData.isPresent()) {
             Calculation existingCalculation = calculationData.get();
-            existingCalculation.setUser(calculation.getUser());
+            existingCalculation.setUserId(calculation.getUserId());
             existingCalculation.setType(calculation.getType());
             existingCalculation.setExpression(calculation.getExpression());
             existingCalculation.setResult(calculation.getResult());

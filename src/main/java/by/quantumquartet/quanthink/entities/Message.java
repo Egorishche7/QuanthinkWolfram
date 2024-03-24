@@ -13,9 +13,8 @@ public class Message {
     @Column(name = "m_id")
     private long id;
 
-    @ManyToOne
-    @JoinColumn(name = "m_sender_id", nullable = false)
-    private User sender;
+    @Column(name = "m_sender_id", nullable = false)
+    private long senderId;
 
     @Column(name = "m_content", nullable = false)
     private String content;
@@ -24,13 +23,13 @@ public class Message {
     private Date date;
 
     public Message() {
-        this.sender = null;
+        this.senderId = 0;
         this.content = "";
         this.date = null;
     }
 
-    public Message(User sender, String content, Date date) {
-        this.sender = sender;
+    public Message(long senderId, String content, Date date) {
+        this.senderId = senderId;
         this.content = content;
         this.date = date;
     }
@@ -43,12 +42,12 @@ public class Message {
         this.id = id;
     }
 
-    public User getSender() {
-        return sender;
+    public long getSenderId() {
+        return senderId;
     }
 
-    public void setSender(User sender) {
-        this.sender = sender;
+    public void setSenderId(long senderId) {
+        this.senderId = senderId;
     }
 
     public String getContent() {
@@ -71,7 +70,7 @@ public class Message {
     public String toString() {
         return "Message{" +
                 "id=" + id +
-                ", sender=" + sender +
+                ", senderId=" + senderId +
                 ", content='" + content + '\'' +
                 ", date=" + date +
                 '}';
