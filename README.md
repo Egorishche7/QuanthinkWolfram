@@ -18,9 +18,9 @@
 
 # Реализация дизайна интерфейса:
 
-![https://github.com/xenia155/QuanthinkWolfram/blob/docs/img/main.png?raw=true]()
-![Uploading telegram-cloud-photo-size-2-5193114201512598015-y.jpg…]()
-![Uploading telegram-cloud-photo-size-2-5193114201512598016-x.jpg…]()
+![https://github.com/xenia155/QuanthinkWolfram/blob/docs/img/main.png?raw=true](https://github.com/xenia155/QuanthinkWolfram/blob/docs/img/main.png?raw=true)
+![https://github.com/xenia155/QuanthinkWolfram/blob/docs/img/sign-in.jpg?raw=true](https://github.com/xenia155/QuanthinkWolfram/blob/docs/img/sign-in.jpg?raw=true)
+![https://github.com/xenia155/QuanthinkWolfram/blob/docs/img/sign-up.png?raw=true](https://github.com/xenia155/QuanthinkWolfram/blob/docs/img/sign-in.jpg?raw=true)
 
 
 # Авторы
