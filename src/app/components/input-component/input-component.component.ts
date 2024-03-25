@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { CalculationService } from 'src/app/services/calc.service';
 
 @Component({
   selector: 'app-input',
@@ -11,7 +11,7 @@ export class InputComponent {
   isInputFocused: boolean = false;
   calculationResult: string = '';
 
-  constructor(private http: HttpClient) {}
+  constructor(private calculationService: CalculationService) { }
 
   onInputFocus() {
     this.isInputFocused = true;
@@ -23,6 +23,7 @@ export class InputComponent {
 
   addCharacter(character: string) {
     this.inputValue += character;
+    console.log('Character added:', character);
   }
 
   deleteLastCharacter() {
@@ -34,9 +35,7 @@ export class InputComponent {
   }
 
   calculate() {
-    const url = 'http://localhost:8080/calculations';
-
-    this.http.post(url, { expr: this.inputValue })
+    this.calculationService.createCalculation(this.inputValue)
       .subscribe(
         (response: any) => {
           this.calculationResult = response.result;
