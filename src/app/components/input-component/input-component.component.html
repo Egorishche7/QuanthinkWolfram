@@ -1,0 +1,27 @@
+<div class="input-container">
+  <input type="text" placeholder="Enter what you want to calculate or know about" [(ngModel)]="inputValue" (focus)="onInputFocus()" (blur)="onInputBlur()">
+  <button class="btn orange-bg" (click)="calculate()">=</button>
+</div>
+<div class="math-input-container" *ngIf="isInputFocused">
+  <button class="btn" (click)="addCharacter('(')">(</button>
+  <button class="btn" (click)="addCharacter(')')">)</button>
+  <button class="btn" (click)="addCharacter('^')">^</button>
+  <button class="btn" (click)="addCharacter('*')">*</button>
+  <button class="btn" (click)="addCharacter('/')">/</button>
+  <button class="btn" (click)="addCharacter('+')">+</button>
+  <button class="btn" (click)="addCharacter('-')">-</button>
+  <button class="btn" (click)="addCharacter('π')">π</button>
+  <button class="btn" (click)="addCharacter('e')">e</button>
+  <button class="btn" (click)="addCharacter('sin(')">sin</button>
+  <button class="btn" (click)="addCharacter('cos(')">cos</button>
+  <button class="btn" (click)="addCharacter('tg(')">tg</button>
+  <button class="btn" (click)="addCharacter('ctg(')">ctg</button>
+  <button class="btn" (click)="addCharacter('sinh(')">sinh</button>
+  <button class="btn" (click)="addCharacter('cosh(')">cosh</button>
+  <button class="btn" (click)="addCharacter('tanh(')">tanh</button>
+  <button class="btn" (click)="addCharacter('coth(')">coth</button>
+  <button class="btn" (click)="addCharacter('√(')">√</button>
+  <button class="btn" (click)="addCharacter('x')">x</button>
+  <button class="btn" (click)="deleteLastCharacter()">Backspace</button>
+  <button class="btn" (click)="clearInput()">Clear</button>
+</div>
