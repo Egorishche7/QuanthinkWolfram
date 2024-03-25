@@ -14,11 +14,11 @@
 ![https://github.com/xenia155/QuanthinkWolfram/blob/docs/img/packages-scheme.png?raw=true](https://github.com/xenia155/QuanthinkWolfram/assets/95574685/fae29a6a-f6af-4622-aa9f-68fe61e91212)
 
 ## Диаграмма классов:
-![telegram-cloud-document-2-5190539011680126171](https://github.com/xenia155/QuanthinkWolfram/assets/95574685/0c824997-f946-4df9-8a3b-dbfabf5657ae)
+![https://github.com/xenia155/QuanthinkWolfram/blob/docs/img/classes-scheme.png?raw=true](https://github.com/xenia155/QuanthinkWolfram/assets/95574685/0c824997-f946-4df9-8a3b-dbfabf5657ae)
 
 # Реализация дизайна интерфейса:
 
-![Uploading telegram-cloud-photo-size-2-5193114201512598013-y.jpg…]()
+![https://github.com/xenia155/QuanthinkWolfram/blob/docs/img/main.png?raw=true]()
 ![Uploading telegram-cloud-photo-size-2-5193114201512598015-y.jpg…]()
 ![Uploading telegram-cloud-photo-size-2-5193114201512598016-x.jpg…]()
 
