@@ -1,0 +1,43 @@
+<form [formGroup]="registerForm" (ngSubmit)="submitDetails()" class="orange-form">
+  <p-card header="Create an account" [style]="{ width: '360px' }">
+    <div class="field">
+      <label for="fullName" class="orange-text">Full Name</label>
+      <input type="text" pInputText formControlName="fullName" class="w-full" name="fullName" placeholder="Type your name" />
+      <small *ngIf="fullName.invalid && (fullName.dirty || fullName.touched)" class="block p-error orange-text">
+        <div *ngIf="fullName.errors?.['required']">Name is required.</div>
+        <div *ngIf="fullName.errors?.['pattern']">Enter a valid name.</div>
+      </small>
+    </div>
+    <div class="field">
+      <label for="email" class="orange-text">Email</label>
+      <input type="text" pInputText formControlName="email" class="w-full" name="email" placeholder="Type your email" />
+      <small *ngIf="email.invalid && (email.dirty || email.touched)" class="block p-error orange-text">
+        <div *ngIf="email.errors?.['required']">Email is required.</div>
+        <div *ngIf="email.errors?.['email']">Email should be valid.</div>
+      </small>
+    </div>
+    <div class="field">
+      <label for="password" class="orange-text">Password</label>
+      <input type="password" pInputText formControlName="password" class="w-full" name="password" placeholder="Type your password" />
+      <small *ngIf="password.invalid && (password.dirty || password.touched)" class="block p-error orange-text">
+        <div *ngIf="password.errors?.['required']">Password is required.</div>
+      </small>
+    </div>
+    <div class="field">
+      <label for="confirmPassword" class="orange-text">Confirm Password</label>
+      <input type="password" pInputText formControlName="confirmPassword" class="w-full" name="confirmPassword" placeholder="Confirm Password" />
+      <small *ngIf="confirmPassword.invalid && (confirmPassword.dirty || confirmPassword.touched)" class="block p-error orange-text">
+        <div *ngIf="confirmPassword.errors?.['required']">Confirm the password.</div>
+      </small>
+      <small class="block p-error orange-text" *ngIf="registerForm.errors?.['passwordMismatch'] && confirmPassword.valid && password.valid">
+        Passwords should match.
+      </small>
+    </div>
+    <p-button label="Create Account" styleClass="w-full orange-button" [disabled]="registerForm.invalid" type="submit"></p-button>
+    <div class="mt-2">Already have an account? <a routerLink="/login" class="orange-link">Sign in.</a></div>
+  </p-card>
+  <div class="bottom-text">
+    <p class="gray-text ">&copy;Resources & Tools About Contact Connect <img src="assets/icons/6.png" alt="Logo" class="bottom-image"></p>
+    <p class="gray-text ">&copy;2024 QuanThink Wolfram Terms Privacy</p>
+  </div>
+</form>
