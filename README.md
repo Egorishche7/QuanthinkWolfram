@@ -6,12 +6,12 @@
 ```Java, C++, JavaScript, TypeScript```
 
 # Схема БД:
-![telegram-cloud-document-2-5190539011680126169](https://github.com/xenia155/QuanthinkWolfram/assets/95574685/fe4d5946-f26a-4ed4-b65c-ae9fdea64475)
+![https://github.com/xenia155/QuanthinkWolfram/blob/docs/img/db-scheme.png?raw=true](https://github.com/xenia155/QuanthinkWolfram/blob/docs/img/db-scheme.png?raw=true)
 
 # Архитектура серверной и клиентской части:
 
 ## Диаграмма пакетов:
-![telegram-cloud-document-2-5190539011680126170](https://github.com/xenia155/QuanthinkWolfram/assets/95574685/fae29a6a-f6af-4622-aa9f-68fe61e91212)
+![https://github.com/xenia155/QuanthinkWolfram/blob/docs/img/packages-scheme.png?raw=true](https://github.com/xenia155/QuanthinkWolfram/assets/95574685/fae29a6a-f6af-4622-aa9f-68fe61e91212)
 
 ## Диаграмма классов:
 ![telegram-cloud-document-2-5190539011680126171](https://github.com/xenia155/QuanthinkWolfram/assets/95574685/0c824997-f946-4df9-8a3b-dbfabf5657ae)
