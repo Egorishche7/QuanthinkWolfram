@@ -22,6 +22,7 @@ public class BasicArithmetic {
                 case "e":
                     tmp = ConvertConstToValues(tmp);
                     tmp = checkFloatPoints(tmp);
+                    tmp = checkMulBrackets(tmp);
                     break;
                 case "(":
                     while (true) {
@@ -63,6 +64,31 @@ public class BasicArithmetic {
         }
         else
             return String.valueOf(Math.round(Double.parseDouble(tmp)));
+    }
+
+    private static String checkMulBrackets(String expr){
+        String tmp = expr;
+        int previous = -1;
+        while (true)
+        {
+            int index = tmp.indexOf('(', previous + 1);
+            if (index == -1)
+                break;
+            if (index != 0 && Character.isDigit(tmp.charAt(index-1)))
+                tmp = tmp.substring(0, index) + "*" + tmp.substring(index);
+            previous = index + 1;
+        }
+        previous = -1;
+        while (true)
+        {
+            int index = tmp.indexOf(')', previous + 1);
+            if (index == -1)
+                break;
+            if (index != tmp.length() - 1 && (Character.isDigit(tmp.charAt(index+1)) || tmp.charAt(index+1) == '('))
+                tmp = tmp.substring(0, index + 1) + "*" + tmp.substring(index + 1);
+            previous = index + 2;
+        }
+        return tmp;
     }
 
     private static String ConvertConstToValues(String expr){
