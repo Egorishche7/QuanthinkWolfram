@@ -1,11 +1,11 @@
 <form [formGroup]="registerForm" (ngSubmit)="submitDetails()" class="orange-form">
   <p-card header="Create an account" [style]="{ width: '360px' }">
     <div class="field">
-      <label for="fullName" class="orange-text">Full Name</label>
-      <input type="text" pInputText formControlName="fullName" class="w-full" name="fullName" placeholder="Type your name" />
-      <small *ngIf="fullName.invalid && (fullName.dirty || fullName.touched)" class="block p-error orange-text">
-        <div *ngIf="fullName.errors?.['required']">Name is required.</div>
-        <div *ngIf="fullName.errors?.['pattern']">Enter a valid name.</div>
+      <label for="username" class="orange-text">Full Name</label>
+      <input type="text" pInputText formControlName="username" class="w-full" name="username" placeholder="Type your name" />
+      <small *ngIf="username.invalid && (username.dirty || username.touched)" class="block p-error orange-text">
+        <div *ngIf="username.errors?.['required']">Name is required.</div>
+        <div *ngIf="username.errors?.['pattern']">Enter a valid name.</div>
       </small>
     </div>
     <div class="field">
