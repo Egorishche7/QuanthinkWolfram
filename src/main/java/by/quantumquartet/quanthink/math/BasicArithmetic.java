@@ -4,25 +4,20 @@ import java.util.Objects;
 
 public class BasicArithmetic {
 
-    private static final double delta = 1e-8;
     private final static String[] order = {"e","(", "^", "*", "+"};
-    private final static char PI = 'π';
-    private final static char EXP = 'e';
 
-    private static Boolean checkDouble(double value){
-        return Math.abs(Math.round(value) - value) > delta;
-    }
 
-    public static String SolveExpression(String expr){
+
+    public static String solveExpression(String expr){
         String tmp = expr;
         if (Objects.equals(tmp, ""))
             return "0";
         for (String s : order) {
             switch (s) {
                 case "e":
-                    tmp = ConvertConstToValues(tmp);
-                    tmp = checkFloatPoints(tmp);
-                    tmp = checkMulBrackets(tmp);
+                    tmp = UtilFunctions.convertConstToValues(tmp);
+                    tmp = UtilFunctions.checkFloatPoints(tmp);
+                    tmp = UtilFunctions.checkMulBrackets(tmp);
                     break;
                 case "(":
                     while (true) {
@@ -43,118 +38,31 @@ public class BasicArithmetic {
                         if (begin == end)
                             break;
                         else
-                            tmp = tmp.substring(0, begin) + SolveExpression(tmp.substring(begin + 1, end))
+                            tmp = tmp.substring(0, begin) + solveExpression(tmp.substring(begin + 1, end))
                                     + tmp.substring(end + 1);
                     }
                     break;
                 case "^":
-                    tmp = SolvePow(tmp);
+                    tmp = solvePow(tmp);
                     break;
                 case "*":
-                    tmp = SolveMulDiv(tmp);
+                    tmp = solveMulDiv(tmp);
                     break;
                 case "+":
-                    tmp = SolveSumSub(tmp);
+                    tmp = solveSumSub(tmp);
                     break;
             }
-            tmp = ReduceSumSub(tmp);
+            tmp = UtilFunctions.reduceSumSub(tmp);
         }
-        if (checkDouble(Double.parseDouble(tmp))) {
+        if (UtilFunctions.checkDouble(Double.parseDouble(tmp))) {
             return String.valueOf(Double.parseDouble(tmp));
         }
         else
             return String.valueOf(Math.round(Double.parseDouble(tmp)));
     }
 
-    private static String checkMulBrackets(String expr){
-        String tmp = expr;
-        int previous = -1;
-        while (true)
-        {
-            int index = tmp.indexOf('(', previous + 1);
-            if (index == -1)
-                break;
-            if (index != 0 && Character.isDigit(tmp.charAt(index-1)))
-                tmp = tmp.substring(0, index) + "*" + tmp.substring(index);
-            previous = index + 1;
-        }
-        previous = -1;
-        while (true)
-        {
-            int index = tmp.indexOf(')', previous + 1);
-            if (index == -1)
-                break;
-            if (index != tmp.length() - 1 && (Character.isDigit(tmp.charAt(index+1)) || tmp.charAt(index+1) == '('))
-                tmp = tmp.substring(0, index + 1) + "*" + tmp.substring(index + 1);
-            previous = index + 2;
-        }
-        return tmp;
-    }
 
-    private static String ConvertConstToValues(String expr){
-        String tmp = expr;
-        while (true)
-        {
-            int index = tmp.indexOf(PI);
-            if (index == -1)
-                break;
-            tmp = tmp.substring(0, index) + Math.PI + tmp.substring(index + 1);
-        }
-        while (true)
-        {
-            int index = tmp.indexOf(EXP);
-            if (index == -1)
-                break;
-            tmp = tmp.substring(0, index) + Math.E + tmp.substring(index + 1);
-        }
-        return tmp;
-    }
-
-    private static String checkFloatPoints(String expr){
-        String tmp = expr;
-        int previous = -1;
-        while (true)
-        {
-            int index = tmp.indexOf('.',previous + 1);
-            if (index == -1)
-                break;
-            if (index == tmp.length() - 1 || !Character.isDigit(tmp.charAt(index + 1)))
-                tmp = tmp.substring(0, index + 1) + '0' + tmp.substring(index + 1);
-            previous = index + 1;
-        }
-        previous = -1;
-        while (true)
-        {
-            int index = tmp.indexOf('.',previous + 1);
-            if (index == -1)
-                break;
-            if (index == 0)
-                tmp = '0' + tmp.substring(index);
-            else if (!Character.isDigit(tmp.charAt(index - 1)))
-                tmp = tmp.substring(0, index) + '0' + tmp.substring(index);
-            previous = index + 1;
-        }
-        previous = tmp.indexOf('.');
-        while (true)
-        {
-            int index = tmp.indexOf('.',previous + 1);
-            if (index == -1)
-                break;
-            boolean check = false;
-            for (int i = previous + 1; i < index; i++){
-                if (!Character.isDigit(tmp.charAt(i)))
-                {
-                    check = true;
-                    break;
-                }
-            }
-            if (!check)
-                throw new IllegalArgumentException("Error");
-            previous = index;
-        }
-        return tmp;
-    }
-    private static String SolveMulDiv(String expr) {
+    private static String solveMulDiv(String expr) {
         String tmp = expr;
         while (true)
         {
@@ -213,7 +121,7 @@ public class BasicArithmetic {
         return tmp;
     }
 
-    private static String SolvePow(String expr){
+    private static String solvePow(String expr){
         String tmp = expr;
         while (true)
         {
@@ -259,7 +167,7 @@ public class BasicArithmetic {
         return tmp;
     }
 
-    private static String SolveSumSub(String expr){
+    private static String solveSumSub(String expr){
         String tmp = expr;
         while (true)
         {
@@ -310,34 +218,4 @@ public class BasicArithmetic {
         return tmp;
     }
 
-    private static String ReduceSumSub(String expr){
-        String tmp = expr;
-        while (true) {
-            int ind = tmp.indexOf("--");
-            if (ind == -1)
-                break;
-            tmp = tmp.substring(0, ind) + "+" + tmp.substring(ind + 2);
-        }
-        while (true) {
-            int ind = tmp.indexOf("++");
-            if (ind == -1)
-                break;
-            tmp = tmp.substring(0, ind) + "+" + tmp.substring(ind + 2);
-        }
-        while (true) {
-            int ind = tmp.indexOf("-+");
-            if (ind == -1)
-                break;
-            tmp = tmp.substring(0, ind) + "-" + tmp.substring(ind + 2);
-        }
-        while (true) {
-            int ind = tmp.indexOf("+-");
-            if (ind == -1)
-                break;
-            tmp = tmp.substring(0, ind) + "-" + tmp.substring(ind + 2);
-        }
-        if(tmp.charAt(0) == '+')
-            tmp = tmp.substring(1);
-        return tmp;
-    }
 }

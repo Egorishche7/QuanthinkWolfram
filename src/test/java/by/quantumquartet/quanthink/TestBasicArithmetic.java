@@ -5,7 +5,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import java.lang.Math;
 
-import static by.quantumquartet.quanthink.math.BasicArithmetic.SolveExpression;
+import static by.quantumquartet.quanthink.math.BasicArithmetic.solveExpression;
 public class TestBasicArithmetic {
 
     private Object[] convertor(String expr){
@@ -14,7 +14,8 @@ public class TestBasicArithmetic {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"2+2=4",
+    @ValueSource(strings = {"=0",
+            "2+2=4",
             "-3+4=1",
             "0+0=0",
             (Integer.MAX_VALUE + Integer.MIN_VALUE)+"=-1",
@@ -31,7 +32,7 @@ public class TestBasicArithmetic {
     })
     public void testSolveExpressionSimpleSum(String expr) {
         Object[] data = convertor(expr);
-        Assertions.assertEquals(data[0], SolveExpression((String)data[1]));
+        Assertions.assertEquals(data[0], solveExpression((String)data[1]));
     }
 
     @ParameterizedTest
@@ -54,7 +55,7 @@ public class TestBasicArithmetic {
     })
     public void testSolveExpressionSimpleSub(String expr) {
         Object[] data = convertor(expr);
-        Assertions.assertEquals(data[0], SolveExpression((String)data[1]));
+        Assertions.assertEquals(data[0], solveExpression((String)data[1]));
     }
 
     @ParameterizedTest
@@ -79,7 +80,7 @@ public class TestBasicArithmetic {
             })
     public void testSolveExpressionSimpleMul(String expr) {
         Object[] data = convertor(expr);
-        Assertions.assertEquals(data[0], SolveExpression((String)data[1]));
+        Assertions.assertEquals(data[0], solveExpression((String)data[1]));
     }
 
     @ParameterizedTest
@@ -102,7 +103,7 @@ public class TestBasicArithmetic {
             })
     public void testSolveExpressionSimpleDel(String expr) {
         Object[] data = convertor(expr);
-        Assertions.assertEquals(data[0], SolveExpression((String)data[1]));
+        Assertions.assertEquals(data[0], solveExpression((String)data[1]));
     }
 
     @ParameterizedTest
@@ -128,7 +129,7 @@ public class TestBasicArithmetic {
     })
     public void testSolveExpressionSimplePow(String expr) {
         Object[] data = convertor(expr);
-        Assertions.assertEquals(data[0], SolveExpression((String)data[1]));
+        Assertions.assertEquals(data[0], solveExpression((String)data[1]));
     }
 
     @ParameterizedTest
@@ -141,7 +142,7 @@ public class TestBasicArithmetic {
     })
     public void testSolveExpressionConstants(String expr) {
         Object[] data = convertor(expr);
-        Assertions.assertEquals(data[0], SolveExpression((String)data[1]));
+        Assertions.assertEquals(data[0], solveExpression((String)data[1]));
     }
 
     @ParameterizedTest
@@ -174,7 +175,7 @@ public class TestBasicArithmetic {
     })
     public void testSolveExpressionComplex(String expr) {
         Object[] data = convertor(expr);
-        Assertions.assertEquals(data[0], SolveExpression((String)data[1]));
+        Assertions.assertEquals(data[0], solveExpression((String)data[1]));
     }
 
 
@@ -202,7 +203,7 @@ public class TestBasicArithmetic {
     public void testSolveExpressionExceptions(String expr) {
         Object[] data = convertor(expr);
         try{
-            SolveExpression((String)data[1]);
+            solveExpression((String)data[1]);
         }
         catch (ArithmeticException | StackOverflowError | IllegalArgumentException ex){
             Assertions.assertEquals(data[0], ex.getMessage());
