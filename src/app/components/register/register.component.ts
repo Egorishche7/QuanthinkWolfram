@@ -46,6 +46,7 @@ export class RegisterComponent {
   submitDetails() {
     const postData = { ...this.registerForm.value };
     delete postData.confirmPassword;
+
     this.authService.registerUser(postData as User).subscribe(
       response => {
         console.log(response);
@@ -53,7 +54,7 @@ export class RegisterComponent {
         this.router.navigate(['login']);
       },
       error => {
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Something went wrong' });
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error });
       }
     );
   }

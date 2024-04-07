@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { User } from 'src/app/interfaces/auth';
 import { AuthService } from 'src/app/services/auth.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -43,16 +42,13 @@ export class LoginComponent implements OnInit {
   loginUser() {
     const { email, password } = this.loginForm.value;
     this.authService.login({ email, password }).subscribe(
-      (response: any) => {
-        if (response.length > 0 && response[0].password === password) {
-          sessionStorage.setItem('email', email);
-          this.router.navigate(['/home']);
-        } else {
-          this.msgService.add({ severity: 'error', summary: 'Error', detail: 'Email or password is wrong' });
-        }
+      response => {
+        console.log(response);
+        sessionStorage.setItem('email', email);
+        this.router.navigate(['/home']);
       },
-      (error: any) => {
-        this.msgService.add({ severity: 'error', summary: 'Error', detail: 'Something went wrong' });
+      error => {
+        this.msgService.add({ severity: 'error', summary: 'Error', detail: error.error });
       }
     );
   }

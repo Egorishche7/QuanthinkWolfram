@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Calculation } from "../interfaces/calculation";
+import { Observable } from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -9,8 +11,7 @@ export class CalculationService {
 
   constructor(private http: HttpClient) { }
 
-  createCalculation(expression: string) {
-    const calculation = { expression };
-    return this.http.post(this.apiUrl, calculation);
+  createCalculation(calculationDetails: Calculation): Observable<any> {
+    return this.http.post(this.apiUrl, calculationDetails);
   }
 }

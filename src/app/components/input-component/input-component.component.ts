@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import {CalculationService} from "../../services/calc.service";
+import {Calculation} from "../../interfaces/calculation";
 
 @Component({
   selector: 'app-input',
@@ -8,16 +10,21 @@ import { Component } from '@angular/core';
 export class InputComponent {
   inputValue: string = '';
   isInputFocused: boolean = false;
+  calculationResult: string | undefined;
 
-onInputFocus() {
-  this.isInputFocused = true;
-}
+  constructor(
+    private calcService: CalculationService
+  ) { }
 
-onInputBlur() {
-  setTimeout(() => {
-    this.isInputFocused = false;
-  }, 200);
-}
+  onInputFocus() {
+    this.isInputFocused = true;
+  }
+
+  onInputBlur() {
+    setTimeout(() => {
+      this.isInputFocused = false;
+    }, 200);
+  }
 
   addCharacter(character: string) {
     this.inputValue += character;
@@ -32,5 +39,19 @@ onInputBlur() {
   }
 
   calculate() {
+    const calcData: Calculation = {
+      //userId: this.authService.getUserId(),
+      userId: 1,
+      type: 'basic_calculation',
+      expression: this.inputValue,
+      threadsUsed: 1
+    };
+
+    this.calcService.createCalculation(calcData as Calculation).subscribe(
+      response => {
+        console.log(response);
+        this.calculationResult = response.result;
+      }
+    );
   }
 }
