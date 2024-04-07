@@ -1,0 +1,78 @@
+.sign-in-button {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  right: 100px;
+  background-color: #ffa500;
+  color: white;
+}
+.language-image {
+position: absolute;
+  top: 0;
+  right: 5px;
+}
+.header {
+  text-align: center;
+}
+
+.logo-image {
+  width: 600px;
+  height: 300px;
+  object-fit: contain;
+margin-left: 100px;
+margin-top: 100px;
+margin-bottom: 0px;
+}
+
+.bottom-image {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+margin-left: 10px;
+margin-top: 0px;
+margin-bottom: -5px;
+}
+
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+
+}
+
+.libraries {
+  display: flex;
+
+  align-items: center;
+  margin-right: 100px;
+  margin-top: 0px;
+  margin-bottom: 200px;
+}
+
+.libraries span {
+  margin-right: 100px;
+  font-size: 30px;
+}
+
+.purple-text {
+  color: purple;
+}
+
+.green-text {
+  color: green;
+}
+
+.yellow-text {
+  color: yellow;
+}
+
+.turquoise-text {
+  color: turquoise;
+}
+
+.bottom-text {
+  text-align: center;
+  font-size: 16px;
+  color: grey;
+}
