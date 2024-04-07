@@ -1,6 +1,6 @@
 export interface Calculation {
-  userId: number;
+  userId: string;
   type: string;
   expression: string;
-  threadsUsed: number;
+  threadsUsed: string;
 }
