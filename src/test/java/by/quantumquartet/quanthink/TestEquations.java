@@ -1,6 +1,5 @@
 package by.quantumquartet.quanthink;
 
-import by.quantumquartet.quanthink.math.Equations;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -19,7 +18,7 @@ class TestEquations {
             "-x-11.1, -11.1",
             "x*5+35, -7",
     })
-    void testSolveLinearEquations(String equation, String answer) {
+    void TestSolveLinearEquations(String equation, String answer) {
         Assertions.assertEquals(answer, SolveEquation(equation));
     }
 
@@ -36,7 +35,7 @@ class TestEquations {
             "x^2+3x+2, -2 -1",
             "x^2-5x+6, 2 3",
     })
-    void testSolveSquareEquations(String equation, String answer) {
+    void TestSolveSquareEquations(String equation, String answer) {
         Assertions.assertEquals(answer, SolveEquation(equation));
     }
 
@@ -64,7 +63,7 @@ class TestEquations {
             "-4+3x^3+6x^2-5x, -2.457427107756338 -0.5425728922436623 1",
 
     })
-    void testSolveCubeEquations(String equation, String answer) {
+    void TestSolveCubeEquations(String equation, String answer) {
         Assertions.assertEquals(answer, SolveEquation(equation));
     }
 
@@ -80,22 +79,25 @@ class TestEquations {
             "x^4-x^2-x+15, -1.4793019877548672±1.3628400473634645i 1.4793019877548672±1.2326133810945565i",
             "x^4-2x^3+x^2-x, 0 1.7548776662466927 0.1225611668766537±0.7448617666197442i",
     })
-    void testSolveQuadraticEquations(String equation, String answer) {
+    void TestSolveQuadraticEquations(String equation, String answer) {
         Assertions.assertEquals(answer, SolveEquation(equation));
     }
-//            "x^2-6x+5, 1 5",
-//            "x^2-2x+1, 1",
-//
-//            "x^3-3x^2+3, -0.879385242 1.347296355 2.532088885",
-//            " "
-//    @ParameterizedTest
-//    @CsvSource({
-//            "x^2-2+99, No roots found",
-//    })
-//    public void testSolveEquationsExceptions(double leftBorder, double rightBorder, String expected) {
-//        Exception exception = assertThrows(Exception.class, () -> {
-//            nonLinearEquation.solve(leftBorder, rightBorder);
-//        });
-//        assertEquals(expected, exception.getMessage());
-//    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "x^5-10x^3+25x^2-30x+12, -4.216284950737348 0.6985981076838914 1.826392027288295 0.8456474078825805±1.2310655986041252i",
+            "x^5+3x^4+7x^3+5x^2+8x+6, -0.8124439694326794 -1.3731165964096315±1.8709115425464447i 0.2793385811259712±1.1371903235348473i",
+            "x^5+x^4-2x^3-x^2+x-1, 1.2177360761317852 -1.4187835700502833±0.21916531057075353i 0.3099155319843907±0.5499105361862413i",
+            "x^5-x-1, 1.1673039782614856 -0.7648844336006798±0.3524715460318958i 0.18123244446993703±1.0839541013177691i",
+            "x^5-6x^4+11x^3-10x^2+5x, 0 1.381966011250105 3.618033988749895 0.5±0.8660254037844385i",
+            "x^5-8x^4+26x^3-40x^2+32x, 0 2.956145157584922±1.3835510696656972i 2.956145157584922±1.3835510696656972i",
+            "x^5-10x^4+35x^3-60x^2+60x, 0 3.505692194778895 4.65658546538949 0.9188611699158105±1.6825988321891197i",
+            "x^5-12x^4+54x^3-96x^2+96x, 0 1.0879648437317473±1.4446001632053822i 4.912035156268253±2.2858012262833594i",
+            "x^5-14x^4+84x^3-168x^2+196x-128, 1.4092177174521454 0.5204140197325642±1.2079307333943259i 5.7749771215413634±4.3766473626706945i",
+            "x^5-15x^4+105x^3-225x^2+315x-243, 1.444526851673044 0.5095489364198142±1.461172608645502i 6.268187637743663±5.564002147817288i",
+    })
+    void TestSolvePentaEquations(String equation, String answer) {
+        Assertions.assertEquals(answer, SolveEquation(equation));
+    }
+
 }

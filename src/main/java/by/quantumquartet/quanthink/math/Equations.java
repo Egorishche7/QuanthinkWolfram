@@ -1,6 +1,5 @@
 package by.quantumquartet.quanthink.math;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -50,16 +49,16 @@ public class Equations {
                 roots = new StringBuilder(String.valueOf(-coeffs[0] / coeffs[1]));
                 break;
             case 2:
-                roots = new StringBuilder(solveSquareEquation(coeffs[2], coeffs[1], coeffs[0]));
+                roots = new StringBuilder(SolveSquareEquation(coeffs[2], coeffs[1], coeffs[0]));
                 break;
             case 3:
-                roots = new StringBuilder(solveCubeEquation(coeffs[3], coeffs[2], coeffs[1], coeffs[0]));
+                roots = new StringBuilder(SolveCubeEquation(coeffs[3], coeffs[2], coeffs[1], coeffs[0]));
                 break;
             case 4:
-                roots = new StringBuilder(solveQuadraticEquation(coeffs[4], coeffs[3], coeffs[2], coeffs[1], coeffs[0]));
+                roots = new StringBuilder(SolveQuadraticEquation(coeffs[4], coeffs[3], coeffs[2], coeffs[1], coeffs[0]));
                 break;
             case 5:
-                roots = new StringBuilder(solvePentaEquation(coeffs[5], coeffs[4], coeffs[3], coeffs[2], coeffs[1], coeffs[0]));
+                roots = new StringBuilder(SolvePentaEquation(coeffs[5], coeffs[4], coeffs[3], coeffs[2], coeffs[1], coeffs[0]));
                 break;
         }
         String[] rootsArr = roots.toString().split(" ");
@@ -156,8 +155,7 @@ public class Equations {
         return eqClass;
     }
 
-
-    private static String solveSquareEquation(double a, double b, double c) {
+    private static String SolveSquareEquation(double a, double b, double c) {
         double D = Math.pow(b,2) - 4.0 * a * c;
         if (D > 0) {
             D = Math.sqrt(D);
@@ -177,7 +175,7 @@ public class Equations {
     }
 
 
-    private static String solveCubeEquation(double a, double b, double c, double d) {
+    private static String SolveCubeEquation(double a, double b, double c, double d) {
 
         double B = b / a;
         double C = c / a;
@@ -241,9 +239,7 @@ public class Equations {
         }
     }
 
-
-    // solve equation x^4 + b*x^2 + c*x + d
-    private static String solveQuadraticEquation(double a, double b, double c, double d, double e) {
+    private static String SolveQuadraticEquation(double a, double b, double c, double d, double e) {
         double[] roots = new double[]{0,0,0,0};
         double B = b / a;
         double C = c / a;
@@ -316,12 +312,11 @@ public class Equations {
         }
     }
 
-    private static int SolveP4De(double[] roots,double b, double c, double d)	// solve equation x^4 + b*x^2 + c*x + d
-    {
+    private static int SolveP4De(double[] roots,double b, double c, double d) { // solve equation x^4 + b*x^2 + c*x + d
         if(Math.abs(c) < UtilFunctions.GetDelta() * (Math.abs(b) + Math.abs(d)))
             return SolveP4Bi(roots,b,d);
 
-        String result = solveCubeEquation(1, 2*b, b*b-4*d, -c*c);
+        String result = SolveCubeEquation(1, 2*b, b*b-4*d, -c*c);
         String[] tmp = result.split(" ");
         int resReal = 0;
         for (int i = 0; i < tmp.length; i ++){
@@ -398,8 +393,7 @@ public class Equations {
         return 2;
     }
 
-    private static int SolveP4Bi(double[] roots, double b, double d)
-    {
+    private static int SolveP4Bi(double[] roots, double b, double d) {
         double D = b * b - 4 * d;
         if(D >= 0)
         {
@@ -443,7 +437,7 @@ public class Equations {
             roots[2] = tmp2[0];
             roots[3] = tmp2[1];
             return 0;
-        } // if( D>=0 )
+        }
     }
 
     private static double N4Step(double x, double a,double b,double c,double d) {
@@ -483,8 +477,96 @@ public class Equations {
         }
     }
 
-    private static String solvePentaEquation(double a, double b, double c, double d, double e, double f) {
-        return "";
+    private static String SolvePentaEquation(double a, double b, double c, double d, double e, double f) {
+        double root = SolveP5_1(b / a, c / a, d / a, e / a, f / a);
+        double b1 = b / a + root, c1 = c / a + root * b1, d1 = d / a + root * c1, e1 = e / a +root*d1;
+        return root + " " + SolveQuadraticEquation(1, b1, c1, d1, e1);
     }
 
+    private static double FunctionF5(double x, double a, double b, double c, double d, double e){
+        return ((((x+a)*x+b)*x+c)*x+d)*x+e;
+    }
+
+    private static double SolveP5_1(double a,double b,double c,double d,double e)
+    {
+        int cnt;
+        if(Math.abs(e)< UtilFunctions.GetDelta() ) return 0;
+
+        double brd =  Math.abs(a);
+        if( Math.abs(b) > brd )
+            brd = Math.abs(b);
+        if( Math.abs(c) > brd )
+            brd = Math.abs(c);
+        if( Math.abs(d) > brd )
+            brd = Math.abs(d);
+        if( Math.abs(e) > brd )
+            brd = Math.abs(e);
+        brd++;
+
+        double x0, f0;
+        double x1, f1;
+        double x2, f2, f2s;
+        double dx = 0;
+
+        if(e < 0) {
+            x0 =   0;
+            x1 = brd;
+            f0=e;
+            f1 = FunctionF5(x1, a, b, c, d, e);
+            x2 = 0.01 * brd;
+        }
+        else{
+            x0 = -brd;
+            x1 = 0;
+            f0 = FunctionF5(x0, a, b, c, d, e);
+            f1 = e;
+            x2 = -0.01 * brd;
+        }
+
+        if(Math.abs(f0) < UtilFunctions.GetDelta())
+            return x0;
+        if(Math.abs(f1) < UtilFunctions.GetDelta())
+            return x1;
+
+        for(cnt=0; cnt<10; cnt++)
+        {
+            x2 = (x0 + x1) / 2;
+            f2 = FunctionF5(x2, a, b, c, d, e);
+            if (Math.abs(f2)<UtilFunctions.GetDelta())
+                return x2;
+            if (f2 > 0) {
+                x1 = x2; f1 = f2;
+            }
+            else {
+                x0 = x2;
+                f0 = f2;
+            }
+        }
+
+        do {
+            if(cnt++ > 50)
+                break;
+            if(x2 <= x0 || x2 >= x1)
+                x2 = (x0 + x1) / 2.0;
+            f2 = FunctionF5(x2, a, b, c, d, e);
+            if(Math.abs(f2) < UtilFunctions.GetDelta())
+                return x2;
+            if(f2>0) {
+                x1 = x2;
+                f1 = f2;
+            }
+            else {
+                x0 = x2;
+                f0 = f2;
+            }
+            f2s= (((5 * x2 + 4 * a) * x2 + 3 * b)* x2 + 2 * c) * x2 + d;
+            if(Math.abs(f2s) < UtilFunctions.GetDelta() ) {
+                x2=1e99;
+                continue;
+            }
+            dx = f2/f2s;
+            x2 -= dx;
+        } while(Math.abs(dx) > UtilFunctions.GetDelta());
+        return x2;
+    }
 }
