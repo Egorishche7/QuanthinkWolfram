@@ -28,7 +28,7 @@ public class CalculationService {
 
     public Calculation createCalculation(Calculation calculation) {
         String expression = calculation.getExpression();
-        String result = BasicArithmetic.SolveExpression(expression);
+        String result = BasicArithmetic.solveExpression(expression);
         calculation.setResult(result);
         return calculationRepository.save(calculation);
     }
