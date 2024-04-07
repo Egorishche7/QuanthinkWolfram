@@ -3,6 +3,11 @@ package by.quantumquartet.quanthink.controllers;
 import by.quantumquartet.quanthink.auth.AuthenticationRequest;
 import by.quantumquartet.quanthink.entities.User;
 import by.quantumquartet.quanthink.services.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +36,7 @@ public class UserController {
      *
      * @return List of users if found, otherwise 404 NOT FOUND.
      */
+    @Operation(summary = "Get all users", description = "Retrieves a list of all users.")
     @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
@@ -46,8 +52,12 @@ public class UserController {
      * @param id The ID of the user to retrieve.
      * @return User if found, otherwise 404 NOT FOUND.
      */
+    @Operation(summary = "Get user by ID", description = "Retrieves a user by ID.")
+    @ApiResponse(responseCode = "200", description = "User found",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = User.class))})
+    @ApiResponse(responseCode = "404", description = "User not found")
     @GetMapping("/users/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable("id") long id) {
+    public ResponseEntity<User> getUserById(@Parameter(description = "User ID") @PathVariable("id") long id) {
         Optional<User> userData = userService.getUserById(id);
         return userData.map(user -> new ResponseEntity<>(user, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -59,6 +69,10 @@ public class UserController {
      * @param user The user object to be created.
      * @return Newly created user with HTTP status 201 CREATED, or 400 BAD REQUEST if email already exists.
      */
+    @Operation(summary = "Create user", description = "Creates a new user.")
+    @ApiResponse(responseCode = "201", description = "User created",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = User.class))})
+    @ApiResponse(responseCode = "400", description = "Email already exists")
     @PostMapping("/users")
     public ResponseEntity<?> createUser(@RequestBody User user) {
         try {
@@ -81,6 +95,10 @@ public class UserController {
      * @param authenticationRequest The authentication request containing email and password.
      * @return Authenticated user with HTTP status 200 OK if successful, otherwise 401 UNAUTHORIZED.
      */
+    @Operation(summary = "Login user", description = "Authenticates a user.")
+    @ApiResponse(responseCode = "200", description = "User authenticated",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = User.class))})
+    @ApiResponse(responseCode = "401", description = "Unauthorized")
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody AuthenticationRequest authenticationRequest) {
         String email = authenticationRequest.getEmail();
@@ -107,8 +125,13 @@ public class UserController {
      * @param user The updated user object.
      * @return Updated user with HTTP status 200 OK if successful, otherwise 404 NOT FOUND.
      */
+    @Operation(summary = "Update user", description = "Updates a user.")
+    @ApiResponse(responseCode = "200", description = "User updated",
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = User.class))})
+    @ApiResponse(responseCode = "404", description = "User not found")
     @PutMapping("/users/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable("id") long id, @RequestBody User user) {
+    public ResponseEntity<User> updateUser(@Parameter(description = "User ID") @PathVariable("id") long id,
+                                           @RequestBody User user) {
         User updatedUser = userService.updateUser(id, user);
         if (updatedUser != null) {
             return new ResponseEntity<>(updatedUser, HttpStatus.OK);
@@ -123,8 +146,11 @@ public class UserController {
      * @param id The ID of the user to delete.
      * @return HTTP status 204 NO CONTENT if successful, otherwise 500 INTERNAL SERVER ERROR.
      */
+    @Operation(summary = "Delete user", description = "Deletes a user by ID.")
+    @ApiResponse(responseCode = "204", description = "User deleted")
+    @ApiResponse(responseCode = "500", description = "Internal server error")
     @DeleteMapping("/users/{id}")
-    public ResponseEntity<HttpStatus> deleteUser(@PathVariable("id") long id) {
+    public ResponseEntity<HttpStatus> deleteUser(@Parameter(description = "User ID") @PathVariable("id") long id) {
         try {
             userService.deleteUser(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
