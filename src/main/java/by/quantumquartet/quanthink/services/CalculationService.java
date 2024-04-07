@@ -6,6 +6,7 @@ import by.quantumquartet.quanthink.repositories.CalculationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,6 +31,7 @@ public class CalculationService {
         String expression = calculation.getExpression();
         String result = BasicArithmetic.solveExpression(expression);
         calculation.setResult(result);
+        calculation.setDate(new Date());
         return calculationRepository.save(calculation);
     }
 
