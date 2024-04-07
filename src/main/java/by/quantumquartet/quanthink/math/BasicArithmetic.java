@@ -54,11 +54,7 @@ public class BasicArithmetic {
             }
             tmp = UtilFunctions.reduceSumSub(tmp);
         }
-        if (UtilFunctions.checkDouble(Double.parseDouble(tmp))) {
-            return String.valueOf(Double.parseDouble(tmp));
-        }
-        else
-            return String.valueOf(Math.round(Double.parseDouble(tmp)));
+        return UtilFunctions.FloatRemover(tmp);
     }
 
 

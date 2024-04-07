@@ -8,11 +8,18 @@ public class UtilFunctions {
 
     private UtilFunctions(){}
 
-    public static Boolean checkDouble(double value){
-        return Math.abs(Math.round(value) - value) > UtilFunctions.getDelta();
+    public static Boolean CheckDouble(double value){
+        return Math.abs(Math.round(value) - value) > UtilFunctions.GetDelta();
     }
 
-    public static double getDelta(){
+    public static String FloatRemover(String value){
+        if (CheckDouble(Double.parseDouble(value)))
+            return String.valueOf(Double.parseDouble(value));
+        else
+            return String.valueOf(Math.round(Double.parseDouble(value)));
+    }
+
+    public static double GetDelta(){
         return DELTA;
     }
 
@@ -177,4 +184,11 @@ public class UtilFunctions {
         }
         return tmp;
     }
+
+    public static void swap(double a, double b){
+        double tmp = a;
+        a = b;
+        b = tmp;
+    }
+
 }
