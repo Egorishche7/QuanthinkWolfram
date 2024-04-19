@@ -1,6 +1,5 @@
 package by.quantumquartet.quanthink.controllers;
 
-import by.quantumquartet.quanthink.auth.AuthenticationRequest;
 import by.quantumquartet.quanthink.entities.User;
 import by.quantumquartet.quanthink.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -89,34 +88,34 @@ public class UserController {
         }
     }
 
-    /**
-     * Endpoint to authenticate a user.
-     *
-     * @param authenticationRequest The authentication request containing email and password.
-     * @return Authenticated user with HTTP status 200 OK if successful, otherwise 401 UNAUTHORIZED.
-     */
-    @Operation(summary = "Login user", description = "Authenticates a user.")
-    @ApiResponse(responseCode = "200", description = "User authenticated",
-            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = User.class))})
-    @ApiResponse(responseCode = "401", description = "Unauthorized")
-    @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody AuthenticationRequest authenticationRequest) {
-        String email = authenticationRequest.getEmail();
-        String password = authenticationRequest.getPassword();
-
-        Optional<User> userOptional = userService.findByEmail(email);
-        if (userOptional.isEmpty()) {
-            return new ResponseEntity<>("User not found", HttpStatus.UNAUTHORIZED);
-        }
-
-        User user = userOptional.get();
-
-        if (!user.getPassword().equals(password)) {
-            return new ResponseEntity<>("Wrong password", HttpStatus.UNAUTHORIZED);
-        }
-
-        return new ResponseEntity<>(user, HttpStatus.OK);
-    }
+//    /**
+//     * Endpoint to authenticate a user.
+//     *
+//     * @param authenticationRequest The authentication request containing email and password.
+//     * @return Authenticated user with HTTP status 200 OK if successful, otherwise 401 UNAUTHORIZED.
+//     */
+//    @Operation(summary = "Login user", description = "Authenticates a user.")
+//    @ApiResponse(responseCode = "200", description = "User authenticated",
+//            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = User.class))})
+//    @ApiResponse(responseCode = "401", description = "Unauthorized")
+//    @PostMapping("/login")
+//    public ResponseEntity<?> loginUser(@RequestBody AuthenticationRequest authenticationRequest) {
+//        String email = authenticationRequest.getEmail();
+//        String password = authenticationRequest.getPassword();
+//
+//        Optional<User> userOptional = userService.findByEmail(email);
+//        if (userOptional.isEmpty()) {
+//            return new ResponseEntity<>("User not found", HttpStatus.UNAUTHORIZED);
+//        }
+//
+//        User user = userOptional.get();
+//
+//        if (!user.getPassword().equals(password)) {
+//            return new ResponseEntity<>("Wrong password", HttpStatus.UNAUTHORIZED);
+//        }
+//
+//        return new ResponseEntity<>(user, HttpStatus.OK);
+//    }
 
     /**
      * Endpoint to update a user.

@@ -18,7 +18,7 @@ public class MessageService {
     }
 
     public List<Message> getAllMessages() {
-        return (List<Message>) messageRepository.findAll();
+        return messageRepository.findAll();
     }
 
     public Optional<Message> getMessageById(long id) {
@@ -33,12 +33,12 @@ public class MessageService {
         Optional<Message> messageData = messageRepository.findById(id);
         if (messageData.isPresent()) {
             Message existingMessage = messageData.get();
-            existingMessage.setSenderId(message.getSenderId());
             existingMessage.setContent(message.getContent());
             existingMessage.setDate(message.getDate());
+            existingMessage.setUser(message.getUser());
             return messageRepository.save(existingMessage);
         } else {
-            return null;
+            throw new RuntimeException("Message not found");
         }
     }
 

@@ -1,53 +1,51 @@
 package by.quantumquartet.quanthink.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Table(name = "user")
+@Table(name = "user", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "u_id")
     private long id;
 
-    @Column(name = "u_email", unique = true, nullable = false)
+    @NotBlank
+    @Email
+    @Column(nullable = false)
     private String email;
 
-    @Column(name = "u_username", nullable = false)
+    @NotBlank
+    @Column(nullable = false)
     private String username;
 
-    @Column(name = "u_password", nullable = false)
+    @NotBlank
+    @Column(nullable = false)
     private String password;
 
-    @Column(name = "u_role", nullable = false, columnDefinition = "VARCHAR(10) DEFAULT 'user'")
-    private String role;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
 
-    @Transient
-    private List<Calculation> calculations;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Calculation> calculations = new HashSet<>();
 
-    @Transient
-    private List<Message> messages;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Message> messages = new HashSet<>();
 
     public User() {
-        this.email = "";
-        this.username = "";
-        this.password = "";
-        this.role = "user";
-        this.calculations = null;
-        this.messages = null;
     }
 
-    public User(String email, String username, String password, String role,
-                List<Calculation> calculations, List<Message> messages) {
+    public User(String email, String username, String password) {
         this.email = email;
         this.username = username;
         this.password = password;
-        this.role = role;
-        this.calculations = calculations;
-        this.messages = messages;
     }
 
     public long getId() {
@@ -82,40 +80,27 @@ public class User {
         this.password = password;
     }
 
-    public String getRole() {
-        return role;
+    public Set<Role> getRoles() {
+        return roles;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
-    public List<Calculation> getCalculations() {
+    public Set<Calculation> getCalculations() {
         return calculations;
     }
 
-    public void setCalculations(List<Calculation> calculations) {
+    public void setCalculations(Set<Calculation> calculations) {
         this.calculations = calculations;
     }
 
-    public List<Message> getMessages() {
+    public Set<Message> getMessages() {
         return messages;
     }
 
-    public void setMessages(List<Message> messages) {
+    public void setMessages(Set<Message> messages) {
         this.messages = messages;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", role='" + role + '\'' +
-                ", calculations=" + calculations +
-                ", messages=" + messages +
-                '}';
     }
 }

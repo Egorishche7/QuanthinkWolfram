@@ -1,12 +1,14 @@
 package by.quantumquartet.quanthink.controllers;
 
 import by.quantumquartet.quanthink.entities.Calculation;
+import by.quantumquartet.quanthink.rest.request.CalculationRequest;
 import by.quantumquartet.quanthink.services.CalculationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,21 +61,31 @@ public class CalculationController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    /**
-     * Endpoint to create a new calculation.
-     *
-     * @param calculation The calculation object to be created.
-     * @return Newly created calculation with HTTP status 201 CREATED, or 500 INTERNAL SERVER ERROR if creation fails.
-     */
-    @Operation(summary = "Create calculation", description = "Creates a new calculation.")
-    @ApiResponse(responseCode = "201", description = "Calculation created",
-            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Calculation.class))})
-    @ApiResponse(responseCode = "500", description = "Internal server error")
+//    /**
+//     * Endpoint to create a new calculation.
+//     *
+//     * @param calculation The calculation object to be created.
+//     * @return Newly created calculation with HTTP status 201 CREATED, or 500 INTERNAL SERVER ERROR if creation fails.
+//     */
+//    @Operation(summary = "Create calculation", description = "Creates a new calculation.")
+//    @ApiResponse(responseCode = "201", description = "Calculation created",
+//            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Calculation.class))})
+//    @ApiResponse(responseCode = "500", description = "Internal server error")
+//    @PostMapping
+//    public ResponseEntity<Calculation> createCalculation(@RequestBody Calculation calculation) {
+//        try {
+//            Calculation newCalculation = calculationService.createCalculation(calculation);
+//            return new ResponseEntity<>(newCalculation, HttpStatus.CREATED);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
+
     @PostMapping
-    public ResponseEntity<Calculation> createCalculation(@RequestBody Calculation calculation) {
+    public ResponseEntity<String> performCalculation(@Valid @RequestBody CalculationRequest calculationRequest) {
         try {
-            Calculation newCalculation = calculationService.createCalculation(calculation);
-            return new ResponseEntity<>(newCalculation, HttpStatus.CREATED);
+            String result = calculationService.performCalculation(calculationRequest);
+            return new ResponseEntity<>(result, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
