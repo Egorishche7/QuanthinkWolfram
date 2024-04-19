@@ -1,6 +1,9 @@
 package by.quantumquartet.quanthink;
 
+import by.quantumquartet.quanthink.entities.ERole;
+import by.quantumquartet.quanthink.entities.Role;
 import by.quantumquartet.quanthink.entities.User;
+import by.quantumquartet.quanthink.services.RoleService;
 import by.quantumquartet.quanthink.services.UserService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -14,7 +17,7 @@ public class QuanthinkWolframApplication {
     }
 
     @Bean
-    CommandLineRunner init(UserService userService) {
+    CommandLineRunner init(UserService userService, RoleService roleService) {
         return args -> {
             for (int i = 1; i <= 5; i++) {
                 User user = new User();
@@ -23,6 +26,9 @@ public class QuanthinkWolframApplication {
                 user.setPassword("password" + i);
                 userService.createUser(user);
             }
+
+            roleService.createRole(new Role(ERole.ROLE_USER));
+            roleService.createRole(new Role(ERole.ROLE_ADMIN));
         };
     }
 }

@@ -1,51 +1,48 @@
 package by.quantumquartet.quanthink.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.Date;
 
 @Entity
 @Table(name = "calculation")
 public class Calculation {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "c_id")
     private long id;
 
-    @Column(name = "c_user_id", nullable = false)
-    private long userId;
-
-    @Column(name = "c_type", nullable = false)
+    @NotBlank
+    @Column(nullable = false)
     private String type;
 
-    @Column(name = "c_expression", nullable = false)
+    @NotBlank
+    @Column(nullable = false)
     private String expression;
 
-    @Column(name = "c_result", nullable = false, columnDefinition = "TEXT")
+    @NotBlank
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String result;
 
-    @Column(name = "c_date", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @NotBlank
+    // @DateTimeFormat ?
+    @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date date;
 
-    @Column(name = "c_threads_used", nullable = false)
+    @NotBlank
+    @Column(nullable = false)
     private int threadsUsed;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
     public Calculation() {
-        this.userId = 0;
-        this.type = "";
-        this.expression = "";
-        this.result = "";
-        this.date = null;
-        this.threadsUsed = 0;
     }
 
-    public Calculation(long userId, String type, String expression, String result, Date date, int threadsUsed) {
-        this.userId = userId;
+    public Calculation(String type, String expression, int threadsUsed) {
         this.type = type;
         this.expression = expression;
-        this.result = result;
-        this.date = date;
         this.threadsUsed = threadsUsed;
     }
 
@@ -55,14 +52,6 @@ public class Calculation {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
     }
 
     public String getType() {
@@ -105,16 +94,11 @@ public class Calculation {
         this.threadsUsed = threadsUsed;
     }
 
-    @Override
-    public String toString() {
-        return "Calculation{" +
-                "id=" + id +
-                ", userId=" + userId +
-                ", type='" + type + '\'' +
-                ", expression='" + expression + '\'' +
-                ", result='" + result + '\'' +
-                ", date=" + date +
-                ", threadsUsed=" + threadsUsed +
-                '}';
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

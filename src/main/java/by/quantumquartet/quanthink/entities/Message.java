@@ -1,35 +1,34 @@
 package by.quantumquartet.quanthink.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.Date;
 
 @Entity
 @Table(name = "message")
 public class Message {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "m_id")
     private long id;
 
-    @Column(name = "m_sender_id", nullable = false)
-    private long senderId;
-
-    @Column(name = "m_content", nullable = false)
+    @NotBlank
+    @Column(nullable = false)
     private String content;
 
-    @Column(name = "m_date", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @NotBlank
+    // @DateTimeFormat ?
+    @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date date;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
     public Message() {
-        this.senderId = 0;
-        this.content = "";
-        this.date = null;
     }
 
-    public Message(long senderId, String content, Date date) {
-        this.senderId = senderId;
+    public Message(String content, Date date) {
         this.content = content;
         this.date = date;
     }
@@ -40,14 +39,6 @@ public class Message {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public long getSenderId() {
-        return senderId;
-    }
-
-    public void setSenderId(long senderId) {
-        this.senderId = senderId;
     }
 
     public String getContent() {
@@ -66,13 +57,11 @@ public class Message {
         this.date = date;
     }
 
-    @Override
-    public String toString() {
-        return "Message{" +
-                "id=" + id +
-                ", senderId=" + senderId +
-                ", content='" + content + '\'' +
-                ", date=" + date +
-                '}';
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
