@@ -1,6 +1,6 @@
 package by.quantumquartet.quanthink.services;
 
-import by.quantumquartet.quanthink.entities.Message;
+import by.quantumquartet.quanthink.models.Message;
 import by.quantumquartet.quanthink.repositories.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

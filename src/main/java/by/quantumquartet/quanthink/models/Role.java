@@ -1,4 +1,4 @@
-package by.quantumquartet.quanthink.entities;
+package by.quantumquartet.quanthink.models;
 
 import jakarta.persistence.*;
 

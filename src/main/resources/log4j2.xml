@@ -5,21 +5,9 @@
     </Properties>
 
     <Appenders>
-        <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
-
-        <RollingFile name="DebugFile" fileName="${log-path}/debug.log"
-                     filePattern="${log-path}/debug-%d{MM-dd-yyyy}-%i.log.gz">
-            <Filters>
-                <ThresholdFilter level="DEBUG"/>
-            </Filters>
-            <Policies>
-                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
-                <SizeBasedTriggeringPolicy size="10 MB"/>
-            </Policies>
-        </RollingFile>
-
         <RollingFile name="InfoFile" fileName="${log-path}/info.log"
                      filePattern="${log-path}/info-%d{MM-dd-yyyy}-%i.log.gz">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
             <Filters>
                 <ThresholdFilter level="INFO"/>
             </Filters>
@@ -31,6 +19,7 @@
 
         <RollingFile name="WarnFile" fileName="${log-path}/warn.log"
                      filePattern="${log-path}/warn-%d{MM-dd-yyyy}-%i.log.gz">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
             <Filters>
                 <ThresholdFilter level="WARN"/>
             </Filters>
@@ -42,6 +31,7 @@
 
         <RollingFile name="ErrorFile" fileName="${log-path}/error.log"
                      filePattern="${log-path}/error-%d{MM-dd-yyyy}-%i.log.gz">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
             <Filters>
                 <ThresholdFilter level="ERROR"/>
             </Filters>
@@ -53,7 +43,9 @@
     </Appenders>
 
     <Loggers>
-        <Root level="ERROR">
+        <Root level="INFO">
+            <AppenderRef ref="InfoFile"/>
+            <AppenderRef ref="WarnFile"/>
             <AppenderRef ref="ErrorFile"/>
         </Root>
     </Loggers>

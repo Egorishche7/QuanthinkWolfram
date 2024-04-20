@@ -1,7 +1,7 @@
 package by.quantumquartet.quanthink.services;
 
-import by.quantumquartet.quanthink.entities.Calculation;
-import by.quantumquartet.quanthink.entities.User;
+import by.quantumquartet.quanthink.models.Calculation;
+import by.quantumquartet.quanthink.models.User;
 import by.quantumquartet.quanthink.math.BasicArithmetic;
 import by.quantumquartet.quanthink.repositories.CalculationRepository;
 import by.quantumquartet.quanthink.repositories.UserRepository;
@@ -9,7 +9,7 @@ import by.quantumquartet.quanthink.rest.request.CalculationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,7 +46,7 @@ public class CalculationService {
             newCalculation.setType(calculationRequest.getType());
             newCalculation.setExpression(expression);
             newCalculation.setResult(result);
-            newCalculation.setDate(new Date());
+            newCalculation.setDate(new Timestamp(System.currentTimeMillis()));
             newCalculation.setThreadsUsed(calculationRequest.getThreadsUsed());
             newCalculation.setUser(userData.get());
             calculationRepository.save(newCalculation);

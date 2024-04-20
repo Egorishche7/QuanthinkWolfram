@@ -1,6 +1,11 @@
 package by.quantumquartet.quanthink.controllers;
 
-import by.quantumquartet.quanthink.entities.Message;
+import static by.quantumquartet.quanthink.services.AppLogger.logError;
+
+import java.util.List;
+import java.util.Optional;
+
+import by.quantumquartet.quanthink.models.Message;
 import by.quantumquartet.quanthink.services.MessageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -11,9 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Controller class to handle HTTP requests related to Message entity.
@@ -74,6 +76,7 @@ public class MessageController {
             Message newMessage = messageService.createMessage(message);
             return new ResponseEntity<>(newMessage, HttpStatus.CREATED);
         } catch (Exception e) {
+            logError(MessageController.class, e.getMessage());
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -116,6 +119,7 @@ public class MessageController {
             messageService.deleteMessage(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
+            logError(MessageController.class, e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

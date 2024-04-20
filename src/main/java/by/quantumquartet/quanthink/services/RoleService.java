@@ -1,6 +1,7 @@
 package by.quantumquartet.quanthink.services;
-import by.quantumquartet.quanthink.entities.Role;
-import by.quantumquartet.quanthink.entities.ERole;
+
+import by.quantumquartet.quanthink.models.Role;
+import by.quantumquartet.quanthink.models.ERole;
 import by.quantumquartet.quanthink.repositories.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,6 @@ public class RoleService {
         return roleRepository.findByName(name);
     }
 
-    // create RoleController.java
     public Role createRole(Role role) {
         return roleRepository.save(role);
     }

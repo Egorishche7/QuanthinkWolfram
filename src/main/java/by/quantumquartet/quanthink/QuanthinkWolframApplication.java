@@ -1,8 +1,8 @@
 package by.quantumquartet.quanthink;
 
-import by.quantumquartet.quanthink.entities.ERole;
-import by.quantumquartet.quanthink.entities.Role;
-import by.quantumquartet.quanthink.entities.User;
+import by.quantumquartet.quanthink.models.ERole;
+import by.quantumquartet.quanthink.models.Role;
+import by.quantumquartet.quanthink.models.User;
 import by.quantumquartet.quanthink.services.RoleService;
 import by.quantumquartet.quanthink.services.UserService;
 import org.springframework.boot.CommandLineRunner;

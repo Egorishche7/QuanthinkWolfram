@@ -1,6 +1,11 @@
 package by.quantumquartet.quanthink.controllers;
 
-import by.quantumquartet.quanthink.entities.User;
+import static by.quantumquartet.quanthink.services.AppLogger.logError;
+
+import java.util.List;
+import java.util.Optional;
+
+import by.quantumquartet.quanthink.models.User;
 import by.quantumquartet.quanthink.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -11,11 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
-
-import static by.quantumquartet.quanthink.services.LoggerManager.logException;
 
 /**
  * Controller class to handle HTTP requests related to User entity.
@@ -63,61 +63,6 @@ public class UserController {
     }
 
     /**
-     * Endpoint to create a new user.
-     *
-     * @param user The user object to be created.
-     * @return Newly created user with HTTP status 201 CREATED, or 400 BAD REQUEST if email already exists.
-     */
-    @Operation(summary = "Create user", description = "Creates a new user.")
-    @ApiResponse(responseCode = "201", description = "User created",
-            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = User.class))})
-    @ApiResponse(responseCode = "400", description = "Email already exists")
-    @PostMapping("/users")
-    public ResponseEntity<?> createUser(@RequestBody User user) {
-        try {
-            Optional<User> existingUser = userService.findByEmail(user.getEmail());
-            if (existingUser.isPresent()) {
-                return new ResponseEntity<>("Email already exists", HttpStatus.BAD_REQUEST);
-            }
-
-            User newUser = userService.createUser(user);
-            return new ResponseEntity<>(newUser, HttpStatus.CREATED);
-        } catch (Exception e) {
-            logException(e);
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-//    /**
-//     * Endpoint to authenticate a user.
-//     *
-//     * @param authenticationRequest The authentication request containing email and password.
-//     * @return Authenticated user with HTTP status 200 OK if successful, otherwise 401 UNAUTHORIZED.
-//     */
-//    @Operation(summary = "Login user", description = "Authenticates a user.")
-//    @ApiResponse(responseCode = "200", description = "User authenticated",
-//            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = User.class))})
-//    @ApiResponse(responseCode = "401", description = "Unauthorized")
-//    @PostMapping("/login")
-//    public ResponseEntity<?> loginUser(@RequestBody AuthenticationRequest authenticationRequest) {
-//        String email = authenticationRequest.getEmail();
-//        String password = authenticationRequest.getPassword();
-//
-//        Optional<User> userOptional = userService.findByEmail(email);
-//        if (userOptional.isEmpty()) {
-//            return new ResponseEntity<>("User not found", HttpStatus.UNAUTHORIZED);
-//        }
-//
-//        User user = userOptional.get();
-//
-//        if (!user.getPassword().equals(password)) {
-//            return new ResponseEntity<>("Wrong password", HttpStatus.UNAUTHORIZED);
-//        }
-//
-//        return new ResponseEntity<>(user, HttpStatus.OK);
-//    }
-
-    /**
      * Endpoint to update a user.
      *
      * @param id   The ID of the user to update.
@@ -154,7 +99,7 @@ public class UserController {
             userService.deleteUser(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
-            logException(e);
+            logError(UserController.class, e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

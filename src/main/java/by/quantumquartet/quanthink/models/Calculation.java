@@ -1,9 +1,9 @@
-package by.quantumquartet.quanthink.entities;
+package by.quantumquartet.quanthink.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "calculation")
@@ -21,13 +21,12 @@ public class Calculation {
     private String expression;
 
     @NotBlank
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(nullable = false)
     private String result;
 
     @NotBlank
-    // @DateTimeFormat ?
-    @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Date date;
+    @Column(nullable = false)
+    private Timestamp date;
 
     @NotBlank
     @Column(nullable = false)
@@ -78,11 +77,11 @@ public class Calculation {
         this.result = result;
     }
 
-    public Date getDate() {
+    public Timestamp getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(Timestamp date) {
         this.date = date;
     }
 

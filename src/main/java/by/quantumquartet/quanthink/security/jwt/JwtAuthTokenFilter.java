@@ -1,5 +1,7 @@
 package by.quantumquartet.quanthink.security.jwt;
 
+import static by.quantumquartet.quanthink.services.AppLogger.logError;
+
 import java.io.IOException;
 
 import by.quantumquartet.quanthink.security.services.UserDetailsServiceImpl;
@@ -7,9 +9,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,8 +24,6 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
 
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
-
-    private static final Logger logger = LoggerFactory.getLogger(JwtAuthTokenFilter.class);
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
@@ -48,7 +45,7 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception e) {
-            logger.error("Cannot set user authentication: {}", e.getMessage());
+            logError(JwtAuthTokenFilter.class, "Cannot set user authentication: " + e.getMessage());
         }
 
         filterChain.doFilter(request, response);

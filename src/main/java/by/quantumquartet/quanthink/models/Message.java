@@ -1,9 +1,9 @@
-package by.quantumquartet.quanthink.entities;
+package by.quantumquartet.quanthink.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "message")
@@ -17,9 +17,8 @@ public class Message {
     private String content;
 
     @NotBlank
-    // @DateTimeFormat ?
-    @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Date date;
+    @Column(nullable = false)
+    private Timestamp date;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
@@ -28,9 +27,8 @@ public class Message {
     public Message() {
     }
 
-    public Message(String content, Date date) {
+    public Message(String content) {
         this.content = content;
-        this.date = date;
     }
 
     public long getId() {
@@ -49,11 +47,11 @@ public class Message {
         this.content = content;
     }
 
-    public Date getDate() {
+    public Timestamp getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(Timestamp date) {
         this.date = date;
     }
 

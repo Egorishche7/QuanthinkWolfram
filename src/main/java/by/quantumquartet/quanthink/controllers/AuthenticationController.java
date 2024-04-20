@@ -1,12 +1,14 @@
 package by.quantumquartet.quanthink.controllers;
 
+import static by.quantumquartet.quanthink.services.AppLogger.logError;
+
 import java.util.List;
 import java.util.Optional;
 
+import by.quantumquartet.quanthink.models.User;
 import by.quantumquartet.quanthink.rest.request.LoginRequest;
 import by.quantumquartet.quanthink.rest.request.RegisterRequest;
 import by.quantumquartet.quanthink.rest.response.JwtResponse;
-import by.quantumquartet.quanthink.entities.User;
 import by.quantumquartet.quanthink.security.jwt.JwtUtils;
 import by.quantumquartet.quanthink.security.services.UserDetailsImpl;
 import by.quantumquartet.quanthink.services.UserService;
@@ -23,8 +25,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import static by.quantumquartet.quanthink.services.LoggerManager.logException;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
@@ -53,7 +53,7 @@ public class AuthenticationController {
             long newUserId = userService.registerUser(registerRequest);
             return new ResponseEntity<>(newUserId, HttpStatus.CREATED);
         } catch (Exception e) {
-            logException(e);
+            logError(AuthenticationController.class, e.getMessage());
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

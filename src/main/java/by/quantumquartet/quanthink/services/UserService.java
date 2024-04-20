@@ -1,8 +1,8 @@
 package by.quantumquartet.quanthink.services;
 
-import by.quantumquartet.quanthink.entities.ERole;
-import by.quantumquartet.quanthink.entities.Role;
-import by.quantumquartet.quanthink.entities.User;
+import by.quantumquartet.quanthink.models.ERole;
+import by.quantumquartet.quanthink.models.Role;
+import by.quantumquartet.quanthink.models.User;
 import by.quantumquartet.quanthink.repositories.UserRepository;
 import by.quantumquartet.quanthink.rest.request.RegisterRequest;
 import org.springframework.beans.factory.annotation.Autowired;

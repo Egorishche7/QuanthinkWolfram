@@ -1,4 +1,4 @@
-package by.quantumquartet.quanthink.security;
+package by.quantumquartet.quanthink.config;
 
 import by.quantumquartet.quanthink.security.jwt.JwtAuthEntryPoint;
 import by.quantumquartet.quanthink.security.jwt.JwtAuthTokenFilter;
@@ -21,12 +21,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableMethodSecurity
-public class WebSecurityConfiguration {
+public class SecurityConfiguration {
     private final JwtAuthEntryPoint unauthorizedHandler;
     private final UserDetailsServiceImpl userDetailsService;
 
     @Autowired
-    public WebSecurityConfiguration(JwtAuthEntryPoint unauthorizedHandler, UserDetailsServiceImpl userDetailsService) {
+    public SecurityConfiguration(JwtAuthEntryPoint unauthorizedHandler, UserDetailsServiceImpl userDetailsService) {
         this.unauthorizedHandler = unauthorizedHandler;
         this.userDetailsService = userDetailsService;
     }
@@ -61,9 +61,13 @@ public class WebSecurityConfiguration {
         http.csrf(AbstractHttpConfigurer::disable)
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth ->
-                        auth.requestMatchers(HttpMethod.GET, "/users").hasRole("ADMIN")
-                                .anyRequest().permitAll()
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.GET, "/users").hasRole("ADMIN")
+                        .anyRequest().permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .permitAll()
                 );
 
         http.authenticationProvider(authenticationProvider());

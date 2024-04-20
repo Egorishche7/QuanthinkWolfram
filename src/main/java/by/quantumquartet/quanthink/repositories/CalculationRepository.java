@@ -1,6 +1,6 @@
 package by.quantumquartet.quanthink.repositories;
 
-import by.quantumquartet.quanthink.entities.Calculation;
+import by.quantumquartet.quanthink.models.Calculation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

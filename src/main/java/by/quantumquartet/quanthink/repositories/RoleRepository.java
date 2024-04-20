@@ -1,7 +1,7 @@
 package by.quantumquartet.quanthink.repositories;
 
-import by.quantumquartet.quanthink.entities.Role;
-import by.quantumquartet.quanthink.entities.ERole;
+import by.quantumquartet.quanthink.models.Role;
+import by.quantumquartet.quanthink.models.ERole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
