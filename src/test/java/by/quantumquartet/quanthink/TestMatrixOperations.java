@@ -93,4 +93,12 @@ public class TestMatrixOperations {
             for (int j = 0; j < size[1]; j++)
                 Assert.assertEquals(transposedMatrix.getElememnt(i, j), actual.getElememnt(i, j), 0);
     }
+
+    @Test
+    public void TestMatrixGetDeterminant() {
+        for (int i = 1; i < 8; i++) {
+            double det = MatrixOperations.GetDeterminant(matrix1, i);
+            Assert.assertEquals(-1392.0, det, 0);
+        }
+    }
 }

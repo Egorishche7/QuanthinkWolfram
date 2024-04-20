@@ -1,5 +1,11 @@
 package by.quantumquartet.quanthink.math;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.DoubleStream;
 
 public class MatrixOperations {
@@ -92,12 +98,88 @@ public class MatrixOperations {
     public static Matrix GetReverseMatrix(Matrix m){
         return new Matrix(1,1, new double[][]{{0}});
     }
+    public static double GetDeterminant(Matrix m, int n){
+        if (m.getSize()[0] != m.getSize()[1]){
+            throw new IllegalArgumentException("Matrix must be square!");
+        }
+        else{
+            Double res;
+            if (n == 1)
+            {
+                res = 0.0;
+                for (int i = 0; i < m.getSize()[0]; i++){
+                    double[][] subArray = generateSubArray (m.getData(), m.getSize()[0], i);
+                    res += Math.pow(-1.0, 1.0 + i + 1.0) * m.getElememnt(0,i)
+                            * determinant(subArray, m.getSize()[0] - 1);
+                }
+            }
+            else {
+                res = 0.0;
+                ExecutorService executorService = Executors.newFixedThreadPool(n);
+                List<ComputingThreads.CountDeterminantTask> tasks = new ArrayList<>(m.getSize()[0]);
 
-    public static double GetDeterminant(Matrix m){
-        return 0;
+                for (int i = 0; i < m.getSize()[0]; i ++) {
+                    ComputingThreads.CountDeterminantTask task = new ComputingThreads.CountDeterminantTask(m.getData(),
+                            m.getSize()[0], i);
+                    tasks.add(task);
+                    executorService.execute(task);
+                }
+                executorService.shutdown();
+                try {
+                    executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                for (ComputingThreads.CountDeterminantTask task: tasks) {
+                    res += task.Result;
+                }
+
+            }
+            return res;
+        }
+
     }
 
     public static String SolveSystem(Matrix A, Matrix f){
         return " ";
     }
+
+
+
+    static double determinant(double A[][], int n){
+        double res;
+
+        if (n == 1)
+            res = A[0][0];
+        else if (n == 2)
+            res = A[0][0]*A[1][1] - A[1][0]*A[0][1];
+        else{
+            res = 0;
+            for (int i = 0; i < n; i++){
+                double[][] subArray = generateSubArray (A, n, i);
+                res += Math.pow(-1.0, 1.0 + i + 1.0) * A[0][i] * determinant(subArray, n - 1);
+            }
+        }
+        return res;
+    }
+
+    static double[][] generateSubArray(double A[][], int n, int j1){
+        double[][] m = new double[n-1][];
+        for (int k=0; k < (n - 1); k++)
+            m[k] = new double[n-1];
+
+        for (int i = 1; i < n; i++){
+            int j2 = 0;
+            for (int j = 0; j < n; j++){
+                if(j == j1)
+                    continue;
+                m[i-1][j2] = A[i][j];
+                j2++;
+            }
+        }
+        return m;
+    }
+
+
 }
+
