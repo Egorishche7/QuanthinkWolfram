@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
  * Controller class to handle HTTP requests related to Message entity.
  */
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/messages")
 public class MessageController {
     private final MessageService messageService;
