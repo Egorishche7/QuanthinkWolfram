@@ -1,6 +1,9 @@
 <div class="header">
   <div class="icon-container">
-    <p-button label="Sign in" (onClick)="logOut()" class="sign-in-button"></p-button>
+    <p-button *ngIf="isLoggedIn(); else loginButton" label="Sign out" (onClick)="logOut()" class="sign-in-button"></p-button>
+    <ng-template #loginButton>
+      <p-button label="Sign in" (onClick)="logOut()" class="sign-in-button"></p-button>
+    </ng-template>
     <img src="assets/icons/5.png" alt="Logo" class="logo-image">
   </div>
 </div>

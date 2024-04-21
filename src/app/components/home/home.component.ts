@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { LanguageService } from '../../services/language.service'; // Укажите правильный путь к сервису LanguageService
+import { LanguageService } from '../../services/language.service';
 
 @Component({
   selector: 'app-home',
@@ -26,5 +26,9 @@ export class HomeComponent {
 
   changeLanguage(language: string): void {
     this.languageService.setLanguage(language);
+  }
+
+  isLoggedIn(): boolean {
+    return !!sessionStorage.getItem('email');
   }
 }
