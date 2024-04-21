@@ -1,19 +1,23 @@
 package by.quantumquartet.quanthink.controllers;
 
-import by.quantumquartet.quanthink.entities.Calculation;
+import static by.quantumquartet.quanthink.services.AppLogger.logError;
+
+import java.util.List;
+import java.util.Optional;
+
+import by.quantumquartet.quanthink.models.Calculation;
+import by.quantumquartet.quanthink.rest.request.CalculationRequest;
 import by.quantumquartet.quanthink.services.CalculationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Controller class to handle HTTP requests related to Calculation entity.
@@ -53,28 +57,19 @@ public class CalculationController {
     @ApiResponse(responseCode = "404", description = "Calculation not found")
     @GetMapping("/{id}")
     public ResponseEntity<Calculation> getCalculationById(@Parameter(description = "Calculation ID")
-                                                              @PathVariable("id") long id) {
+                                                          @PathVariable("id") long id) {
         Optional<Calculation> calculationData = calculationService.getCalculationById(id);
         return calculationData.map(calculation -> new ResponseEntity<>(calculation, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    /**
-     * Endpoint to create a new calculation.
-     *
-     * @param calculation The calculation object to be created.
-     * @return Newly created calculation with HTTP status 201 CREATED, or 500 INTERNAL SERVER ERROR if creation fails.
-     */
-    @Operation(summary = "Create calculation", description = "Creates a new calculation.")
-    @ApiResponse(responseCode = "201", description = "Calculation created",
-            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Calculation.class))})
-    @ApiResponse(responseCode = "500", description = "Internal server error")
     @PostMapping
-    public ResponseEntity<Calculation> createCalculation(@RequestBody Calculation calculation) {
+    public ResponseEntity<String> performCalculation(@Valid @RequestBody CalculationRequest calculationRequest) {
         try {
-            Calculation newCalculation = calculationService.createCalculation(calculation);
-            return new ResponseEntity<>(newCalculation, HttpStatus.CREATED);
+            String result = calculationService.performCalculation(calculationRequest);
+            return new ResponseEntity<>(result, HttpStatus.CREATED);
         } catch (Exception e) {
+            logError(CalculationController.class, e.getMessage());
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -92,7 +87,7 @@ public class CalculationController {
     @ApiResponse(responseCode = "404", description = "Calculation not found")
     @PutMapping("/{id}")
     public ResponseEntity<Calculation> updateCalculation(@Parameter(description = "Calculation ID") @PathVariable("id")
-                                                             long id, @RequestBody Calculation calculation) {
+                                                         long id, @RequestBody Calculation calculation) {
         Calculation updatedCalculation = calculationService.updateCalculation(id, calculation);
         if (updatedCalculation != null) {
             return new ResponseEntity<>(updatedCalculation, HttpStatus.OK);
@@ -112,11 +107,12 @@ public class CalculationController {
     @ApiResponse(responseCode = "500", description = "Internal server error")
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteCalculation(@Parameter(description = "Calculation ID")
-                                                            @PathVariable("id") long id) {
+                                                        @PathVariable("id") long id) {
         try {
             calculationService.deleteCalculation(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
+            logError(CalculationController.class, e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

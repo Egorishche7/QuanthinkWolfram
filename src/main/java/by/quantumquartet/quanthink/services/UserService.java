@@ -1,24 +1,34 @@
 package by.quantumquartet.quanthink.services;
 
-import by.quantumquartet.quanthink.entities.User;
+import by.quantumquartet.quanthink.models.ERole;
+import by.quantumquartet.quanthink.models.Role;
+import by.quantumquartet.quanthink.models.User;
 import by.quantumquartet.quanthink.repositories.UserRepository;
+import by.quantumquartet.quanthink.rest.request.RegisterRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserService {
+    private final PasswordEncoder encoder;
+    private final RoleService roleService;
     private final UserRepository userRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(PasswordEncoder encoder, RoleService roleService, UserRepository userRepository) {
+        this.encoder = encoder;
+        this.roleService = roleService;
         this.userRepository = userRepository;
     }
 
     public List<User> getAllUsers() {
-        return (List<User>) userRepository.findAll();
+        return userRepository.findAll();
     }
 
     public Optional<User> getUserById(long id) {
@@ -33,6 +43,25 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public long registerUser(RegisterRequest registerRequest) {
+        User newUser = new User(
+                registerRequest.getEmail(),
+                registerRequest.getUsername(),
+                encoder.encode(registerRequest.getPassword())
+        );
+
+        Set<Role> roles = new HashSet<>();
+        Optional<Role> roleData = roleService.findRoleByName(ERole.ROLE_USER);
+        if (roleData.isPresent()) {
+            roles.add(roleData.get());
+        } else {
+            throw new RuntimeException("Role not found");
+        }
+        newUser.setRoles(roles);
+
+        return userRepository.save(newUser).getId();
+    }
+
     public User updateUser(long id, User user) {
         Optional<User> userData = userRepository.findById(id);
         if (userData.isPresent()) {
@@ -40,10 +69,12 @@ public class UserService {
             existingUser.setEmail(user.getEmail());
             existingUser.setUsername(user.getUsername());
             existingUser.setPassword(user.getPassword());
-            existingUser.setRole(user.getRole());
+            existingUser.setRoles(user.getRoles());
+            existingUser.setCalculations(user.getCalculations());
+            existingUser.setMessages(user.getMessages());
             return userRepository.save(existingUser);
         } else {
-            return null;
+            throw new RuntimeException("User not found");
         }
     }
 
