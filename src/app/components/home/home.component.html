@@ -14,7 +14,7 @@
   </button>
   <div *ngIf="showLanguageMenu" class="language-menu">
     <button (click)="changeLanguage('ru')">{{ getTranslation('Русский') }}</button>
-    <button (click)="changeLanguage('be')">{{ getTranslation('Белорусский') }}</button>
+    <button (click)="changeLanguage('by')">{{ getTranslation('Белорусский') }}</button>
     <button (click)="changeLanguage('en')">{{ getTranslation('English') }}</button>
   </div>
 </div>
@@ -24,7 +24,7 @@
     <div [ngSwitch]="selectedLanguage">
       <span *ngSwitchCase="'en'">{{ getTranslation('Choose your library') }}</span>
       <span *ngSwitchCase="'ru'">{{ getTranslation('Choose your library') }}</span>
-      <span *ngSwitchCase="'be'">{{ getTranslation('Choose your library') }}</span>
+      <span *ngSwitchCase="'by'">{{ getTranslation('Choose your library') }}</span>
     </div>
   </app-input>
 </div>

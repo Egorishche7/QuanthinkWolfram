@@ -16,7 +16,8 @@ export class LanguageService {
   };
 
   languageChanged: Subject<void> = new Subject<void>();
-public selectedLanguageChanged: Subject<string> = new Subject<string>();
+  public selectedLanguageChanged: Subject<string> = new Subject<string>();
+
   constructor() { }
 
   public getTranslation(key: string): string {
@@ -25,12 +26,12 @@ public selectedLanguageChanged: Subject<string> = new Subject<string>();
   }
 
   public getLanguage(): string {
-    const storedLanguage = localStorage.getItem('selectedLanguage');
+    const storedLanguage = localStorage.getItem('SelectedLanguage');
     return storedLanguage || this.defaultLanguage;
   }
 
   public setLanguage(language: string): void {
-    localStorage.setItem('selectedLanguage', language);
-    this.languageChanged.next(); // Уведомить другие компоненты о смене языка
+    localStorage.setItem('SelectedLanguage', language);
+    this.languageChanged.next(); // Notify other components about the language change
   }
 }
