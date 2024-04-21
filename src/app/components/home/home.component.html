@@ -1,36 +1,49 @@
 <div class="header">
   <div class="icon-container">
-    <p-button *ngIf="isLoggedIn(); else loginButton" label="Sign out" (onClick)="logOut()" class="sign-in-button"></p-button>
+    <p-button *ngIf="isLoggedIn(); else loginButton" label="{{ getTranslation('Sign out') }}" (onClick)="logOut()" class="sign-in-button"></p-button>
     <ng-template #loginButton>
-      <p-button label="Sign in" (onClick)="logOut()" class="sign-in-button"></p-button>
+      <p-button label="{{ getTranslation('Sign in') }}" (onClick)="logOut()" class="sign-in-button"></p-button>
     </ng-template>
     <img src="assets/icons/5.png" alt="Logo" class="logo-image">
   </div>
 </div>
+
 <div class="language-container">
   <button class="language-button" (click)="toggleLanguageMenu()">
     <img src="assets/icons/change_language.png" alt="Language" class="language-image">
   </button>
   <div *ngIf="showLanguageMenu" class="language-menu">
-    <button (click)="changeLanguage('ru')">Русский</button>
-    <button (click)="changeLanguage('be')">Белорусский</button>
-    <button (click)="changeLanguage('en')">English</button>
+    <button (click)="changeLanguage('ru')">{{ getTranslation('Русский') }}</button>
+    <button (click)="changeLanguage('be')">{{ getTranslation('Белорусский') }}</button>
+    <button (click)="changeLanguage('en')">{{ getTranslation('English') }}</button>
   </div>
 </div>
+
 <div class="center-content">
-  <app-input></app-input>
+  <app-input>
+    <div [ngSwitch]="selectedLanguage">
+      <span *ngSwitchCase="'en'">{{ getTranslation('Choose your library') }}</span>
+      <span *ngSwitchCase="'ru'">{{ getTranslation('Choose your library') }}</span>
+      <span *ngSwitchCase="'be'">{{ getTranslation('Choose your library') }}</span>
+    </div>
+  </app-input>
 </div>
 
 <div class="footer">
   <div class="libraries">
-    <span class="purple-text">Choose your library &gt;</span>
-    <span class="green-text">History &gt;</span>
-    <span class="yellow-text">Settings &gt;</span>
-    <span class="turquoise-text">Online Chat &gt;</span>
+    <span class="purple-text">{{ getTranslation('Choose your library') }} &gt;</span>
+    <span class="green-text">{{ getTranslation('History') }} &gt;</span>
+    <span class="yellow-text">{{ getTranslation('Settings') }} &gt;</span>
+    <span class="turquoise-text">{{ getTranslation('Online Chat') }} &gt;</span>
   </div>
 </div>
 
 <div class="bottom-text">
-  <p class="gray-text">&copy;Resources & Tools About Contact Connect <img src="assets/icons/facebook.png" alt="Logo" class="bottom-image"> <img src="assets/icons/twitter.png" alt="Logo" class="bottom-image"> <img src="assets/icons/telegram.png" alt="Logo" class="bottom-image"> <img src="assets/icons/instagram.png" alt="Logo" class="bottom-image"></p>
-  <p class="gray-text">&copy;2024 QuanThink Wolfram Terms Privacy</p>
+  <p class="gray-text">&copy;{{ getTranslation('Resources & Tools About Contact Connect') }}
+    <img src="assets/icons/facebook.png" alt="Logo" class="bottom-image">
+    <img src="assets/icons/twitter.png" alt="Logo" class="bottom-image">
+    <img src="assets/icons/telegram.png" alt="Logo" class="bottom-image">
+    <img src="assets/icons/instagram.png" alt="Logo" class="bottom-image">
+  </p>
+  <p class="gray-text">&copy;2024 QuanThink Wolfram {{ getTranslation('Terms Privacy') }}</p>
 </div>

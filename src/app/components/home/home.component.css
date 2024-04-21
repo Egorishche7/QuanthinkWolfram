@@ -1,25 +1,25 @@
 .sign-in-button {
   display: flex;
   align-items: center;
-  position: absolute;
+  position: fixed;
   top: 0;
   right: 100px;
   background-color: #ffa500;
   color: white;
+  z-index: 1;
 }
 
 .language-container {
-position: absolute;
+  position: fixed;
+  top: -5px;
+  right: 10px;
 }
 
 .language-button {
- align-items: center;
-  position: absolute;
-  top: -360px;
+  align-items: center;
   background: none;
   border: none;
   cursor: pointer;
-  left: 1350px;
 }
 
 .language-menu {
@@ -30,9 +30,8 @@ position: absolute;
   display: flex;
   flex-direction: column;
   z-index: 1;
-position: absolute;
-  top: -300px;
-  left: 1340px;
+  top: 50px;
+  right: 0;
 }
 
 .language-menu button {

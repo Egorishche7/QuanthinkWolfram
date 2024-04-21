@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CalculationService } from "../../services/calc.service";
 import { Calculation } from "../../interfaces/calculation";
 import { Router } from "@angular/router";
+import { LanguageService } from '../../services/language.service';
 
 @Component({
   selector: 'app-input',
@@ -9,15 +10,25 @@ import { Router } from "@angular/router";
   styleUrls: ['./input-component.component.css']
 })
 export class InputComponent {
+
   inputValue: string = '';
   isInputFocused: boolean = false;
   calculationResult: string | undefined;
-
+inputError: string = '';
   constructor(
     private calcService: CalculationService,
-    private router: Router
+    private router: Router,
+    private languageService: LanguageService
   ) { }
+ ngOnInit() {
+    this.languageService.languageChanged.subscribe(() => {
+      this.languageChangedCallback();
+    });
+  }
 
+  languageChangedCallback() {
+    this.inputError = '';
+  }
   onInputFocus() {
     this.isInputFocused = true;
   }
@@ -41,12 +52,7 @@ export class InputComponent {
   }
 
   calculate() {
-    const userId = localStorage.getItem('userId'); // Изменено на localStorage
-
-    if (!userId) {
-      this.router.navigate(['login']);
-      return;
-    }
+    const userId = localStorage.getItem('userId');
 
     const calcData: Calculation = {
       userId: userId,
@@ -57,9 +63,12 @@ export class InputComponent {
 
     this.calcService.createCalculation(calcData as Calculation).subscribe(
       response => {
-        console.log(response);
-        this.calculationResult = response.result;
+        this.calculationResult = response;
       }
     );
+  }
+
+getTranslation(key: string): string {
+    return this.languageService.getTranslation(key);
   }
 }

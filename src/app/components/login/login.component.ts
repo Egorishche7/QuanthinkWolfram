@@ -3,7 +3,9 @@ import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { AuthService } from 'src/app/services/auth.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
+import { LanguageService } from '../../services/language.service';
+import { Subscription } from 'rxjs';
+import { EventEmitter } from '@angular/core';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -11,13 +13,16 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   host: { class: 'orange-form' }
 })
 export class LoginComponent implements OnInit {
+languageChanged: EventEmitter<string> = new EventEmitter<string>();
   loginForm: FormGroup;
+  private languageSubscription: Subscription | undefined;
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private msgService: MessageService
+    private msgService: MessageService,
+    private languageService: LanguageService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -26,9 +31,21 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (sessionStorage.getItem('email')) {
-      this.router.navigate(['/']);
-    }
+  this.languageSubscription = this.languageService.selectedLanguageChanged.subscribe(() => {
+    // Update translations on the login form
+    // For example, you can update the form header and button labels
+    this.loginForm.patchValue({
+      header: this.languageService.getTranslation('Sign In'),
+      emailLabel: this.languageService.getTranslation('Email'),
+      passwordLabel: this.languageService.getTranslation('Password'),
+      signInButtonLabel: this.languageService.getTranslation('SIGN IN'),
+      createAccountLinkLabel: this.languageService.getTranslation("Don't have an account? Create one.")
+    });
+  });
+}
+
+  ngOnDestroy() {
+    this.languageSubscription?.unsubscribe();
   }
 
   get email() {
@@ -44,14 +61,19 @@ export class LoginComponent implements OnInit {
     this.authService.login({ email, password }).subscribe(
       response => {
         console.log(response);
-        const userId = response.id; 
-        sessionStorage.setItem('email', email);
-        sessionStorage.setItem('userId', userId); 
+        const userId = response.id;
+        localStorage.setItem('email', email);
+        localStorage.setItem('userId', userId);
         this.router.navigate(['/home']);
       },
       error => {
-        this.msgService.add({ severity: 'error', summary: 'Error', detail: error.error });
+        this.msgService.add({ severity: 'error', summary: 'Error', detail: "Incorrect email or password" });
       }
     );
   }
+
+  changeLanguage(language: string) {
+  this.languageService.setLanguage(language);
+  this.languageChanged.emit(language);
+}
 }
