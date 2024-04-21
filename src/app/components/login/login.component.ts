@@ -44,13 +44,13 @@ export class LoginComponent implements OnInit {
     this.authService.login({ email, password }).subscribe(
       response => {
         console.log(response);
-        const userId = response.id; 
-        sessionStorage.setItem('email', email);
-        sessionStorage.setItem('userId', userId); 
+        const userId = response.id;
+        localStorage.setItem('email', email);
+        localStorage.setItem('userId', userId);
         this.router.navigate(['/home']);
       },
       error => {
-        this.msgService.add({ severity: 'error', summary: 'Error', detail: error.error });
+        this.msgService.add({ severity: 'error', summary: 'Error', detail: "Incorrect email or password" });
       }
     );
   }

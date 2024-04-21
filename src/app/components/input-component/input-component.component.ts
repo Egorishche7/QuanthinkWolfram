@@ -43,11 +43,6 @@ export class InputComponent {
   calculate() {
     const userId = localStorage.getItem('userId'); // Изменено на localStorage
 
-    if (!userId) {
-      this.router.navigate(['login']);
-      return;
-    }
-
     const calcData: Calculation = {
       userId: userId,
       type: 'basic_calculation',
@@ -57,8 +52,7 @@ export class InputComponent {
 
     this.calcService.createCalculation(calcData as Calculation).subscribe(
       response => {
-        console.log(response);
-        this.calculationResult = response.result;
+        this.calculationResult = response;
       }
     );
   }
