@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { LanguageService } from '../../services/language.service'; // Укажите правильный путь к сервису LanguageService
 
 @Component({
   selector: 'app-home',
@@ -7,11 +8,23 @@ import { Router } from '@angular/router';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent {
+  selectedLanguage: string;
+  showLanguageMenu: boolean = false;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private languageService: LanguageService) {
+    this.selectedLanguage = this.languageService.getLanguage();
+  }
 
   logOut() {
-  sessionStorage.clear();
-  this.router.navigate(['/login']); 
-}
+    sessionStorage.clear();
+    this.router.navigate(['/login']);
+  }
+
+  toggleLanguageMenu(): void {
+    this.showLanguageMenu = !this.showLanguageMenu;
+  }
+
+  changeLanguage(language: string): void {
+    this.languageService.setLanguage(language);
+  }
 }

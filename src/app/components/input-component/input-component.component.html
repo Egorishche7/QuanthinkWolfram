@@ -3,7 +3,7 @@
   <button class="btn orange-bg" (click)="calculate()">=</button>
 </div>
 
-<div class="math-input-container" *ngIf="isInputFocused">
+<div class="math-input-container" [hidden]="!isInputFocused">
   <button class="btn" (click)="addCharacter('(')">(</button>
   <button class="btn" (click)="addCharacter(')')">)</button>
   <button class="btn" (click)="addCharacter('^')">^</button>

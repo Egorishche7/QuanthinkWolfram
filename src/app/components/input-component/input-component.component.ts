@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import {CalculationService} from "../../services/calc.service";
-import {Calculation} from "../../interfaces/calculation";
-import {Router} from "@angular/router";
+import { CalculationService } from "../../services/calc.service";
+import { Calculation } from "../../interfaces/calculation";
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-input',
@@ -41,15 +41,15 @@ export class InputComponent {
   }
 
   calculate() {
-    let userIdString: string | null = sessionStorage.getItem('userId');
-    if (!userIdString) {
-      // this.router.navigate(['login'])
-      // return;
-      userIdString = "0";
+    const userId = localStorage.getItem('userId'); // Изменено на localStorage
+
+    if (!userId) {
+      this.router.navigate(['login']);
+      return;
     }
 
     const calcData: Calculation = {
-      userId: userIdString,
+      userId: userId,
       type: 'basic_calculation',
       expression: this.inputValue,
       threadsUsed: "1"

@@ -1,11 +1,19 @@
 <div class="header">
   <div class="icon-container">
     <p-button label="Sign in" (onClick)="logOut()" class="sign-in-button"></p-button>
-    <img src="assets/icons/change_language.png" alt="Logo" class="language-image">
     <img src="assets/icons/5.png" alt="Logo" class="logo-image">
   </div>
 </div>
-
+<div class="language-container">
+  <button class="language-button" (click)="toggleLanguageMenu()">
+    <img src="assets/icons/change_language.png" alt="Language" class="language-image">
+  </button>
+  <div *ngIf="showLanguageMenu" class="language-menu">
+    <button (click)="changeLanguage('ru')">Русский</button>
+    <button (click)="changeLanguage('be')">Белорусский</button>
+    <button (click)="changeLanguage('en')">English</button>
+  </div>
+</div>
 <div class="center-content">
   <app-input></app-input>
 </div>

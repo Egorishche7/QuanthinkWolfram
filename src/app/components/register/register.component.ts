@@ -5,6 +5,7 @@ import { User } from 'src/app/interfaces/auth';
 import { AuthService } from 'src/app/services/auth.service';
 import { passwordMatchValidator } from 'src/app/shared/password-match.directive';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -25,7 +26,7 @@ export class RegisterComponent {
     private authService: AuthService,
     private messageService: MessageService,
     private router: Router
-  ) { }
+  ) {}
 
   get username() {
     return this.registerForm.controls.username;

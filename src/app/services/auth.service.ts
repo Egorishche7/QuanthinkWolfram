@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { User } from '../interfaces/auth';
@@ -16,6 +16,6 @@ export class AuthService {
   }
 
   login(authRequest: User_login): Observable<any> {
-    return this.http.post(`${this.baseUrl}/login`, authRequest);
+    return this.http.post<User>(`${this.baseUrl}/login`, authRequest);
   }
 }
