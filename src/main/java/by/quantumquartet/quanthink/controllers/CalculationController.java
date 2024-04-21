@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
  * Controller class to handle HTTP requests related to Calculation entity.
  */
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/calculations")
 public class CalculationController {
     private final CalculationService calculationService;

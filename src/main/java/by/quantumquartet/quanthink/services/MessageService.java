@@ -1,20 +1,26 @@
 package by.quantumquartet.quanthink.services;
 
 import by.quantumquartet.quanthink.models.Message;
+import by.quantumquartet.quanthink.models.User;
 import by.quantumquartet.quanthink.repositories.MessageRepository;
+import by.quantumquartet.quanthink.repositories.UserRepository;
+import by.quantumquartet.quanthink.rest.request.MessageRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class MessageService {
     private final MessageRepository messageRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public MessageService(MessageRepository messageRepository) {
+    public MessageService(MessageRepository messageRepository, UserRepository userRepository) {
         this.messageRepository = messageRepository;
+        this.userRepository = userRepository;
     }
 
     public List<Message> getAllMessages() {
@@ -27,6 +33,20 @@ public class MessageService {
 
     public Message createMessage(Message message) {
         return messageRepository.save(message);
+    }
+
+    public Message writeMessage(MessageRequest messageRequest) {
+        Optional<User> userData = userRepository.findById(messageRequest.getUserId());
+        if (userData.isPresent()) {
+            Message newMessage = new Message();
+            newMessage.setContent(messageRequest.getContent());
+            newMessage.setDate(new Timestamp(System.currentTimeMillis()));
+            newMessage.setUser(userData.get());
+            messageRepository.save(newMessage);
+            return newMessage;
+        } else {
+            throw new RuntimeException("User not found");
+        }
     }
 
     public Message updateMessage(long id, Message message) {
