@@ -54,8 +54,8 @@ public class Matrix {
     public double[] getColumn(int j){
         if (j < 0 || j >= this.cols)
             throw new IndexOutOfBoundsException("No such column. Index is out of bounds");
-        double[] column = new double[this.cols];
-        for (int i =0; i < this.cols; i++)
+        double[] column = new double[this.rows];
+        for (int i = 0; i < this.rows; i++)
             column[i] = this.data[i][j];
         return column;
     }

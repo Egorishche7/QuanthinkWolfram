@@ -191,4 +191,38 @@ public class UtilFunctions {
         b = tmp;
     }
 
+    public static double determinant(double A[][], int n){
+        double res;
+
+        if (n == 1)
+            res = A[0][0];
+        else if (n == 2)
+            res = A[0][0]*A[1][1] - A[1][0]*A[0][1];
+        else{
+            res = 0;
+            for (int i = 0; i < n; i++){
+                double[][] subArray = generateSubArray (A, n, i);
+                res += Math.pow(-1.0, 1.0 + i + 1.0) * A[0][i] * determinant(subArray, n - 1);
+            }
+        }
+        return res;
+    }
+
+    public static double[][] generateSubArray(double A[][], int n, int j1){
+        double[][] m = new double[n-1][];
+        for (int k=0; k < (n - 1); k++)
+            m[k] = new double[n-1];
+
+        for (int i = 1; i < n; i++){
+            int j2 = 0;
+            for (int j = 0; j < n; j++){
+                if(j == j1)
+                    continue;
+                m[i-1][j2] = A[i][j];
+                j2++;
+            }
+        }
+        return m;
+    }
+
 }

@@ -15,6 +15,12 @@ public class TestMatrixOperations {
     static Matrix matrixSub;
     static Matrix matrixMul;
     static Matrix transposedMatrix;
+
+    static Matrix NonReversedMatrix;
+    static Matrix ReversedMatrix;
+    static Matrix A;
+    static Matrix f;
+
     @BeforeClass
     public static void setUpBeforeTest(){
         double[][] data1 = new double[][]{{1, -5, 14, 15},
@@ -41,18 +47,34 @@ public class TestMatrixOperations {
                 {-5, -16, 0, -6},
                 {14, 11 , 17, -3},
                 {15, 14, 20, 1}};
+
+        double[][] dataNonReversed = new double[][]{{1, 2, 1},
+                {2, 5, 6},
+                {3, 1, 2}};
+        double[][] dataReversed = new double[][]{{4.0/19.0, -3.0/19.0, 7.0/19.0},
+                {14.0/19.0, -1.0/19.0, -4.0/19.0},
+                {-13.0/19.0, 5.0/19.0, 1.0/19.0}};
+        double[][] dataSystemA = new double[][]{{3, 2, 1, 1},
+                {1, -1, 4, -1},
+                {-2, -2 , -3,  1},
+                {1, 5, -1 , 2}};
+        double[][] dataSystemf = new double[][]{{-2}, {-1}, {9},{4}};
         matrix1 = new Matrix(4,4, data1);
         matrix2 = new Matrix(4,4, data2);
         matrixSum = new Matrix(4,4, dataSum);
         matrixSub = new Matrix(4,4, dataSub);
         matrixMul = new Matrix(4,4, dataMul);
         transposedMatrix = new Matrix(4,4, dataTransposed);
+        NonReversedMatrix = new Matrix(3,3, dataNonReversed);
+        ReversedMatrix = new Matrix(3,3, dataReversed);
+        A = new Matrix(4,4, dataSystemA);
+        f = new Matrix(4,1, dataSystemf);
     }
 
     @Test
     public void TestMatrixSum() {
         int[] size = matrixSum.getSize();
-        Matrix actual = MatrixOperations.MatrixSum(matrix1, matrix2, 1);
+        Matrix actual = MatrixOperations.MatrixSum(matrix1, matrix2, 4);
         for (int i = 0; i < size[0]; i++)
             for (int j = 0; j < size[1]; j++)
                 Assert.assertEquals(matrixSum.getElememnt(i, j), actual.getElememnt(i, j), 0);
@@ -61,7 +83,7 @@ public class TestMatrixOperations {
     @Test
     public void TestMatrixSub() {
         int[] size = matrixSub.getSize();
-        Matrix actual = MatrixOperations.MatrixSub(matrix1, matrix2, 1);
+        Matrix actual = MatrixOperations.MatrixSub(matrix1, matrix2, 2);
         for (int i = 0; i < size[0]; i++)
             for (int j = 0; j < size[1]; j++)
                 Assert.assertEquals(matrixSub.getElememnt(i, j), actual.getElememnt(i, j), 0);
@@ -70,7 +92,7 @@ public class TestMatrixOperations {
     @Test
     public void TestMatrixMul() {
         int[] size = matrixMul.getSize();
-        Matrix actual = MatrixOperations.MatrixMul(matrix1, matrix2, 1);
+        Matrix actual = MatrixOperations.MatrixMul(matrix1, matrix2, 4);
         for (int i = 0; i < size[0]; i++)
             for (int j = 0; j < size[1]; j++)
                 Assert.assertEquals(matrixMul.getElememnt(i, j), actual.getElememnt(i, j), 0);
@@ -79,7 +101,7 @@ public class TestMatrixOperations {
     @Test
     public void TestMatrixMulNum() {
         int[] size = matrix1.getSize();
-        Matrix actual = MatrixOperations.MatrixMul(matrix1, 5, 1);
+        Matrix actual = MatrixOperations.MatrixMul(matrix1, 5, 4);
         for (int i = 0; i < size[0]; i++)
             for (int j = 0; j < size[1]; j++)
                 Assert.assertEquals(matrix1.getElememnt(i, j) * 5, actual.getElememnt(i, j), 0);
@@ -100,5 +122,20 @@ public class TestMatrixOperations {
             double det = MatrixOperations.GetDeterminant(matrix1, i);
             Assert.assertEquals(-1392.0, det, 0);
         }
+    }
+
+    @Test
+    public void TestGetReversedMatrix() {
+        int[] size = NonReversedMatrix.getSize();
+        Matrix actual = MatrixOperations.GetReverseMatrix(NonReversedMatrix);
+        for (int i = 0; i < size[0]; i++)
+            for (int j = 0; j < size[1]; j++)
+                Assert.assertEquals(ReversedMatrix.getElememnt(i, j), actual.getElememnt(i, j), 1e-8);
+    }
+
+    @Test
+    public void TestSolveSystem() {
+        String actual = MatrixOperations.SolveSystem(A,f ,4);
+        Assert.assertEquals("-3 -1 2 7", actual);
     }
 }
