@@ -10,5 +10,23 @@
 "Enter what you want to calculate or know about": "Enter what you want to calculate or know about",
   "Clear": "Clear",
   "Backspace": "Backspace",
-  "Result": "Result"
+  "Result": "Result",
+"email": "email",
+"Email is required": "Email is required",
+"Email should be valid": "Email should be valid",
+"Password": "Password",
+"Type your password": "Type your password",
+"Password is required.": "Password is required.",
+"SIGN IN": "SIGN IN",
+"Don't have an account?": "Don't have an account?",
+"Create one.": "Create one.",
+
+"Create an account": "Create an account",
+"SIGN IN": "SIGN IN",
+"Confirm Password": "Confirm Password",
+"Confirm the password": "Confirm the password",
+"Already have an account?": "Already have an account?",
+
+"Full Name": "Full Name",
+"Enter a valid name.": "Enter a valid name."
 }

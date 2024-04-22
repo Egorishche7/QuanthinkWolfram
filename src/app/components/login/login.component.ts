@@ -13,10 +13,8 @@ import { EventEmitter } from '@angular/core';
   host: { class: 'orange-form' }
 })
 export class LoginComponent implements OnInit {
-languageChanged: EventEmitter<string> = new EventEmitter<string>();
   loginForm: FormGroup;
-  private languageSubscription: Subscription | undefined;
-
+inputError: string = '';
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
@@ -31,22 +29,25 @@ languageChanged: EventEmitter<string> = new EventEmitter<string>();
   }
 
   ngOnInit() {
-  this.languageSubscription = this.languageService.selectedLanguageChanged.subscribe(() => {
-    // Update translations on the login form
-    // For example, you can update the form header and button labels
-    this.loginForm.patchValue({
-      header: this.languageService.getTranslation('Sign In'),
-      emailLabel: this.languageService.getTranslation('Email'),
-      passwordLabel: this.languageService.getTranslation('Password'),
-      signInButtonLabel: this.languageService.getTranslation('SIGN IN'),
-      createAccountLinkLabel: this.languageService.getTranslation("Don't have an account? Create one.")
+this.languageService.languageChanged.subscribe(() => {
+      this.languageChangedCallback();
     });
-  });
+    if (sessionStorage.getItem('email')) {
+      this.router.navigate(['/']);
+    }
 }
 
-  ngOnDestroy() {
-    this.languageSubscription?.unsubscribe();
+languageChangedCallback() {
+  this.inputError = this.languageService.getTranslation('Input Error');
+  console.log('Current language:', this.languageService.getLanguage());
+  console.log('Translated input error:', this.inputError);
+}
+
+getTranslation(key: string): string {
+    return this.languageService.getTranslation(key);
   }
+
+
 
   get email() {
     return this.loginForm.controls['email'];
@@ -72,8 +73,4 @@ languageChanged: EventEmitter<string> = new EventEmitter<string>();
     );
   }
 
-  changeLanguage(language: string) {
-  this.languageService.setLanguage(language);
-  this.languageChanged.emit(language);
-}
 }

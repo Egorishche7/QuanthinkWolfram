@@ -22,16 +22,25 @@ export class LanguageService {
 
   public getTranslation(key: string): string {
     const selectedLanguage = this.getLanguage();
-    return this.translations[selectedLanguage][key] || key;
+    const translation = this.translations[selectedLanguage][key] || key;
+
+    console.log(`Translation for key '${key}' in language '${selectedLanguage}': ${translation}`);
+
+    return translation;
   }
 
   public getLanguage(): string {
     const storedLanguage = localStorage.getItem('SelectedLanguage');
-    return storedLanguage || this.defaultLanguage;
+    const language = storedLanguage || this.defaultLanguage;
+
+    console.log(`Selected language: ${language}`);
+
+    return language;
   }
 
-  public setLanguage(language: string): void {
-    localStorage.setItem('SelectedLanguage', language);
-    this.languageChanged.next(); // Notify other components about the language change
-  }
+public setLanguage(language: string): void {
+  localStorage.setItem('SelectedLanguage', language);
+
+  this.languageChanged.next(); // Notify other components about the language change
+}
 }
