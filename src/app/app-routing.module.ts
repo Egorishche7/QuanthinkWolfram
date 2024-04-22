@@ -35,7 +35,7 @@ const routes: Routes = [
     component: SettingsComponent
   },
   {
-    path: 'online-chat',
+    path: 'chat',
     component: OnlineChatComponent
   },
   {

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LanguageService } from '../../services/language.service';
 import { Subscription } from 'rxjs';
-import {  EventEmitter } from '@angular/core';
+import { EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-home',
@@ -19,16 +19,16 @@ export class HomeComponent implements OnInit {
     this.selectedLanguage = this.languageService.getLanguage();
   }
 
- ngOnInit() {
-  this.languageSubscription = this.languageService.selectedLanguageChanged.subscribe(() => {
-    this.selectedLanguage = this.languageService.getLanguage();
-  });
-}
+  ngOnInit() {
+    this.languageSubscription = this.languageService.selectedLanguageChanged.subscribe(() => {
+      this.selectedLanguage = this.languageService.getLanguage();
+    });
+  }
 
-changeLanguage(language: string): void {
-  this.languageService.setLanguage(language);
-  this.languageService.selectedLanguageChanged.next(language);
-}
+  changeLanguage(language: string): void {
+    this.languageService.setLanguage(language);
+    this.languageService.selectedLanguageChanged.next(language);
+  }
 
   ngOnDestroy() {
     this.languageSubscription?.unsubscribe();
@@ -43,13 +43,15 @@ changeLanguage(language: string): void {
     this.showLanguageMenu = !this.showLanguageMenu;
   }
 
-
-
   isLoggedIn(): boolean {
     return !!sessionStorage.getItem('email');
   }
 
   getTranslation(key: string): string {
     return this.languageService.getTranslation(key);
+  }
+
+  goToChat(): void {
+    this.router.navigate(['/chat']);
   }
 }
