@@ -2,15 +2,12 @@ package by.quantumquartet.quanthink.controllers;
 
 import static by.quantumquartet.quanthink.services.AppLogger.logError;
 
-import java.util.List;
-import java.util.Optional;
-
 import by.quantumquartet.quanthink.models.User;
 import by.quantumquartet.quanthink.rest.request.LoginRequest;
 import by.quantumquartet.quanthink.rest.request.RegisterRequest;
 import by.quantumquartet.quanthink.rest.response.JwtResponse;
 import by.quantumquartet.quanthink.security.jwt.JwtUtils;
-import by.quantumquartet.quanthink.security.services.UserDetailsImpl;
+import by.quantumquartet.quanthink.models.UserDetailsImpl;
 import by.quantumquartet.quanthink.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +22,9 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")

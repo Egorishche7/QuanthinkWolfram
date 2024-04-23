@@ -1,21 +1,15 @@
-package by.quantumquartet.quanthink.security.services;
+package by.quantumquartet.quanthink.models;
 
-import java.io.Serial;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
-import by.quantumquartet.quanthink.models.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class UserDetailsImpl implements UserDetails {
-    @Serial
-    private static final long serialVersionUID = 1L;
-
     private final long id;
 
     private final String email;
@@ -48,11 +42,6 @@ public class UserDetailsImpl implements UserDetails {
                 authorities);
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
-    }
-
     public long getId() {
         return id;
     }
@@ -62,13 +51,18 @@ public class UserDetailsImpl implements UserDetails {
     }
 
     @Override
+    public String getUsername() {
+        return username;
+    }
+
+    @Override
     public String getPassword() {
         return password;
     }
 
     @Override
-    public String getUsername() {
-        return username;
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authorities;
     }
 
     @Override
@@ -89,17 +83,5 @@ public class UserDetailsImpl implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        UserDetailsImpl user = (UserDetailsImpl) o;
-        return Objects.equals(id, user.id);
     }
 }
