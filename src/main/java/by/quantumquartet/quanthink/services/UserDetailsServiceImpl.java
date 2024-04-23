@@ -1,6 +1,7 @@
-package by.quantumquartet.quanthink.security.services;
+package by.quantumquartet.quanthink.services;
 
 import by.quantumquartet.quanthink.models.User;
+import by.quantumquartet.quanthink.models.UserDetailsImpl;
 import by.quantumquartet.quanthink.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

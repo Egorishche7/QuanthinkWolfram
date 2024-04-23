@@ -2,9 +2,7 @@ package by.quantumquartet.quanthink.security.jwt;
 
 import static by.quantumquartet.quanthink.services.AppLogger.logError;
 
-import java.io.IOException;
-
-import by.quantumquartet.quanthink.security.services.UserDetailsServiceImpl;
+import by.quantumquartet.quanthink.services.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,6 +15,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import java.io.IOException;
 
 public class JwtAuthTokenFilter extends OncePerRequestFilter {
     @Autowired
@@ -41,7 +41,6 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
                                 null,
                                 userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception e) {

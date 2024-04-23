@@ -2,9 +2,6 @@ package by.quantumquartet.quanthink.controllers;
 
 import static by.quantumquartet.quanthink.services.AppLogger.logError;
 
-import java.util.List;
-import java.util.Optional;
-
 import by.quantumquartet.quanthink.models.User;
 import by.quantumquartet.quanthink.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,6 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Controller class to handle HTTP requests related to User entity.

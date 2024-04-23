@@ -2,20 +2,19 @@ package by.quantumquartet.quanthink.security.jwt;
 
 import static by.quantumquartet.quanthink.services.AppLogger.logError;
 
-import java.security.Key;
-import java.util.Date;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-import by.quantumquartet.quanthink.security.services.UserDetailsImpl;
+import by.quantumquartet.quanthink.models.UserDetailsImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
+import java.security.Key;
+import java.util.Date;
+
 @Component
 public class JwtUtils {
-
     @Value("${jwt.jwtSecret}")
     private String jwtSecret;
 
@@ -23,7 +22,6 @@ public class JwtUtils {
     private int jwtExpirationMs;
 
     public String generateJwtToken(Authentication authentication) {
-
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
 
         return Jwts.builder()
