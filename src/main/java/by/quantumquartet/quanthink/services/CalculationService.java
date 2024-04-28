@@ -5,7 +5,7 @@ import by.quantumquartet.quanthink.models.User;
 import by.quantumquartet.quanthink.math.BasicArithmetic;
 import by.quantumquartet.quanthink.repositories.CalculationRepository;
 import by.quantumquartet.quanthink.repositories.UserRepository;
-import by.quantumquartet.quanthink.rest.request.CalculationRequest;
+import by.quantumquartet.quanthink.rest.requests.CalculationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,8 +24,8 @@ public class CalculationService {
         this.userRepository = userRepository;
     }
 
-    public List<Calculation> getAllCalculations() {
-        return calculationRepository.findAll();
+    public List<Object> getAllCalculations() {
+        return calculationRepository.findAllCalculations();
     }
 
     public Optional<Calculation> getCalculationById(long id) {

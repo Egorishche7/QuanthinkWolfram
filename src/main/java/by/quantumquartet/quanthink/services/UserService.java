@@ -4,7 +4,8 @@ import by.quantumquartet.quanthink.models.ERole;
 import by.quantumquartet.quanthink.models.Role;
 import by.quantumquartet.quanthink.models.User;
 import by.quantumquartet.quanthink.repositories.UserRepository;
-import by.quantumquartet.quanthink.rest.request.RegisterRequest;
+import by.quantumquartet.quanthink.rest.requests.RegisterRequest;
+import by.quantumquartet.quanthink.rest.requests.UpdateUserRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -35,12 +36,8 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public Optional<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
-    }
-
-    public User createUser(User user) {
-        return userRepository.save(user);
+    public boolean isEmailAlreadyExists(String email) {
+        return userRepository.existsByEmail(email);
     }
 
     public long registerUser(RegisterRequest registerRequest) {
@@ -55,26 +52,42 @@ public class UserService {
         if (roleData.isPresent()) {
             roles.add(roleData.get());
         } else {
-            throw new RuntimeException("Role not found");
+            throw new RuntimeException("Role " + ERole.ROLE_USER + " not found");
         }
         newUser.setRoles(roles);
 
         return userRepository.save(newUser).getId();
     }
 
-    public User updateUser(long id, User user) {
+    public User updateUser(long id, UpdateUserRequest updateUserRequest) {
         Optional<User> userData = userRepository.findById(id);
         if (userData.isPresent()) {
             User existingUser = userData.get();
-            existingUser.setEmail(user.getEmail());
-            existingUser.setUsername(user.getUsername());
-            existingUser.setPassword(user.getPassword());
-            existingUser.setRoles(user.getRoles());
-            existingUser.setCalculations(user.getCalculations());
-            existingUser.setMessages(user.getMessages());
+            existingUser.setEmail(updateUserRequest.getEmail());
+            existingUser.setUsername(updateUserRequest.getUsername());
+            existingUser.setPassword(encoder.encode(updateUserRequest.getPassword()));
             return userRepository.save(existingUser);
         } else {
-            throw new RuntimeException("User not found");
+            throw new RuntimeException("User with id = " + id + " not found");
+        }
+    }
+
+    public User promoteToAdmin(long id) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            User existingUser = user.get();
+            Set<Role> roles = existingUser.getRoles();
+
+            Optional<Role> roleData = roleService.findRoleByName(ERole.ROLE_ADMIN);
+            if (roleData.isPresent()) {
+                roles.add(roleData.get());
+            } else {
+                throw new RuntimeException("Role " + ERole.ROLE_ADMIN + " not found");
+            }
+            existingUser.setRoles(roles);
+            return userRepository.save(existingUser);
+        } else {
+            throw new RuntimeException("User with id = " + id + " not found");
         }
     }
 
