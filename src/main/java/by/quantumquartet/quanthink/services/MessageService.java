@@ -4,7 +4,7 @@ import by.quantumquartet.quanthink.models.Message;
 import by.quantumquartet.quanthink.models.User;
 import by.quantumquartet.quanthink.repositories.MessageRepository;
 import by.quantumquartet.quanthink.repositories.UserRepository;
-import by.quantumquartet.quanthink.rest.request.MessageRequest;
+import by.quantumquartet.quanthink.rest.requests.MessageRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,19 +1,15 @@
-package by.quantumquartet.quanthink.rest.response;
-
-import java.util.List;
+package by.quantumquartet.quanthink.rest.responses;
 
 public class JwtResponse {
     private long id;
     private String type = "Bearer";
     private String token;
     private String email;
-    private List<String> roles;
 
-    public JwtResponse(String token, long id, String email, List<String> roles) {
+    public JwtResponse(String token, long id, String email) {
         this.token = token;
         this.id = id;
         this.email = email;
-        this.roles = roles;
     }
 
     public long getId() {
@@ -46,13 +42,5 @@ public class JwtResponse {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public List<String> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<String> roles) {
-        this.roles = roles;
     }
 }

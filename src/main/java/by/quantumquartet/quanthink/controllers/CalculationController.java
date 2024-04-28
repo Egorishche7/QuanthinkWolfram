@@ -3,7 +3,7 @@ package by.quantumquartet.quanthink.controllers;
 import static by.quantumquartet.quanthink.services.AppLogger.logError;
 
 import by.quantumquartet.quanthink.models.Calculation;
-import by.quantumquartet.quanthink.rest.request.CalculationRequest;
+import by.quantumquartet.quanthink.rest.requests.CalculationRequest;
 import by.quantumquartet.quanthink.services.CalculationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -40,8 +40,8 @@ public class CalculationController {
      */
     @Operation(summary = "Get all calculations", description = "Retrieves a list of all calculations.")
     @GetMapping
-    public ResponseEntity<List<Calculation>> getAllCalculations() {
-        List<Calculation> calculations = calculationService.getAllCalculations();
+    public ResponseEntity<List<Object>> getAllCalculations() {
+        List<Object> calculations = calculationService.getAllCalculations();
         return new ResponseEntity<>(calculations, HttpStatus.OK);
     }
 

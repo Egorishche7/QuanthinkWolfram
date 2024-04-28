@@ -1,18 +1,22 @@
-package by.quantumquartet.quanthink.rest.request;
+package by.quantumquartet.quanthink.rest.requests;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-public class LoginRequest {
+public class RegisterRequest {
     @NotBlank
     @Email
     private String email;
 
     @NotBlank
+    private String username;
+
+    @NotBlank
     private String password;
 
-    public LoginRequest(String email, String password) {
+    public RegisterRequest(String email, String username, String password) {
         this.email = email;
+        this.username = username;
         this.password = password;
     }
 
@@ -22,6 +26,14 @@ public class LoginRequest {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {

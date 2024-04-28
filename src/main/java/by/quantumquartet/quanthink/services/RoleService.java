@@ -1,5 +1,7 @@
 package by.quantumquartet.quanthink.services;
 
+import static by.quantumquartet.quanthink.services.AppLogger.logError;
+
 import by.quantumquartet.quanthink.models.Role;
 import by.quantumquartet.quanthink.models.ERole;
 import by.quantumquartet.quanthink.repositories.RoleRepository;
@@ -41,7 +43,7 @@ public class RoleService {
             existingRole.setName(role.getName());
             return roleRepository.save(existingRole);
         } else {
-            return null;
+            throw new RuntimeException("Role with id = " + id + " not found");
         }
     }
 
