@@ -1,4 +1,4 @@
-package by.quantumquartet.quanthink;
+package by.quantumquartet.quanthink.testJava;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;

@@ -1,4 +1,4 @@
-package by.quantumquartet.quanthink;
+package by.quantumquartet.quanthink.testJava;
 
 import by.quantumquartet.quanthink.math.Matrix;
 import by.quantumquartet.quanthink.math.MatrixOperations;
