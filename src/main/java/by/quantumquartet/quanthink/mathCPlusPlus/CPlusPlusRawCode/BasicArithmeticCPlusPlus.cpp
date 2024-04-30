@@ -1,7 +1,7 @@
 #define _USE_MATH_DEFINES
-
 #include <string>
 #include <exception>
+#include <iostream>
 #include <stdexcept>
 #include <limits>
 #include <math.h>
@@ -9,13 +9,10 @@
 
 
 //This is how we represent a Java exception already in progress
-struct ThrownJavaException : std::runtime_error {
-    ThrownJavaException() : std::runtime_error("") {}
-    ThrownJavaException(const std::string& msg) : std::runtime_error(msg) {}
-};
+
 
 const double DELTA = 1e-8;
-const char PI = 'π';
+const char PI = 'p';
 const char EXP = 'e';
 
 const char order[] = { 'e','(', '^', '*', '+'};
@@ -33,9 +30,22 @@ std::string ReduceSumSub(std::string expr);
 std::string CheckFloatPoints(std::string expr);
 std::string SimplifyMul(std::string expr);
 
-//JNIEXPORT jstring JNICALL Java_by_quantumquartet_quanthink_mathCPlusPlus_NativeMathLib_solveExpressionC
-//(JNIEnv*, jobject, jstring) {
-//}
+//This is how we represent a Java exception already in progress
+struct ThrownJavaException : std::runtime_error {
+    ThrownJavaException() :std::runtime_error("") {}
+    ThrownJavaException(const std::string& msg ) :std::runtime_error(msg) {}
+};
+
+struct NewJavaException : public ThrownJavaException{
+    NewJavaException(JNIEnv * env, const char* type="", const char* message="")
+        :ThrownJavaException(type+std::string(" ")+message)
+    {
+        jclass newExcCls = env->FindClass(type);
+        if (newExcCls != NULL)
+            env->ThrowNew(newExcCls, message);
+        //if it is null, a NoClassDefFoundError was already thrown
+    }
+};
 
 JNIEXPORT jstring JNICALL Java_by_quantumquartet_quanthink_mathCPlusPlus_NativeMathLib_solveExpressionC
   (JNIEnv *env, jobject, jstring jStr){
@@ -51,7 +61,18 @@ JNIEXPORT jstring JNICALL Java_by_quantumquartet_quanthink_mathCPlusPlus_NativeM
 
       env->DeleteLocalRef(stringJbytes);
       env->DeleteLocalRef(stringClass);
-    return env->NewStringUTF(SolveExpression(ret).c_str());
+      std::string result;
+      try{
+        result = SolveExpression(ret);
+        } catch(ThrownJavaException* e) { //do not let C++ exceptions outside of this function
+        std::string info = e->what();
+        int sep = info.find('|');
+        const char* message = info.substr(0,sep).c_str();
+        std::string ex_type = "java/lang/" + info.substr(sep+1);
+        std:: cout << message << " " << ex_type;
+        NewJavaException(env, ex_type.c_str(), message);
+      }
+      return env->NewStringUTF(result.c_str());
   }
 
 std::string SolveExpression(std::string expr) {
@@ -82,11 +103,11 @@ std::string SolveExpression(std::string expr) {
                     }
                 }
                 if ((begin != -1 && end == -1) || (begin == -1 && end != -1))
-                    throw new std::runtime_error("numbers of left and right brackets must be equal");
+                    throw new ThrownJavaException("Numbers of left and right brackets must be equal|IllegalArgumentException");
                 if (begin == end)
                     break;
                 else
-                    tmp = tmp.substr(0, begin) + SolveExpression(tmp.substr(begin + 1, end))
+                    tmp = tmp.substr(0, begin) + SolveExpression(tmp.substr(begin + 1, end - (begin + 1)))
                     + tmp.substr(end + 1);
             }
             break;
@@ -139,22 +160,22 @@ std::string SolveMulDiv(std::string expr) {
             if (ind_operation_end == -1)
                 ind_operation_end = tmp.length();
             if (ind_operation_end == check_mul_del + 1 || ind_operation_begin == check_mul_del - 1)
-                throw new std::runtime_error("Error");
-            double left = std::stod(tmp.substr(ind_operation_begin + 1, check_mul_del));
-            double right = std::stod(tmp.substr(check_mul_del + 1, ind_operation_end));
+                throw new ThrownJavaException("Error|ArithmeticException");
+            double left = std::stod(tmp.substr(ind_operation_begin + 1, check_mul_del - (ind_operation_begin + 1)));
+            double right = std::stod(tmp.substr(check_mul_del + 1, ind_operation_end - (check_mul_del + 1)));
             if (tmp[check_mul_del] == '*')
             {
 
                 if ( abs(left * right) - 1 > (double)std::numeric_limits<int>::max())
-                    throw new std::runtime_error("Stack overflow");
+                    throw new ThrownJavaException("Stack overflow|StackOverflowError");
                 tmp = tmp.substr(0, ind_operation_begin + 1) + std::to_string(left * right)
                     + tmp.substr(ind_operation_end);
             }
             else {
                 if (right == 0)
-                    throw new std::runtime_error("Can't divide by zero");
+                    throw new ThrownJavaException("Can't divide by zero|ArithmeticException");
                 if (abs(left / right) - 1 > (double)std::numeric_limits<int>::max())
-                    throw new std::runtime_error("Stack overflow");
+                    throw new ThrownJavaException("Stack overflow|StackOverflowError");
                 tmp = tmp.substr(0, ind_operation_begin + 1) + std::to_string(left / right)
                     + tmp.substr(ind_operation_end);
 
@@ -199,11 +220,11 @@ std::string SolvePow(std::string expr) {
             if (ind_operation_end == -1)
                 ind_operation_end = tmp.length();
             if (ind_operation_end == check_pow + 1 || ind_operation_begin == check_pow - 1)
-                throw new std::runtime_error("Error");
-            double basis = std::stod(tmp.substr(ind_operation_begin + 1, check_pow));
-            double degree = std::stod(tmp.substr(check_pow + 1, ind_operation_end));
+                throw new ThrownJavaException("Error|ArithmeticException");
+            double basis = std::stod(tmp.substr(ind_operation_begin + 1, check_pow - (ind_operation_begin + 1)));
+            double degree = std::stod(tmp.substr(check_pow + 1, ind_operation_end - (check_pow + 1)));
             if (abs(pow(basis, degree)) - 1 > std::numeric_limits<int>::max())
-                throw new std::runtime_error("Stack overflow");
+                throw new ThrownJavaException("Stack overflow|StackOverflowError");
             tmp = tmp.substr(0, ind_operation_begin + 1) + std::to_string(pow(basis, degree))
                 + tmp.substr(ind_operation_end);
         }
@@ -241,18 +262,18 @@ std::string SolveSumSub(std::string expr) {
             }
             if (ind_operation_end == -1)
                 ind_operation_end = tmp.length();
-            double left = std::stod(tmp.substr(ind_operation_begin, check_sum_sub));
-            double right = std::stod(tmp.substr(check_sum_sub + 1, ind_operation_end));
+            double left = std::stod(tmp.substr(ind_operation_begin, check_sum_sub - ind_operation_begin));
+            double right = std::stod(tmp.substr(check_sum_sub + 1, ind_operation_end - (check_sum_sub + 1)));
             if (tmp[check_sum_sub] == '+')
             {
                 if (abs(left + right) - 1 > std::numeric_limits<int>::max())
-                    throw new std::runtime_error("Stack overflow");
+                    throw new ThrownJavaException("Stack overflow|StackOverflowError");
                 tmp = tmp.substr(0, ind_operation_begin) + std::to_string(left + right)
                     + tmp.substr(ind_operation_end);
             }
             else {
                 if (abs(left - right) - 1 > std::numeric_limits<int>::max())
-                    throw new std::runtime_error("Stack overflow");
+                    throw new ThrownJavaException("Stack overflow|StackOverflowError");
                 tmp = tmp.substr(0, ind_operation_begin) + std::to_string(left - right)
                     + tmp.substr(ind_operation_end);
             }
@@ -262,11 +283,7 @@ std::string SolveSumSub(std::string expr) {
     return tmp;
 }
 
-
-
-// util
-
-
+// util functions
 
 bool CheckDouble(double value) {
     return abs(round(value) - value) > GetDelta();
@@ -399,7 +416,7 @@ std::string CheckFloatPoints(std::string expr) {
             }
         }
         if (!check)
-            throw new std::runtime_error("Error");
+            throw new ThrownJavaException("Error|IllegalArgumentException");
         previous = index;
     }
     return tmp;
@@ -425,9 +442,9 @@ std::string SimplifyMul(std::string expr) {
                     break;
                 }
             if (index > 0)
-                tmp = tmp.substr(0, index - 1) + tmp.substr(index + 2, end) + tmp.substr(end);
+                tmp = tmp.substr(0, index - 1) + tmp.substr(index + 2, end - (index + 2)) + tmp.substr(end);
             else
-                tmp = tmp.substr(index + 2, end) + tmp.substr(index, index + 1) + tmp.substr(end);
+                tmp = tmp.substr(index + 2, end - (index + 2)) + tmp.substr(index, 1) + tmp.substr(end);
         }
 
         previous = index + 1;
