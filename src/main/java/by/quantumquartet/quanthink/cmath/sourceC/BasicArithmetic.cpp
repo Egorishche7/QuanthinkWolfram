@@ -5,49 +5,18 @@
 #include <stdexcept>
 #include <limits>
 #include <math.h>
-#include "by_quantumquartet_quanthink_mathCPlusPlus_NativeMathLib.h"
-
-
-//This is how we represent a Java exception already in progress
-
-
-const double DELTA = 1e-8;
-const char PI = 'p';
-const char EXP = 'e';
+#include "../includeC/by_quantumquartet_quanthink_cmath_NativeMath_BasicArithmetic.h"
+#include "../includeC/by_quantumquartet_quanthink_cmath_NativeMath_UtilFunctions.h"
 
 const char order[] = { 'e','(', '^', '*', '+'};
+
 std::string SolveExpression(std::string expr);
 std::string SolveMulDiv(std::string expr);
 std::string SolvePow(std::string expr);
 std::string SolveSumSub(std::string expr);
-bool CheckDouble(double value);
-std::string FloatRemover(std::string value);
-double GetDelta();
-std::string CheckMulBrackets(std::string expr);
-std::string ConvertConstToValues(std::string expr);
-std::string AddOneBeforeX(std::string expr);
-std::string ReduceSumSub(std::string expr);
-std::string CheckFloatPoints(std::string expr);
-std::string SimplifyMul(std::string expr);
 
-//This is how we represent a Java exception already in progress
-struct ThrownJavaException : std::runtime_error {
-    ThrownJavaException() :std::runtime_error("") {}
-    ThrownJavaException(const std::string& msg ) :std::runtime_error(msg) {}
-};
 
-struct NewJavaException : public ThrownJavaException{
-    NewJavaException(JNIEnv * env, const char* type="", const char* message="")
-        :ThrownJavaException(type+std::string(" ")+message)
-    {
-        jclass newExcCls = env->FindClass(type);
-        if (newExcCls != NULL)
-            env->ThrowNew(newExcCls, message);
-        //if it is null, a NoClassDefFoundError was already thrown
-    }
-};
-
-JNIEXPORT jstring JNICALL Java_by_quantumquartet_quanthink_mathCPlusPlus_NativeMathLib_solveExpressionC
+JNIEXPORT jstring JNICALL Java_by_quantumquartet_quanthink_cmath_NativeMath_solveExpressionC
   (JNIEnv *env, jobject, jstring jStr){
       const jclass stringClass = env->GetObjectClass(jStr);
       const jmethodID getBytes = env->GetMethodID(stringClass, "getBytes", "(Ljava/lang/String;)[B");
@@ -66,10 +35,10 @@ JNIEXPORT jstring JNICALL Java_by_quantumquartet_quanthink_mathCPlusPlus_NativeM
         result = SolveExpression(ret);
         } catch(ThrownJavaException* e) { //do not let C++ exceptions outside of this function
         std::string info = e->what();
+        std::cout << info << std::endl;
         int sep = info.find('|');
         const char* message = info.substr(0,sep).c_str();
         std::string ex_type = "java/lang/" + info.substr(sep+1);
-        std:: cout << message << " " << ex_type;
         NewJavaException(env, ex_type.c_str(), message);
       }
       return env->NewStringUTF(result.c_str());
@@ -84,9 +53,9 @@ std::string SolveExpression(std::string expr) {
     char item = order[i];
         switch (item) {
         case 'e':
-            tmp = ConvertConstToValues(tmp);
-            tmp = CheckFloatPoints(tmp);
-            tmp = CheckMulBrackets(tmp);
+            tmp = UtilFunctions::ConvertConstToValues(tmp);
+            tmp = UtilFunctions::CheckFloatPoints(tmp);
+            tmp = UtilFunctions::CheckMulBrackets(tmp);
             break;
         case '(':
             while (true) {
@@ -103,7 +72,7 @@ std::string SolveExpression(std::string expr) {
                     }
                 }
                 if ((begin != -1 && end == -1) || (begin == -1 && end != -1))
-                    throw new ThrownJavaException("Numbers of left and right brackets must be equal|IllegalArgumentException");
+                    throw new ThrownJavaException("Incorrect brackets count|IllegalArgumentException");
                 if (begin == end)
                     break;
                 else
@@ -121,9 +90,9 @@ std::string SolveExpression(std::string expr) {
             tmp = SolveSumSub(tmp);
             break;
         }
-        tmp = ReduceSumSub(tmp);
+        tmp = UtilFunctions::ReduceSumSub(tmp);
     }
-    return FloatRemover(tmp);
+    return UtilFunctions::FloatRemover(tmp);
 }
 
 
@@ -279,175 +248,6 @@ std::string SolveSumSub(std::string expr) {
             }
 
         }
-    }
-    return tmp;
-}
-
-// util functions
-
-bool CheckDouble(double value) {
-    return abs(round(value) - value) > GetDelta();
-}
-
-std::string FloatRemover(std::string value) {
-    if (CheckDouble(std::stod(value)))
-        return std::to_string(std::stod(value));
-    else
-        return std::to_string((int)round(std::stod(value)));
-}
-
-double GetDelta() {
-    return DELTA;
-}
-
-std::string CheckMulBrackets(std::string expr) {
-    std::string tmp = expr;
-    int previous = -1;
-    while (true)
-    {
-        int index = tmp.find('(', previous + 1);
-        if (index == -1)
-            break;
-        if (index != 0 && std::isdigit(tmp[index - 1]))
-            tmp = tmp.substr(0, index) + "*" + tmp.substr(index);
-        previous = index + 1;
-    }
-    previous = -1;
-    while (true)
-    {
-        int index = tmp.find(')', previous + 1);
-        if (index == -1)
-            break;
-        if (index != tmp.length() - 1 && (std::isdigit(tmp[index + 1]) || tmp[index + 1] == '('))
-            tmp = tmp.substr(0, index + 1) + "*" + tmp.substr(index + 1);
-        previous = index + 2;
-    }
-    return tmp;
-}
-
-std::string ConvertConstToValues(std::string expr) {
-    std::string tmp = expr;
-    while (true)
-    {
-        int index = tmp.find(PI);
-        if (index == -1)
-            break;
-        tmp = tmp.substr(0, index) + std::to_string(M_PI) + tmp.substr(index + 1);
-    }
-    while (true)
-    {
-        int index = tmp.find(EXP);
-        if (index == -1)
-            break;
-        tmp = tmp.substr(0, index) +std::to_string(M_E) + tmp.substr(index + 1);
-    }
-    return tmp;
-}
-
-
-
-std::string ReduceSumSub(std::string expr) {
-    std::string tmp = expr;
-    while (true) {
-        int ind = tmp.find("--");
-        if (ind == -1)
-            break;
-        tmp = tmp.substr(0, ind) + "+" + tmp.substr(ind + 2);
-    }
-    while (true) {
-        int ind = tmp.find("++");
-        if (ind == -1)
-            break;
-        tmp = tmp.substr(0, ind) + "+" + tmp.substr(ind + 2);
-    }
-    while (true) {
-        int ind = tmp.find("-+");
-        if (ind == -1)
-            break;
-        tmp = tmp.substr(0, ind) + "-" + tmp.substr(ind + 2);
-    }
-    while (true) {
-        int ind = tmp.find("+-");
-        if (ind == -1)
-            break;
-        tmp = tmp.substr(0, ind) + "-" + tmp.substr(ind + 2);
-    }
-    if (tmp[0] == '+')
-        tmp = tmp.substr(1);
-    return tmp;
-}
-
-std::string CheckFloatPoints(std::string expr) {
-    std::string tmp = expr;
-    int previous = -1;
-    while (true)
-    {
-        int index = tmp.find('.', previous + 1);
-        if (index == -1)
-            break;
-        if (index == tmp.length() - 1 || !std::isdigit(tmp[index + 1]))
-            tmp = tmp.substr(0, index + 1) + '0' + tmp.substr(index + 1);
-        previous = index + 1;
-    }
-    previous = -1;
-    while (true)
-    {
-        int index = tmp.find('.', previous + 1);
-        if (index == -1)
-            break;
-        if (index == 0)
-            tmp = '0' + tmp.substr(index);
-        else if (!std::isdigit(tmp[index - 1]))
-            tmp = tmp.substr(0, index) + '0' + tmp.substr(index);
-        previous = index + 1;
-    }
-    previous = tmp.find('.');
-    while (true)
-    {
-        int index = tmp.find('.', previous + 1);
-        if (index == -1)
-            break;
-        bool check = false;
-        for (int i = previous + 1; i < index; i++) {
-            if (!std::isdigit(tmp[i]))
-            {
-                check = true;
-                break;
-            }
-        }
-        if (!check)
-            throw new ThrownJavaException("Error|IllegalArgumentException");
-        previous = index;
-    }
-    return tmp;
-}
-
-std::string SimplifyMul(std::string expr) {
-    std::string tmp = expr;
-    int previous = -1;
-    while (true)
-    {
-        int index = tmp.find('x', previous + 1);
-        if (index == -1)
-            break;
-        if (index != 0 && tmp[index - 1] == '*')
-            tmp = tmp.substr(0, index - 1) + tmp.substr(index);
-        else if (index != tmp.length() - 1 && tmp[index + 1] == '*')
-        {
-            int end = tmp.length();
-            for (int i = index + 2; i < tmp.length(); i++)
-                if (!std::isdigit(tmp[i]))
-                {
-                    end = i;
-                    break;
-                }
-            if (index > 0)
-                tmp = tmp.substr(0, index - 1) + tmp.substr(index + 2, end - (index + 2)) + tmp.substr(end);
-            else
-                tmp = tmp.substr(index + 2, end - (index + 2)) + tmp.substr(index, 1) + tmp.substr(end);
-        }
-
-        previous = index + 1;
     }
     return tmp;
 }

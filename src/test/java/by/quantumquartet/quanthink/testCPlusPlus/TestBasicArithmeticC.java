@@ -3,9 +3,8 @@ package by.quantumquartet.quanthink.testCPlusPlus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import java.lang.Math;
 
-import by.quantumquartet.quanthink.mathCPlusPlus.NativeMathLib;
+import by.quantumquartet.quanthink.cmath.NativeMath;
 
 class TestBasicArithmeticC {
 
@@ -33,7 +32,7 @@ class TestBasicArithmeticC {
     })
     void testSolveExpressionSimpleSum(String expr) {
         Object[] data = convertor(expr);
-        Assertions.assertEquals(data[0], NativeMathLib.solveExpressionC((String)data[1]));
+        Assertions.assertEquals(data[0], NativeMath.solveExpressionC((String)data[1]));
     }
 
     @ParameterizedTest
@@ -48,7 +47,7 @@ class TestBasicArithmeticC {
             "-(-(-50-(-15)))=-35",
             "100--99=199",
             "0-0=0",
-            ".123-.063=0.06",
+            ".123-.063=0.060000",
             Integer.MAX_VALUE + "-0=" + Integer.MAX_VALUE,
             Integer.MIN_VALUE + "-0=" + Integer.MIN_VALUE,
             Integer.MAX_VALUE +"-1000000000=" + (Integer.MAX_VALUE - 1_000_000_000),
@@ -56,7 +55,7 @@ class TestBasicArithmeticC {
     })
     void testSolveExpressionSimpleSub(String expr) {
         Object[] data = convertor(expr);
-        Assertions.assertEquals(data[0], NativeMathLib.solveExpressionC((String)data[1]));
+        Assertions.assertEquals(data[0], NativeMath.solveExpressionC((String)data[1]));
     }
 
     @ParameterizedTest
@@ -81,7 +80,7 @@ class TestBasicArithmeticC {
     })
     void testSolveExpressionSimpleMul(String expr) {
         Object[] data = convertor(expr);
-        Assertions.assertEquals(data[0], NativeMathLib.solveExpressionC((String)data[1]));
+        Assertions.assertEquals(data[0], NativeMath.solveExpressionC((String)data[1]));
     }
 
     @ParameterizedTest
@@ -90,27 +89,27 @@ class TestBasicArithmeticC {
             "11/1=11",
             "16/-4=-4",
             "30/(-5)=-6",
-            "-5/2=-2.5",
-            "(-15)/4=-3.75",
+            "-5/2=-2.500000",
+            "(-15)/4=-3.750000",
             "(-100)/(-25)=4",
             "-70/-5=14",
-            "(-14)/-4=3.5",
+            "(-14)/-4=3.500000",
             "-20/-4=5",
             "-20/(-5)=4",
-            "11/14="+(11.0/14.0),
+            "11/14=0.785714",
             Integer.MIN_VALUE + "/1=" + Integer.MIN_VALUE ,
             Integer.MAX_VALUE + "/1=" + Integer.MAX_VALUE ,
             Integer.MAX_VALUE + "/-1=" + (-Integer.MAX_VALUE),
     })
     void testSolveExpressionSimpleDel(String expr) {
         Object[] data = convertor(expr);
-        Assertions.assertEquals(data[0], NativeMathLib.solveExpressionC((String)data[1]));
+        Assertions.assertEquals(data[0], NativeMath.solveExpressionC((String)data[1]));
     }
 
     @ParameterizedTest
     @ValueSource(strings = {
             "2^4=16",
-            "3^-3="+(1.0/27.0),
+            "3^-3=0.037037",
             "1^1=1",
             "1^100=1",
             "1^0=1",
@@ -119,51 +118,51 @@ class TestBasicArithmeticC {
             "1^-0=1",
             "1^+0=1",
             "0^0=1",
-            "3^-1="+(1.0/3.0),
+            "3^-1=0.333333",
             "25^0.5="+5,
-            "216^(1.0/3.0)="+6,
+            "216^(1.0/3.0)=5.999989",
             "256^0.25=4",
-            "625^-(1/4)=0.2",
-            "2^(-2)=0.25",
+            "625^-(1/4)=0.200000",
+            "2^(-2)=0.250000",
             "2^(3.0)=8",
             "(-2)^(3.0)=-8"
     })
     void testSolveExpressionSimplePow(String expr) {
         Object[] data = convertor(expr);
-        Assertions.assertEquals(data[0], NativeMathLib.solveExpressionC((String)data[1]));
+        Assertions.assertEquals(data[0], NativeMath.solveExpressionC((String)data[1]));
     }
 
     @ParameterizedTest
     @ValueSource(strings = {
-            "e^2="+(Math.E * Math.E),
-            "2*π="+(2*Math.PI),
-            "e+3-π*0.5="+(Math.E + 3.0 - Math.PI * 0.5),
-            "4/3*π*5^3="+(4.0 / 3.0 * Math.PI * 125.0),
+            "e^2=7.389057",
+            "2*p=6.283186",
+            "e+3-p*0.5=4.147486",
+            "4/3*p *5^3=523.598750",
             "=0"
     })
     void testSolveExpressionConstants(String expr) {
         Object[] data = convertor(expr);
-        Assertions.assertEquals(data[0], NativeMathLib.solveExpressionC((String)data[1]));
+        Assertions.assertEquals(data[0], NativeMath.solveExpressionC((String)data[1]));
     }
 
     @ParameterizedTest
     @ValueSource(strings = {
             "(2*5^3-1000)/0.3="+(int)((2*125-1000)/0.3),
-            "12/14=0.8571428571428571",
-            "45/93+33*29+67*45+60*100-80-72/69=9891.440392706872",
-            "((4/5)*(7/2))+((3/2)-(1/4))-((1/3)+(1/6))="+(((4.0/5.0)*(7.0/2.0))+((3.0/2.0)-(1.0/4.0))-((1.0/3.0)+(1.0/6.0))),
-            "(6/11)/((2/3.)^(1/2))-(5/6)=-0.16529067621064852",
-            "(5/3)*((6/5)+(2/5))/(2/3)-((4/7)*(2/3.))=3.61904761904762",
-            "(9/2)-((7/3)-(4/5))*((5/8)+(1/8))/(1./2)=2.1999999999999997",
-            "(4/3)^(3/2)-(3/5)^(5/3)-4+3^(5/3)/5^(3/2)=-2.3290814194308016",
-            "(16/3)*((3/4.)+(1/4))+(4/(2*2))=6.333333333333333",
-            "(25/2)-((6/3)-(2/6))*(3/1)=7.5",
-            "(72/9)/(4/1)+(3/2)*((9/5)-(5/7))=3.628571428571429",
-            "(8/3)^2-(6/4)^2=4.861111111111111",
-            "((11/3)-(5/4))^2+(6/1)=11.840277777777777",
+            "12/14=0.857143",
+            "45/93+33*29+67*45+60*100-80-72/69=9891.440393",
+            "((4/5)*(7/2))+((3/2)-(1/4))-((1/3)+(1/6))=3.550000",
+            "(6/11)/((2/3.)^(1/2))-(5/6)=-0.165290",
+            "(5/3)*((6/5)+(2/5))/(2/3)-((4/7)*(2/3.))=3.619046",
+            "(9/2)-((7/3)-(4/5))*((5/8)+(1/8))/(1./2)=2.200000",
+            "(4/3)^(3/2)-(3/5)^(5/3)-4+3^(5/3)/5^(3/2)=-2.329082",
+            "(16/3)*((3/4.)+(1/4))+(4/(2*2))=6.333333",
+            "(25/2)-((6/3)-(2/6))*(3/1)=7.499999",
+            "(72/9)/(4/1)+(3/2)*((9/5)-(5/7))=3.628571",
+            "(8/3)^2-(6/4)^2=4.861113",
+            "((11/3)-(5/4))^2+(6/1)=11.840279",
             "(3*4)+(6-1)-(2+1)=14",
             "32/(8*(2^2))-6=-5",
-            "5*(6+2)/3-(4*2)=5.333333333333334",
+            "5*(6+2)/3-(4*2)=5.333333",
             "9-(7-4)*(5+1)/2=0",
             "4^3-3^2=55",
             "16*(3+1)+4/2^2=65",
@@ -176,7 +175,7 @@ class TestBasicArithmeticC {
     })
     void testSolveExpressionComplex(String expr) {
         Object[] data = convertor(expr);
-        Assertions.assertEquals(data[0], NativeMathLib.solveExpressionC((String)data[1]));
+        Assertions.assertEquals(data[0], NativeMath.solveExpressionC((String)data[1]));
     }
 
 
@@ -189,8 +188,8 @@ class TestBasicArithmeticC {
             "-2147459123-13312573=Stack overflow",
             "-1000000*1000000=Stack overflow",
             "999999/0.00000001=Stack overflow",
-            "(20-1=Numbers of left and right brackets must be equal",
-            "(20+11)-1*25)=Numbers of left and right brackets must be equal",
+            "(20-1=Incorrect brackets count",
+            "(20+11)-1*25)=Incorrect brackets count",
             "4^^3-3^2=Error",
             "^3-3^2=Error",
             "66^=Error",
@@ -204,7 +203,7 @@ class TestBasicArithmeticC {
     void testSolveExpressionExceptions(String expr) {
         Object[] data = convertor(expr);
         try{
-            NativeMathLib.solveExpressionC((String)data[1]);
+            NativeMath.solveExpressionC((String)data[1]);
         }
         catch (ArithmeticException | StackOverflowError | IllegalArgumentException ex){
             Assertions.assertEquals(data[0], ex.getMessage());
