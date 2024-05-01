@@ -62,13 +62,15 @@ getTranslation(key: string): string {
     this.authService.login({ email, password }).subscribe(
       response => {
         console.log(response);
-        const userId = response.id;
-        localStorage.setItem('email', email);
-        localStorage.setItem('userId', userId);
+        localStorage.setItem('userId', response.data.id);
+        localStorage.setItem('email', response.data.email);
+        localStorage.setItem('tokenType', response.data.type);
+        localStorage.setItem('token', response.data.token);
+        this.msgService.add({ severity: 'success', summary: 'Success', detail: 'Login successful' });
         this.router.navigate(['/home']);
       },
       error => {
-        this.msgService.add({ severity: 'error', summary: 'Error', detail: "Incorrect email or password" });
+        this.msgService.add({ severity: 'error', summary: 'Error', detail: 'Incorrect email or password' });
       }
     );
   }

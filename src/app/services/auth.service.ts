@@ -18,4 +18,8 @@ export class AuthService {
   login(authRequest: User_login): Observable<any> {
     return this.http.post<User>(`${this.baseUrl}/login`, authRequest);
   }
+
+  logout(): Observable<any> {
+    return this.http.post(`${this.baseUrl}/logout`, null);
+  }
 }

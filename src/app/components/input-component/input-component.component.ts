@@ -56,14 +56,13 @@ inputError: string = '';
 
     const calcData: Calculation = {
       userId: userId,
-      type: 'basic_calculation',
       expression: this.inputValue,
-      threadsUsed: "1"
+      library: 'JAVA'
     };
 
     this.calcService.createCalculation(calcData as Calculation).subscribe(
       response => {
-        this.calculationResult = response;
+        this.calculationResult = response.data;
       }
     );
   }

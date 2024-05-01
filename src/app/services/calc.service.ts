@@ -7,17 +7,11 @@ import { Observable } from "rxjs";
   providedIn: 'root'
 })
 export class CalculationService {
-  private apiUrl = 'http://localhost:8080/calculations';
+  private apiUrl = 'http://localhost:8080/calculations/basicArithmetic';
 
   constructor(private http: HttpClient) { }
 
   createCalculation(calculationDetails: Calculation): Observable<any> {
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + localStorage.getItem('token')
-      })
-    };
-    return this.http.post(this.apiUrl, calculationDetails, httpOptions);
+    return this.http.post(this.apiUrl, calculationDetails);
   }
 }

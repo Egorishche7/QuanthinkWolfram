@@ -24,7 +24,7 @@ export class LanguageService {
     const selectedLanguage = this.getLanguage();
     const translation = this.translations[selectedLanguage][key] || key;
 
-    console.log(`Translation for key '${key}' in language '${selectedLanguage}': ${translation}`);
+    // console.log(`Translation for key '${key}' in language '${selectedLanguage}': ${translation}`);
 
     return translation;
   }
@@ -33,7 +33,7 @@ export class LanguageService {
     const storedLanguage = localStorage.getItem('SelectedLanguage');
     const language = storedLanguage || this.defaultLanguage;
 
-    console.log(`Selected language: ${language}`);
+    // console.log(`Selected language: ${language}`);
 
     return language;
   }

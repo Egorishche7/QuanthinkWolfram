@@ -64,7 +64,7 @@ getTranslation(key: string): string {
         this.router.navigate(['login']);
       },
       error => {
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error });
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.error });
       }
     );
   }

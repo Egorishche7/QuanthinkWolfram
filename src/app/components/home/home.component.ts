@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { LanguageService } from '../../services/language.service';
 import { Subscription } from 'rxjs';
 import { EventEmitter } from '@angular/core';
+import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'app-home',
@@ -15,8 +16,9 @@ export class HomeComponent implements OnInit {
   languageChanged: EventEmitter<string> = new EventEmitter<string>();
   private languageSubscription: Subscription | undefined;
 
-  constructor(private router: Router, private languageService: LanguageService) {
+  constructor(private router: Router, private languageService: LanguageService, private authService: AuthService) {
     this.selectedLanguage = this.languageService.getLanguage();
+    this.authService = authService;
   }
 
   ngOnInit() {
@@ -35,7 +37,12 @@ export class HomeComponent implements OnInit {
   }
 
   logOut() {
-    sessionStorage.clear();
+    localStorage.clear();
+    // this.authService.logout().subscribe(
+    //   response=>{
+    //     console.log(response);
+    //   }
+    // );
     this.router.navigate(['/login']);
   }
 
