@@ -1,12 +1,12 @@
-package by.quantumquartet.quanthink;
+package by.quantumquartet.quanthink.testCPlusPlus;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import static by.quantumquartet.quanthink.math.Equations.SolveEquation;
+import static by.quantumquartet.quanthink.cmath.NativeMath.solveEquationC;
 
-class TestEquations {
+class TestEquationsC {
 
     @ParameterizedTest
     @CsvSource({
@@ -19,7 +19,7 @@ class TestEquations {
             "x*5+35, -7",
     })
     void TestSolveLinearEquations(String equation, String answer) {
-        Assertions.assertEquals(answer, SolveEquation(equation));
+        Assertions.assertEquals(answer, solveEquationC(equation));
     }
 
 
@@ -36,7 +36,7 @@ class TestEquations {
             "x^2-5x+6, 2 3",
     })
     void TestSolveSquareEquations(String equation, String answer) {
-        Assertions.assertEquals(answer, SolveEquation(equation));
+        Assertions.assertEquals(answer, solveEquationC(equation));
     }
 
     @ParameterizedTest
@@ -64,7 +64,7 @@ class TestEquations {
 
     })
     void TestSolveCubeEquations(String equation, String answer) {
-        Assertions.assertEquals(answer, SolveEquation(equation));
+        Assertions.assertEquals(answer, solveEquationC(equation));
     }
 
     @ParameterizedTest
@@ -80,7 +80,7 @@ class TestEquations {
             "x^4-2x^3+x^2-x, 0 1.7548776662466927 0.1225611668766537±0.7448617666197442i",
     })
     void TestSolveQuadraticEquations(String equation, String answer) {
-        Assertions.assertEquals(answer, SolveEquation(equation));
+        Assertions.assertEquals(answer, solveEquationC(equation));
     }
 
     @ParameterizedTest
@@ -97,7 +97,7 @@ class TestEquations {
             "x^5-15x^4+105x^3-225x^2+315x-243, 1.444526851673044 0.5095489364198142±1.461172608645502i 6.268187637743663±5.564002147817288i",
     })
     void TestSolvePentaEquations(String equation, String answer) {
-        Assertions.assertEquals(answer, SolveEquation(equation));
+        Assertions.assertEquals(answer, solveEquationC(equation));
     }
 
 }

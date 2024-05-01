@@ -3,7 +3,7 @@ package by.quantumquartet.quanthink.math;
 public class UtilFunctions {
 
     private static final double DELTA = 1e-8;
-    private static final char PI = 'π';
+    private static final char PI = 'p';
     private static final char EXP = 'e';
 
     private UtilFunctions(){}
