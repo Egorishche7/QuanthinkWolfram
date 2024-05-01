@@ -4,10 +4,11 @@ import static by.quantumquartet.quanthink.services.AppLogger.logError;
 
 import by.quantumquartet.quanthink.models.ERole;
 import by.quantumquartet.quanthink.models.User;
-import by.quantumquartet.quanthink.rest.requests.UpdateUserRequest;
+import by.quantumquartet.quanthink.rest.requests.users.UpdateUserRequest;
 import by.quantumquartet.quanthink.rest.responses.ErrorResponse;
 import by.quantumquartet.quanthink.rest.responses.SuccessResponse;
 import by.quantumquartet.quanthink.services.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,19 +50,20 @@ public class UserController {
     }
 
     @PutMapping("/users/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable("id") long id, @RequestBody UpdateUserRequest updateUserRequest) {
+    public ResponseEntity<?> updateUser(@PathVariable("id") long id,
+                                        @Valid @RequestBody UpdateUserRequest updateUserRequest) {
+        if (userService.isEmailAlreadyExists(updateUserRequest.getEmail())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrorResponse("Email already exists"));
+        }
+
+        Optional<User> existingUser = userService.getUserById(id);
+        if (existingUser.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse("User not found"));
+        }
+
         try {
-            if (userService.isEmailAlreadyExists(updateUserRequest.getEmail())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(new ErrorResponse("Email already exists"));
-            }
-
-            Optional<User> existingUser = userService.getUserById(id);
-            if (existingUser.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(new ErrorResponse("User not found"));
-            }
-
             User updatedUser = userService.updateUser(id, updateUserRequest);
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new SuccessResponse<>("User updated successfully", updatedUser));
@@ -72,24 +74,24 @@ public class UserController {
         }
     }
 
-    @PutMapping("/users/{id}/promoteToAdmin")
-    public ResponseEntity<?> promoteToAdmin(@PathVariable("id") long id) {
+    @PutMapping("/users/{id}/assignAdminRole")
+    public ResponseEntity<?> assignAdminRole(@PathVariable("id") long id) {
+        Optional<User> userData = userService.getUserById(id);
+        if (userData.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse("User not found"));
+        }
+
+        boolean isAdmin = userData.get().getRoles().stream().anyMatch(role -> role.getName() == ERole.ROLE_ADMIN);
+        if (isAdmin) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrorResponse("User is already an admin"));
+        }
+
         try {
-            Optional<User> userData = userService.getUserById(id);
-            if (userData.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(new ErrorResponse("User not found"));
-            }
-
-            boolean isAdmin = userData.get().getRoles().stream().anyMatch(role -> role.getName() == ERole.ROLE_ADMIN);
-            if (isAdmin) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(new ErrorResponse("User is already an admin"));
-            }
-
-            User updatedUser = userService.promoteToAdmin(id);
+            User updatedUser = userService.assignAdminRole(id);
             return ResponseEntity.status(HttpStatus.OK)
-                    .body(new SuccessResponse<>("User promoted to admin successfully", updatedUser));
+                    .body(new SuccessResponse<>("Admin role assigned successfully", updatedUser));
         } catch (Exception e) {
             logError(UserController.class, e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -99,16 +101,15 @@ public class UserController {
 
     @DeleteMapping("/users/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable("id") long id) {
+        Optional<User> userData = userService.getUserById(id);
+        if (userData.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse("User not found"));
+        }
         try {
-            Optional<User> userData = userService.getUserById(id);
-            if (userData.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(new ErrorResponse("User not found"));
-            }
-
             userService.deleteUser(id);
             return ResponseEntity.status(HttpStatus.OK)
-                    .body(new SuccessResponse<>("User deleted successfully", userData.get()));
+                    .body(new SuccessResponse<>("User deleted successfully", id));
         } catch (Exception e) {
             logError(UserController.class, e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

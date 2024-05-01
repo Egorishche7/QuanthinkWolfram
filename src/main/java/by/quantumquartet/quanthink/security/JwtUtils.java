@@ -1,4 +1,4 @@
-package by.quantumquartet.quanthink.security.jwt;
+package by.quantumquartet.quanthink.security;
 
 import static by.quantumquartet.quanthink.services.AppLogger.logError;
 

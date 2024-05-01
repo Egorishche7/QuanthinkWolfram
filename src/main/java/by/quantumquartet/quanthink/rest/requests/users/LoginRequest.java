@@ -1,4 +1,4 @@
-package by.quantumquartet.quanthink.rest.requests;
+package by.quantumquartet.quanthink.rest.requests.users;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

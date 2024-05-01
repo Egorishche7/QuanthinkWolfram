@@ -1,4 +1,4 @@
-package by.quantumquartet.quanthink.rest.requests;
+package by.quantumquartet.quanthink.rest.requests.users;
 
 public class UpdateUserRequest extends RegisterRequest {
 
