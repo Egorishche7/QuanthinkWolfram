@@ -1,6 +1,7 @@
-package by.quantumquartet.quanthink.security.services;
+package by.quantumquartet.quanthink.services;
 
 import by.quantumquartet.quanthink.models.User;
+import by.quantumquartet.quanthink.models.UserDetailsImpl;
 import by.quantumquartet.quanthink.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,7 +21,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+                .orElseThrow(() -> new UsernameNotFoundException("User with email " + email + " not found"));
 
         return UserDetailsImpl.build(user);
     }

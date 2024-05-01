@@ -1,8 +1,8 @@
 package by.quantumquartet.quanthink.config;
 
-import by.quantumquartet.quanthink.security.jwt.JwtAuthEntryPoint;
-import by.quantumquartet.quanthink.security.jwt.JwtAuthTokenFilter;
-import by.quantumquartet.quanthink.security.services.UserDetailsServiceImpl;
+import by.quantumquartet.quanthink.security.JwtAuthEntryPoint;
+import by.quantumquartet.quanthink.security.JwtAuthTokenFilter;
+import by.quantumquartet.quanthink.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -63,6 +63,17 @@ public class SecurityConfiguration {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/users").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/users/{id}").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/users/{id}").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.PUT, "/users/{id}/assignAdminRole").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/users/{id}").hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.GET, "calculations").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/calculations/{id}").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/calculations/user/{userId}").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.DELETE, "/calculations/{id}").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/calculations/user/{userId}").hasAnyRole("ADMIN", "USER")
+
                         .anyRequest().permitAll()
                 )
                 .logout(logout -> logout

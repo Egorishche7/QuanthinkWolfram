@@ -25,6 +25,7 @@ public class User {
     private String username;
 
     @NotBlank
+    @JsonIgnore
     @Column(nullable = false)
     private String password;
 
@@ -34,12 +35,12 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Calculation> calculations = new HashSet<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Message> messages = new HashSet<>();
 
     public User() {

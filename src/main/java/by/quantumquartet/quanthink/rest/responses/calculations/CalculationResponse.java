@@ -1,61 +1,30 @@
-package by.quantumquartet.quanthink.models;
+package by.quantumquartet.quanthink.rest.responses.calculations;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
+import by.quantumquartet.quanthink.models.ECalculation;
+import by.quantumquartet.quanthink.models.ELibrary;
 
 import java.sql.Timestamp;
 
-@Entity
-@Table(name = "calculation")
-public class Calculation {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class CalculationResponse {
     private long id;
-
-    @NotBlank
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private ECalculation type;
-
-    @NotBlank
-    @Column(nullable = false, columnDefinition = "TEXT")
     private String inputData;
-
-    @NotBlank
-    @Column(nullable = false)
     private String result;
-
-    @NotBlank
-    @Column(nullable = false)
     private Timestamp date;
-
-    @NotBlank
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private ELibrary library;
-
-    @NotBlank
-    @Column(nullable = false)
     private int threadsUsed;
+    private long userId;
 
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    public Calculation() {
-    }
-
-    public Calculation(ECalculation type, String inputData, String result,
-                       Timestamp date, ELibrary library, int threadsUsed, User user) {
+    public CalculationResponse(long id, ECalculation type, String inputData, String result,
+                               Timestamp date, ELibrary library, int threadsUsed, long userId) {
+        this.id = id;
         this.type = type;
         this.inputData = inputData;
         this.result = result;
         this.date = date;
         this.library = library;
         this.threadsUsed = threadsUsed;
-        this.user = user;
+        this.userId = userId;
     }
 
     public long getId() {
@@ -114,11 +83,11 @@ public class Calculation {
         this.threadsUsed = threadsUsed;
     }
 
-    public User getUser() {
-        return user;
+    public long getUserId() {
+        return userId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 }
