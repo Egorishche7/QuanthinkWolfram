@@ -9,11 +9,6 @@ public class SuccessResponse<T> {
         this.data = data;
     }
 
-    public SuccessResponse() {
-        this.message = "";
-        this.data = null;
-    }
-
     public String getMessage() {
         return message;
     }

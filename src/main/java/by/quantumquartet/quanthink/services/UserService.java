@@ -4,8 +4,8 @@ import by.quantumquartet.quanthink.models.ERole;
 import by.quantumquartet.quanthink.models.Role;
 import by.quantumquartet.quanthink.models.User;
 import by.quantumquartet.quanthink.repositories.UserRepository;
-import by.quantumquartet.quanthink.rest.requests.RegisterRequest;
-import by.quantumquartet.quanthink.rest.requests.UpdateUserRequest;
+import by.quantumquartet.quanthink.rest.requests.users.RegisterRequest;
+import by.quantumquartet.quanthink.rest.requests.users.UpdateUserRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -72,7 +72,7 @@ public class UserService {
         }
     }
 
-    public User promoteToAdmin(long id) {
+    public User assignAdminRole(long id) {
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
             User existingUser = user.get();

@@ -1,4 +1,4 @@
-package by.quantumquartet.quanthink.rest.responses;
+package by.quantumquartet.quanthink.rest.responses.jwt;
 
 public class JwtResponse {
     private long id;

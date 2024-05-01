@@ -2,12 +2,12 @@ package by.quantumquartet.quanthink.controllers;
 
 import static by.quantumquartet.quanthink.services.AppLogger.logError;
 
-import by.quantumquartet.quanthink.rest.requests.LoginRequest;
-import by.quantumquartet.quanthink.rest.requests.RegisterRequest;
+import by.quantumquartet.quanthink.rest.requests.users.LoginRequest;
+import by.quantumquartet.quanthink.rest.requests.users.RegisterRequest;
 import by.quantumquartet.quanthink.rest.responses.SuccessResponse;
 import by.quantumquartet.quanthink.rest.responses.ErrorResponse;
-import by.quantumquartet.quanthink.rest.responses.JwtResponse;
-import by.quantumquartet.quanthink.security.jwt.JwtUtils;
+import by.quantumquartet.quanthink.rest.responses.jwt.JwtResponse;
+import by.quantumquartet.quanthink.security.JwtUtils;
 import by.quantumquartet.quanthink.models.UserDetailsImpl;
 import by.quantumquartet.quanthink.services.UserService;
 import jakarta.validation.Valid;

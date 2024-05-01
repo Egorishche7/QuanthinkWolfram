@@ -10,6 +10,7 @@ public class Role {
     private long id;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private ERole name;
 
     public Role() {
