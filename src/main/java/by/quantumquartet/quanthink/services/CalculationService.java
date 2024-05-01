@@ -2,6 +2,7 @@ package by.quantumquartet.quanthink.services;
 
 import static by.quantumquartet.quanthink.services.AppLogger.logError;
 
+import by.quantumquartet.quanthink.cmath.NativeMath;
 import by.quantumquartet.quanthink.math.Equations;
 import by.quantumquartet.quanthink.math.Matrix;
 import by.quantumquartet.quanthink.math.MatrixOperations;
@@ -65,8 +66,7 @@ public class CalculationService {
         try {
             switch (basicArithmeticRequest.getLibrary()) {
                 case JAVA -> result = BasicArithmetic.solveExpression(expression);
-                // Подключить C++ библиотеку
-                case C_PLUS_PLUS -> result = "";
+                case C_PLUS_PLUS -> result = NativeMath.solveExpressionC(expression);
                 default -> throw new IllegalArgumentException("Not a valid library");
             }
         } catch (IllegalArgumentException e) {
@@ -99,8 +99,7 @@ public class CalculationService {
         try {
             switch (equationRequest.getLibrary()) {
                 case JAVA -> result = Equations.SolveEquation(equation);
-                // Подключить C++ библиотеку
-                case C_PLUS_PLUS -> result = "";
+                case C_PLUS_PLUS -> result = NativeMath.solveEquationC(equation);
                 default -> throw new IllegalArgumentException("Not a valid library");
             }
         } catch (IllegalArgumentException e) {
