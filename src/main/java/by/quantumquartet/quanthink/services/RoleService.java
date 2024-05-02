@@ -1,7 +1,5 @@
 package by.quantumquartet.quanthink.services;
 
-import static by.quantumquartet.quanthink.services.AppLogger.logError;
-
 import by.quantumquartet.quanthink.models.Role;
 import by.quantumquartet.quanthink.models.ERole;
 import by.quantumquartet.quanthink.repositories.RoleRepository;

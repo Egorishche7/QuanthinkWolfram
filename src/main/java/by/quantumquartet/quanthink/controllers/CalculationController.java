@@ -6,7 +6,7 @@ import by.quantumquartet.quanthink.math.Matrix;
 import by.quantumquartet.quanthink.rest.requests.calculations.*;
 import by.quantumquartet.quanthink.rest.responses.ErrorResponse;
 import by.quantumquartet.quanthink.rest.responses.SuccessResponse;
-import by.quantumquartet.quanthink.rest.responses.calculations.CalculationResponse;
+import by.quantumquartet.quanthink.rest.responses.calculations.CalculationDto;
 import by.quantumquartet.quanthink.services.CalculationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class CalculationController {
 
     @GetMapping
     public ResponseEntity<?> getAllCalculations() {
-        List<CalculationResponse> calculations = calculationService.getAllCalculations();
+        List<CalculationDto> calculations = calculationService.getAllCalculations();
         if (calculations.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ErrorResponse("No calculations found"));
@@ -41,7 +41,7 @@ public class CalculationController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getCalculationById(@PathVariable("id") long id) {
-        Optional<CalculationResponse> calculationData = calculationService.getCalculationById(id);
+        Optional<CalculationDto> calculationData = calculationService.getCalculationById(id);
         if (calculationData.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ErrorResponse("Calculation not found"));
@@ -52,7 +52,7 @@ public class CalculationController {
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<?> getCalculationsByUserId(@PathVariable("userId") long userId) {
-        List<CalculationResponse> calculations = calculationService.getCalculationsByUserId(userId);
+        List<CalculationDto> calculations = calculationService.getCalculationsByUserId(userId);
         if (calculations.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ErrorResponse("No calculations found"));
@@ -63,7 +63,7 @@ public class CalculationController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteCalculation(@PathVariable("id") long id) {
-        Optional<CalculationResponse> calculationData = calculationService.getCalculationById(id);
+        Optional<CalculationDto> calculationData = calculationService.getCalculationById(id);
         if (calculationData.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ErrorResponse("Calculation not found"));
@@ -81,7 +81,7 @@ public class CalculationController {
 
     @DeleteMapping("/user/{userId}")
     public ResponseEntity<?> deleteCalculationsByUserId(@PathVariable("userId") long userId) {
-        List<CalculationResponse> calculations = calculationService.getCalculationsByUserId(userId);
+        List<CalculationDto> calculations = calculationService.getCalculationsByUserId(userId);
         if (calculations.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ErrorResponse("No calculations found"));

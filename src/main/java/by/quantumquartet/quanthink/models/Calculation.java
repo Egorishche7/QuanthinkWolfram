@@ -23,7 +23,7 @@ public class Calculation {
     private String inputData;
 
     @NotBlank
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String result;
 
     @NotBlank
