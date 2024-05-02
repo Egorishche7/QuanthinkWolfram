@@ -6,14 +6,12 @@ import by.quantumquartet.quanthink.cmath.NativeMath;
 import by.quantumquartet.quanthink.math.Equations;
 import by.quantumquartet.quanthink.math.Matrix;
 import by.quantumquartet.quanthink.math.MatrixOperations;
-import by.quantumquartet.quanthink.models.Calculation;
-import by.quantumquartet.quanthink.models.ECalculation;
-import by.quantumquartet.quanthink.models.User;
+import by.quantumquartet.quanthink.models.*;
 import by.quantumquartet.quanthink.math.BasicArithmetic;
 import by.quantumquartet.quanthink.repositories.CalculationRepository;
 import by.quantumquartet.quanthink.repositories.UserRepository;
 import by.quantumquartet.quanthink.rest.requests.calculations.*;
-import by.quantumquartet.quanthink.rest.responses.calculations.CalculationResponse;
+import by.quantumquartet.quanthink.rest.responses.calculations.CalculationDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
@@ -21,8 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class CalculationService {
@@ -38,16 +35,33 @@ public class CalculationService {
         this.objectMapper = objectMapper;
     }
 
-    public List<CalculationResponse> getAllCalculations() {
-        return calculationRepository.findAllCalculations();
+    public List<CalculationDto> getAllCalculations() {
+        List<Calculation> calculations = calculationRepository.findAll();
+        List<CalculationDto> calculationsDto = new ArrayList<>();
+
+        for (Calculation calculation : calculations) {
+            CalculationDto calculationDto = convertToDto(calculation);
+            calculationsDto.add(calculationDto);
+        }
+
+        return calculationsDto;
     }
 
-    public Optional<CalculationResponse> getCalculationById(long id) {
-        return calculationRepository.findCalculationById(id);
+    public Optional<CalculationDto> getCalculationById(long id) {
+        Optional<Calculation> calculationData = calculationRepository.findById(id);
+        return calculationData.map(this::convertToDto);
     }
 
-    public List<CalculationResponse> getCalculationsByUserId(long userId){
-        return calculationRepository.findCalculationsByUserId(userId);
+    public List<CalculationDto> getCalculationsByUserId(long userId) {
+        List<Calculation> calculations = calculationRepository.findCalculationsByUserId(userId);
+        List<CalculationDto> calculationsDto = new ArrayList<>();
+
+        for (Calculation calculation : calculations) {
+            CalculationDto calculationDto = convertToDto(calculation);
+            calculationsDto.add(calculationDto);
+        }
+
+        return calculationsDto;
     }
 
     public void deleteCalculation(long id) {
@@ -56,7 +70,7 @@ public class CalculationService {
 
     @Transactional
     public void deleteCalculationsByUserId(long userId) {
-        calculationRepository.deleteByUserId(userId);
+        calculationRepository.deleteCalculationsByUserId(userId);
     }
 
     public String solveBasicArithmetic(BasicArithmeticRequest basicArithmeticRequest) {
@@ -426,5 +440,18 @@ public class CalculationService {
         }
 
         return result;
+    }
+
+    private CalculationDto convertToDto(Calculation calculation) {
+        CalculationDto calculationDto = new CalculationDto();
+        calculationDto.setId(calculation.getId());
+        calculationDto.setType(calculation.getType());
+        calculationDto.setInputData(calculation.getInputData());
+        calculationDto.setResult(calculation.getResult());
+        calculationDto.setDate((calculation.getDate()).toString());
+        calculationDto.setLibrary(calculation.getLibrary());
+        calculationDto.setThreadsUsed(calculation.getThreadsUsed());
+        calculationDto.setUserId(calculation.getUser().getId());
+        return calculationDto;
     }
 }

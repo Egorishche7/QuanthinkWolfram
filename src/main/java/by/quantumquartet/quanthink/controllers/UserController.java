@@ -3,10 +3,10 @@ package by.quantumquartet.quanthink.controllers;
 import static by.quantumquartet.quanthink.services.AppLogger.logError;
 
 import by.quantumquartet.quanthink.models.ERole;
-import by.quantumquartet.quanthink.models.User;
 import by.quantumquartet.quanthink.rest.requests.users.UpdateUserRequest;
 import by.quantumquartet.quanthink.rest.responses.ErrorResponse;
 import by.quantumquartet.quanthink.rest.responses.SuccessResponse;
+import by.quantumquartet.quanthink.rest.responses.users.UserDto;
 import by.quantumquartet.quanthink.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class UserController {
 
     @GetMapping("/users")
     public ResponseEntity<?> getAllUsers() {
-        List<User> users = userService.getAllUsers();
+        List<UserDto> users = userService.getAllUsers();
         if (users.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ErrorResponse("No users found"));
@@ -40,7 +40,7 @@ public class UserController {
 
     @GetMapping("/users/{id}")
     public ResponseEntity<?> getUserById(@PathVariable("id") long id) {
-        Optional<User> userData = userService.getUserById(id);
+        Optional<UserDto> userData = userService.getUserById(id);
         if (userData.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ErrorResponse("User not found"));
@@ -50,21 +50,20 @@ public class UserController {
     }
 
     @PutMapping("/users/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable("id") long id,
-                                        @Valid @RequestBody UpdateUserRequest updateUserRequest) {
+    public ResponseEntity<?> updateUser(@PathVariable("id") long id, @RequestBody UpdateUserRequest updateUserRequest) {
+        Optional<UserDto> userData = userService.getUserById(id);
+        if (userData.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse("User not found"));
+        }
+
         if (userService.isEmailAlreadyExists(updateUserRequest.getEmail())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new ErrorResponse("Email already exists"));
         }
 
-        Optional<User> existingUser = userService.getUserById(id);
-        if (existingUser.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ErrorResponse("User not found"));
-        }
-
         try {
-            User updatedUser = userService.updateUser(id, updateUserRequest);
+            UserDto updatedUser = userService.updateUser(id, updateUserRequest);
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new SuccessResponse<>("User updated successfully", updatedUser));
         } catch (Exception e) {
@@ -76,20 +75,20 @@ public class UserController {
 
     @PutMapping("/users/{id}/assignAdminRole")
     public ResponseEntity<?> assignAdminRole(@PathVariable("id") long id) {
-        Optional<User> userData = userService.getUserById(id);
+        Optional<UserDto> userData = userService.getUserById(id);
         if (userData.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ErrorResponse("User not found"));
         }
 
-        boolean isAdmin = userData.get().getRoles().stream().anyMatch(role -> role.getName() == ERole.ROLE_ADMIN);
+        boolean isAdmin = userData.get().getRoles().stream().anyMatch(role -> role == ERole.ROLE_ADMIN);
         if (isAdmin) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new ErrorResponse("User is already an admin"));
         }
 
         try {
-            User updatedUser = userService.assignAdminRole(id);
+            UserDto updatedUser = userService.assignAdminRole(id);
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new SuccessResponse<>("Admin role assigned successfully", updatedUser));
         } catch (Exception e) {
@@ -101,7 +100,7 @@ public class UserController {
 
     @DeleteMapping("/users/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable("id") long id) {
-        Optional<User> userData = userService.getUserById(id);
+        Optional<UserDto> userData = userService.getUserById(id);
         if (userData.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ErrorResponse("User not found"));

@@ -29,6 +29,7 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -46,10 +47,11 @@ public class User {
     public User() {
     }
 
-    public User(String email, String username, String password) {
+    public User(String email, String username, String password, Set<Role> roles) {
         this.email = email;
         this.username = username;
         this.password = password;
+        this.roles = roles;
     }
 
     public long getId() {

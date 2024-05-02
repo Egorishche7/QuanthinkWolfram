@@ -3,20 +3,21 @@ package by.quantumquartet.quanthink.rest.responses.calculations;
 import by.quantumquartet.quanthink.models.ECalculation;
 import by.quantumquartet.quanthink.models.ELibrary;
 
-import java.sql.Timestamp;
-
-public class CalculationResponse {
+public class CalculationDto {
     private long id;
     private ECalculation type;
     private String inputData;
     private String result;
-    private Timestamp date;
+    private String date;
     private ELibrary library;
     private int threadsUsed;
     private long userId;
 
-    public CalculationResponse(long id, ECalculation type, String inputData, String result,
-                               Timestamp date, ELibrary library, int threadsUsed, long userId) {
+    public CalculationDto() {
+    }
+
+    public CalculationDto(long id, ECalculation type, String inputData, String result,
+                          String date, ELibrary library, int threadsUsed, long userId) {
         this.id = id;
         this.type = type;
         this.inputData = inputData;
@@ -59,11 +60,11 @@ public class CalculationResponse {
         this.result = result;
     }
 
-    public Timestamp getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Timestamp date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
