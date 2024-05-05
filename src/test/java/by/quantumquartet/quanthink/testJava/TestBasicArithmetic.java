@@ -135,9 +135,9 @@ public class TestBasicArithmetic {
     @ParameterizedTest
     @ValueSource(strings = {
             "e^2="+(Math.E * Math.E),
-            "2*p="+(2*Math.PI),
-            "e+3-p*0.5="+(Math.E + 3.0 - Math.PI * 0.5),
-            "4/3*p*5^3="+(4.0 / 3.0 * Math.PI * 125.0),
+            "2*π="+(2*Math.PI),
+            "e+3-π*0.5="+(Math.E + 3.0 - Math.PI * 0.5),
+            "4/3*π*5^3="+(4.0 / 3.0 * Math.PI * 125.0),
             "=0"
     })
     public void testSolveExpressionConstants(String expr) {

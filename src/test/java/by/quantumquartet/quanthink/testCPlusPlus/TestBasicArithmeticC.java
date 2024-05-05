@@ -32,7 +32,7 @@ class TestBasicArithmeticC {
     })
     void testSolveExpressionSimpleSum(String expr) {
         Object[] data = convertor(expr);
-        Assertions.assertEquals(data[0], NativeMath.solveExpressionC((String)data[1]));
+        Assertions.assertEquals(data[0], NativeMath.solveExpressionCStub((String)data[1]));
     }
 
     @ParameterizedTest
@@ -55,7 +55,7 @@ class TestBasicArithmeticC {
     })
     void testSolveExpressionSimpleSub(String expr) {
         Object[] data = convertor(expr);
-        Assertions.assertEquals(data[0], NativeMath.solveExpressionC((String)data[1]));
+        Assertions.assertEquals(data[0], NativeMath.solveExpressionCStub((String)data[1]));
     }
 
     @ParameterizedTest
@@ -80,7 +80,7 @@ class TestBasicArithmeticC {
     })
     void testSolveExpressionSimpleMul(String expr) {
         Object[] data = convertor(expr);
-        Assertions.assertEquals(data[0], NativeMath.solveExpressionC((String)data[1]));
+        Assertions.assertEquals(data[0], NativeMath.solveExpressionCStub((String)data[1]));
     }
 
     @ParameterizedTest
@@ -103,7 +103,7 @@ class TestBasicArithmeticC {
     })
     void testSolveExpressionSimpleDel(String expr) {
         Object[] data = convertor(expr);
-        Assertions.assertEquals(data[0], NativeMath.solveExpressionC((String)data[1]));
+        Assertions.assertEquals(data[0], NativeMath.solveExpressionCStub((String)data[1]));
     }
 
     @ParameterizedTest
@@ -129,20 +129,20 @@ class TestBasicArithmeticC {
     })
     void testSolveExpressionSimplePow(String expr) {
         Object[] data = convertor(expr);
-        Assertions.assertEquals(data[0], NativeMath.solveExpressionC((String)data[1]));
+        Assertions.assertEquals(data[0], NativeMath.solveExpressionCStub((String)data[1]));
     }
 
     @ParameterizedTest
     @ValueSource(strings = {
             "e^2=7.389057",
-            "2*p=6.283186",
-            "e+3-p*0.5=4.147486",
-            "4/3*p *5^3=523.598750",
+            "2*π=6.283186",
+            "e+3-π*0.5=4.147486",
+            "4/3*π *5^3=523.598750",
             "=0"
     })
     void testSolveExpressionConstants(String expr) {
         Object[] data = convertor(expr);
-        Assertions.assertEquals(data[0], NativeMath.solveExpressionC((String)data[1]));
+        Assertions.assertEquals(data[0], NativeMath.solveExpressionCStub((String)data[1]));
     }
 
     @ParameterizedTest
@@ -175,7 +175,7 @@ class TestBasicArithmeticC {
     })
     void testSolveExpressionComplex(String expr) {
         Object[] data = convertor(expr);
-        Assertions.assertEquals(data[0], NativeMath.solveExpressionC((String)data[1]));
+        Assertions.assertEquals(data[0], NativeMath.solveExpressionCStub((String)data[1]));
     }
 
 
@@ -203,7 +203,7 @@ class TestBasicArithmeticC {
     void testSolveExpressionExceptions(String expr) {
         Object[] data = convertor(expr);
         try{
-            NativeMath.solveExpressionC((String)data[1]);
+            NativeMath.solveExpressionCStub((String)data[1]);
         }
         catch (ArithmeticException | StackOverflowError | IllegalArgumentException ex){
             Assertions.assertEquals(data[0], ex.getMessage());

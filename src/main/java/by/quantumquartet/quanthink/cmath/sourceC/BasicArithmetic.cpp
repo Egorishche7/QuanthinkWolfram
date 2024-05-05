@@ -10,12 +10,6 @@
 
 const char order[] = { 'e','(', '^', '*', '+'};
 
-std::string SolveExpression(std::string expr);
-std::string SolveMulDiv(std::string expr);
-std::string SolvePow(std::string expr);
-std::string SolveSumSub(std::string expr);
-
-
 JNIEXPORT jstring JNICALL Java_by_quantumquartet_quanthink_cmath_NativeMath_solveExpressionC
   (JNIEnv *env, jobject, jstring jStr){
       const jclass stringClass = env->GetObjectClass(jStr);
