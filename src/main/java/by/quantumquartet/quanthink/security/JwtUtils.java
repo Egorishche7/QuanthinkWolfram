@@ -2,6 +2,7 @@ package by.quantumquartet.quanthink.security;
 
 import static by.quantumquartet.quanthink.services.AppLogger.logError;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -9,6 +10,7 @@ import by.quantumquartet.quanthink.models.UserDetailsImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.util.StringUtils;
 
 import java.security.Key;
 import java.util.Date;
@@ -39,6 +41,15 @@ public class JwtUtils {
     public String getEmailFromJwtToken(String token) {
         return Jwts.parserBuilder().setSigningKey(key()).build()
                 .parseClaimsJws(token).getBody().getSubject();
+    }
+
+    public String parseJwt(HttpServletRequest request) {
+        String headerAuth = request.getHeader("Authorization");
+        String tokenType = "Bearer ";
+        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith(tokenType)) {
+            return headerAuth.substring(tokenType.length());
+        }
+        return null;
     }
 
     public boolean validateJwtToken(String authToken) {

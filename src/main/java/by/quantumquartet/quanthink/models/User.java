@@ -29,6 +29,14 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @NotBlank
+    @Column(nullable = false)
+    private boolean isEnabled;
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private ConfirmationToken confirmationToken;
+
     @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",
@@ -47,10 +55,11 @@ public class User {
     public User() {
     }
 
-    public User(String email, String username, String password, Set<Role> roles) {
+    public User(String email, String username, String password, boolean isEnabled, Set<Role> roles) {
         this.email = email;
         this.username = username;
         this.password = password;
+        this.isEnabled = isEnabled;
         this.roles = roles;
     }
 
@@ -84,6 +93,22 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean isEnabled() {
+        return isEnabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
+    }
+
+    public ConfirmationToken getConfirmationToken() {
+        return confirmationToken;
+    }
+
+    public void setConfirmationToken(ConfirmationToken confirmationToken) {
+        this.confirmationToken = confirmationToken;
     }
 
     public Set<Role> getRoles() {
