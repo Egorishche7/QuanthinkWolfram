@@ -1,5 +1,7 @@
 package by.quantumquartet.quanthink.services;
 
+import static by.quantumquartet.quanthink.services.AppLogger.logInfo;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -23,5 +25,6 @@ public class EmailService {
         message.setText("To confirm your account, please click here: "
                 + "http://localhost:8080/confirmAccount?token=" + token);
         javaMailSender.send(message);
+        logInfo(EmailService.class, "Account confirmation message sended to " + email);
     }
 }

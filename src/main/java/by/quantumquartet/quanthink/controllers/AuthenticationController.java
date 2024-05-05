@@ -1,6 +1,6 @@
 package by.quantumquartet.quanthink.controllers;
 
-import static by.quantumquartet.quanthink.services.AppLogger.logError;
+import static by.quantumquartet.quanthink.services.AppLogger.*;
 
 import by.quantumquartet.quanthink.models.ConfirmationToken;
 import by.quantumquartet.quanthink.rest.requests.users.LoginRequest;
@@ -52,11 +52,15 @@ public class AuthenticationController {
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
         try {
             if (userService.isEmailAlreadyExists(registerRequest.getEmail())) {
+                logWarn(AuthenticationController.class,
+                        "Email " + registerRequest.getEmail() + " already exists");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body(new ErrorResponse("Email already exists"));
             }
 
             long newUserId = userService.registerUser(registerRequest).getId();
+            logInfo(AuthenticationController.class,
+                    "User registered with id = " + newUserId);
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(new SuccessResponse<>("User registered successfully", newUserId));
         } catch (Exception e) {
@@ -92,6 +96,8 @@ public class AuthenticationController {
     public ResponseEntity<?> confirmUserAccount(@RequestParam("token") String token) {
         Optional<ConfirmationToken> confirmationTokenData = confirmationTokenService.findByToken(token);
         if (confirmationTokenData.isEmpty()) {
+            logWarn(AuthenticationController.class,
+                    "Confirmation token not found");
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ErrorResponse("Confirmation token not found"));
         }
@@ -99,12 +105,16 @@ public class AuthenticationController {
         ConfirmationToken confirmationToken = confirmationTokenData.get();
         Optional<UserDto> userData = userService.getUserById(confirmationToken.getId());
         if (userData.isEmpty()) {
+            logWarn(AuthenticationController.class,
+                    "User with id = " + confirmationToken.getId() + " not found");
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ErrorResponse("User not found"));
         }
 
         try {
             boolean isEnabled = userService.confirmAccount(userData.get().getId());
+            logInfo(AuthenticationController.class,
+                    "User account confirmed with id = " + confirmationToken.getId());
             return ResponseEntity.status(HttpStatus.ACCEPTED)
                     .body(new SuccessResponse<>("User account confirmed successfully", isEnabled));
         } catch (Exception e) {
@@ -125,6 +135,8 @@ public class AuthenticationController {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
         JwtResponse jwtResponse = new JwtResponse(jwt, userDetails.getId(), userDetails.getEmail());
+        logInfo(AuthenticationController.class,
+                "User with id = " + jwtResponse.getId() + " logged in successfully");
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new SuccessResponse<>("Login successful", jwtResponse));
     }

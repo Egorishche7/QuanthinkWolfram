@@ -1,6 +1,6 @@
 package by.quantumquartet.quanthink.controllers;
 
-import static by.quantumquartet.quanthink.services.AppLogger.logError;
+import static by.quantumquartet.quanthink.services.AppLogger.*;
 
 import by.quantumquartet.quanthink.math.Matrix;
 import by.quantumquartet.quanthink.rest.requests.calculations.*;
@@ -32,9 +32,11 @@ public class CalculationController {
     public ResponseEntity<?> getAllCalculations() {
         List<CalculationDto> calculations = calculationService.getAllCalculations();
         if (calculations.isEmpty()) {
+            logWarn(CalculationController.class, "No calculations found");
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ErrorResponse("No calculations found"));
         }
+        logInfo(CalculationController.class, "Calculations retrieved successfully");
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new SuccessResponse<>("Calculations retrieved successfully", calculations));
     }
@@ -43,9 +45,11 @@ public class CalculationController {
     public ResponseEntity<?> getCalculationById(@PathVariable("id") long id) {
         Optional<CalculationDto> calculationData = calculationService.getCalculationById(id);
         if (calculationData.isEmpty()) {
+            logWarn(CalculationController.class, "Calculation with id = " + id + " not found");
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ErrorResponse("Calculation not found"));
         }
+        logInfo(CalculationController.class, "Calculation with id = " + id + " retrieved successfully");
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new SuccessResponse<>("Calculation retrieved successfully", calculationData.get()));
     }
@@ -54,9 +58,12 @@ public class CalculationController {
     public ResponseEntity<?> getCalculationsByUserId(@PathVariable("userId") long userId) {
         List<CalculationDto> calculations = calculationService.getCalculationsByUserId(userId);
         if (calculations.isEmpty()) {
+            logWarn(CalculationController.class, "No calculations found for user with id = " + userId);
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ErrorResponse("No calculations found"));
         }
+        logInfo(CalculationController.class,
+                "Calculations for user with id = " + userId + " retrieved successfully");
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new SuccessResponse<>("User calculations retrieved successfully", calculations));
     }
@@ -65,11 +72,13 @@ public class CalculationController {
     public ResponseEntity<?> deleteCalculation(@PathVariable("id") long id) {
         Optional<CalculationDto> calculationData = calculationService.getCalculationById(id);
         if (calculationData.isEmpty()) {
+            logWarn(CalculationController.class, "Calculation with id = " + id + " not found");
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ErrorResponse("Calculation not found"));
         }
         try {
             calculationService.deleteCalculation(id);
+            logInfo(CalculationController.class, "Calculation with id = " + id + " deleted successfully");
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new SuccessResponse<>("Calculation deleted successfully", id));
         } catch (Exception e) {
@@ -83,11 +92,14 @@ public class CalculationController {
     public ResponseEntity<?> deleteCalculationsByUserId(@PathVariable("userId") long userId) {
         List<CalculationDto> calculations = calculationService.getCalculationsByUserId(userId);
         if (calculations.isEmpty()) {
+            logWarn(CalculationController.class, "No calculations found for user with id = " + userId);
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ErrorResponse("No calculations found"));
         }
         try {
             calculationService.deleteCalculationsByUserId(userId);
+            logInfo(CalculationController.class,
+                    "Calculations for user with id = " + userId + " deleted successfully");
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new SuccessResponse<>("User calculations deleted successfully", userId));
         } catch (Exception e) {
@@ -101,6 +113,7 @@ public class CalculationController {
     public ResponseEntity<?> solveBasicArithmetic(@Valid @RequestBody BasicArithmeticRequest basicArithmeticRequest) {
         try {
             String result = calculationService.solveBasicArithmetic(basicArithmeticRequest);
+            logInfo(CalculationController.class, "Basic arithmetic calculation performed successfully");
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new SuccessResponse<>("Calculation performed successfully", result));
         } catch (IllegalArgumentException e) {
@@ -118,6 +131,7 @@ public class CalculationController {
     public ResponseEntity<?> solveEquation(@Valid @RequestBody EquationRequest equationRequest) {
         try {
             String result = calculationService.solveEquation(equationRequest);
+            logInfo(CalculationController.class, "Equation calculation performed successfully");
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new SuccessResponse<>("Calculation performed successfully", result));
         } catch (IllegalArgumentException e) {
@@ -135,6 +149,7 @@ public class CalculationController {
     public ResponseEntity<?> solveMatrixSum(@Valid @RequestBody MatrixSumRequest matrixSumRequest) {
         try {
             Matrix result = calculationService.solveMatrixSum(matrixSumRequest);
+            logInfo(CalculationController.class, "Matrix sum calculation performed successfully");
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new SuccessResponse<>("Calculation performed successfully", result));
         } catch (IllegalArgumentException e) {
@@ -152,6 +167,7 @@ public class CalculationController {
     public ResponseEntity<?> solveMatrixSub(@Valid @RequestBody MatrixSubRequest matrixSubRequest) {
         try {
             Matrix result = calculationService.solveMatrixSub(matrixSubRequest);
+            logInfo(CalculationController.class, "Matrix subtraction calculation performed successfully");
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new SuccessResponse<>("Calculation performed successfully", result));
         } catch (IllegalArgumentException e) {
@@ -169,6 +185,7 @@ public class CalculationController {
     public ResponseEntity<?> solveMatrixMul(@Valid @RequestBody MatrixMulRequest matrixMulRequest) {
         try {
             Matrix result = calculationService.solveMatrixMul(matrixMulRequest);
+            logInfo(CalculationController.class, "Matrix multiplication calculation performed successfully");
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new SuccessResponse<>("Calculation performed successfully", result));
         } catch (IllegalArgumentException e) {
@@ -186,6 +203,8 @@ public class CalculationController {
     public ResponseEntity<?> solveMatrixMulByNum(@Valid @RequestBody MatrixMulByNumRequest matrixMulByNumRequest) {
         try {
             Matrix result = calculationService.solveMatrixMulByNum(matrixMulByNumRequest);
+            logInfo(CalculationController.class,
+                    "Matrix multiplication by number calculation performed successfully");
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new SuccessResponse<>("Calculation performed successfully", result));
         } catch (IllegalArgumentException e) {
@@ -203,6 +222,7 @@ public class CalculationController {
     public ResponseEntity<?> solveMatrixTranspose(@Valid @RequestBody MatrixTransposeRequest matrixTransposeRequest) {
         try {
             Matrix result = calculationService.solveMatrixTranspose(matrixTransposeRequest);
+            logInfo(CalculationController.class, "Matrix transpose calculation performed successfully");
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new SuccessResponse<>("Calculation performed successfully", result));
         } catch (IllegalArgumentException e) {
@@ -220,6 +240,7 @@ public class CalculationController {
     public ResponseEntity<?> solveMatrixReverse(@Valid @RequestBody MatrixReverseRequest matrixReverseRequest) {
         try {
             Matrix result = calculationService.solveMatrixReverse(matrixReverseRequest);
+            logInfo(CalculationController.class, "Matrix reverse calculation performed successfully");
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new SuccessResponse<>("Calculation performed successfully", result));
         } catch (IllegalArgumentException e) {
@@ -235,9 +256,10 @@ public class CalculationController {
 
     @PostMapping("/matrixDeterminant")
     public ResponseEntity<?> solveMatrixDeterminant(@Valid @RequestBody MatrixDeterminantRequest
-                                                                matrixDeterminantRequest) {
+                                                            matrixDeterminantRequest) {
         try {
             double result = calculationService.solveMatrixDeterminant(matrixDeterminantRequest);
+            logInfo(CalculationController.class, "Matrix determinant calculation performed successfully");
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new SuccessResponse<>("Calculation performed successfully", result));
         } catch (IllegalArgumentException e) {
@@ -255,6 +277,7 @@ public class CalculationController {
     public ResponseEntity<?> solveSystem(@Valid @RequestBody MatrixSystemRequest matrixSystemRequest) {
         try {
             String result = calculationService.solveSystem(matrixSystemRequest);
+            logInfo(CalculationController.class, "Matrix system calculation performed successfully");
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new SuccessResponse<>("Calculation performed successfully", result));
         } catch (IllegalArgumentException e) {
