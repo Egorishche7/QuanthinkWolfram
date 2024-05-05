@@ -80,7 +80,7 @@ public class CalculationService {
         try {
             switch (basicArithmeticRequest.getLibrary()) {
                 case JAVA -> result = BasicArithmetic.solveExpression(expression);
-                case C_PLUS_PLUS -> result = NativeMath.solveExpressionC(expression);
+                case C_PLUS_PLUS -> result = NativeMath.solveExpressionCStub(expression);
                 default -> throw new IllegalArgumentException("Not a valid library");
             }
         } catch (IllegalArgumentException e) {
@@ -113,7 +113,7 @@ public class CalculationService {
         try {
             switch (equationRequest.getLibrary()) {
                 case JAVA -> result = Equations.SolveEquation(equation);
-                case C_PLUS_PLUS -> result = NativeMath.solveEquationC(equation);
+                case C_PLUS_PLUS -> result = NativeMath.solveEquationCStub(equation);
                 default -> throw new IllegalArgumentException("Not a valid library");
             }
         } catch (IllegalArgumentException e) {
