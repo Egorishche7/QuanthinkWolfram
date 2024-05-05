@@ -48,7 +48,7 @@ public class UserService {
         return userRepository.existsByEmail(email);
     }
 
-    public long registerUser(RegisterRequest registerRequest) {
+    public UserDto registerUser(RegisterRequest registerRequest) {
         Set<Role> roles = new HashSet<>();
         Optional<Role> roleData = roleRepository.findByName(ERole.ROLE_USER);
         if (roleData.isPresent()) {
@@ -61,10 +61,23 @@ public class UserService {
                 registerRequest.getEmail(),
                 registerRequest.getUsername(),
                 encoder.encode(registerRequest.getPassword()),
+                false,
                 roles
         );
 
-        return userRepository.save(newUser).getId();
+        return convertToDto(userRepository.save(newUser));
+    }
+
+    public boolean confirmAccount(long id) {
+        Optional<User> userData = userRepository.findById(id);
+        if (userData.isPresent()) {
+            User user = userData.get();
+            user.setEnabled(true);
+            userRepository.save(user);
+            return true;
+        } else {
+            throw new RuntimeException("User with id = " + id + " not found");
+        }
     }
 
     public UserDto updateUser(long id, UpdateUserRequest updateUserRequest) {
