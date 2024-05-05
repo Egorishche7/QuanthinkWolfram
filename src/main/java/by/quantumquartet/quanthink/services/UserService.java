@@ -1,5 +1,7 @@
 package by.quantumquartet.quanthink.services;
 
+import static by.quantumquartet.quanthink.services.AppLogger.logError;
+
 import by.quantumquartet.quanthink.models.ERole;
 import by.quantumquartet.quanthink.models.Role;
 import by.quantumquartet.quanthink.models.User;
@@ -54,6 +56,7 @@ public class UserService {
         if (roleData.isPresent()) {
             roles.add(roleData.get());
         } else {
+            logError(UserService.class, "Role " + ERole.ROLE_USER + " not found");
             throw new RuntimeException("Role " + ERole.ROLE_USER + " not found");
         }
 
@@ -76,6 +79,7 @@ public class UserService {
             userRepository.save(user);
             return true;
         } else {
+            logError(UserService.class, "User with id = " + id + " not found");
             throw new RuntimeException("User with id = " + id + " not found");
         }
     }
@@ -98,6 +102,7 @@ public class UserService {
             }
             return convertToDto(userRepository.save(existingUser));
         } else {
+            logError(UserService.class, "User with id = " + id + " not found");
             throw new RuntimeException("User with id = " + id + " not found");
         }
     }
@@ -117,6 +122,7 @@ public class UserService {
             existingUser.setRoles(roles);
             return convertToDto(userRepository.save(existingUser));
         } else {
+            logError(UserService.class, "User with id = " + id + " not found");
             throw new RuntimeException("User with id = " + id + " not found");
         }
     }

@@ -1,5 +1,7 @@
 package by.quantumquartet.quanthink.services;
 
+import static by.quantumquartet.quanthink.services.AppLogger.logError;
+
 import by.quantumquartet.quanthink.models.ConfirmationToken;
 import by.quantumquartet.quanthink.models.User;
 import by.quantumquartet.quanthink.repositories.ConfirmationTokenRepository;
@@ -39,6 +41,7 @@ public class ConfirmationTokenService {
             confirmationToken.setUser(userData.get());
             return confirmationTokenRepository.save(confirmationToken);
         } else {
+            logError(ConfirmationTokenService.class, "User with id = " + user.getId() + " not found");
             throw new RuntimeException("User with id = " + user.getId() + " not found");
         }
     }
