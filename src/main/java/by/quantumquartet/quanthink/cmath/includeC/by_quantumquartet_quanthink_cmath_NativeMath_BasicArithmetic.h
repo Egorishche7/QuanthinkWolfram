@@ -15,6 +15,11 @@ extern "C" {
 JNIEXPORT jstring JNICALL Java_by_quantumquartet_quanthink_cmath_NativeMath_solveExpressionC
   (JNIEnv *, jobject, jstring);
 
+std::string SolveExpression(std::string expr);
+std::string SolveMulDiv(std::string expr);
+std::string SolvePow(std::string expr);
+std::string SolveSumSub(std::string expr);
+
 #ifdef __cplusplus
 }
 #endif
