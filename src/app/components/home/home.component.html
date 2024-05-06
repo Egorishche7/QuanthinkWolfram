@@ -20,18 +20,21 @@
 </div>
 
 <div class="center-content">
-  <app-input>
-    <div [ngSwitch]="selectedLanguage">
-      <span *ngSwitchCase="'en'">{{ getTranslation('Choose your library') }}</span>
-      <span *ngSwitchCase="'ru'">{{ getTranslation('Choose your library') }}</span>
-      <span *ngSwitchCase="'by'">{{ getTranslation('Choose your library') }}</span>
-    </div>
+  <app-input>    
   </app-input>
 </div>
 
 <div class="footer">
   <div class="libraries">
-    <span class="purple-text">{{ getTranslation('Choose your library') }} &gt;</span>
+    <div [ngSwitch]="selectedLibrary">
+      <img  *ngSwitchCase="'JAVA'" src="assets/icons/java.png" alt="LibLogo">
+      <img *ngSwitchCase="'C_PLUS_PLUS'" src="assets/icons/cpp.png" alt="LibLogo">
+      </div>
+    <span class="purple-text" (click)="toggleLibraryMenu()">{{ getTranslation('Choose your library') }} &gt;</span>
+    <div *ngIf="showlibraryMenu" class="library-menu">
+      <button (click)="changeLibrary('JAVA')">Java</button>
+      <button (click)="changeLibrary('C_PLUS_PLUS')">C++</button>     
+    </div>
     <span class="green-text">{{ getTranslation('History') }} &gt;</span>
     <span class="yellow-text">{{ getTranslation('Settings') }} &gt;</span>
     <span class="turquoise-text" (click)="goToChat()">{{ getTranslation('Online Chat') }} &gt;</span>

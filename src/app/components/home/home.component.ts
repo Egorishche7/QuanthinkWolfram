@@ -12,7 +12,9 @@ import {AuthService} from "../../services/auth.service";
 })
 export class HomeComponent implements OnInit {
   selectedLanguage: string;
+  selectedLibrary: string = "";
   showLanguageMenu: boolean = false;
+  showlibraryMenu: boolean = false;
   languageChanged: EventEmitter<string> = new EventEmitter<string>();
   private languageSubscription: Subscription | undefined;
 
@@ -25,11 +27,14 @@ export class HomeComponent implements OnInit {
     this.languageSubscription = this.languageService.selectedLanguageChanged.subscribe(() => {
       this.selectedLanguage = this.languageService.getLanguage();
     });
+    this.selectedLibrary = "JAVA";
+    localStorage.setItem("Library", "JAVA");
   }
 
   changeLanguage(language: string): void {
     this.languageService.setLanguage(language);
     this.languageService.selectedLanguageChanged.next(language);
+    this.showLanguageMenu = !this.showLanguageMenu;
   }
 
   ngOnDestroy() {
@@ -60,5 +65,18 @@ export class HomeComponent implements OnInit {
 
   goToChat(): void {
     this.router.navigate(['/chat']);
+  }
+
+  toggleLibraryMenu(): void {
+    // console.log(this.isLoggedIn());
+    // if (this.isLoggedIn())
+      this.showlibraryMenu = !this.showlibraryMenu;
+    // Добавить просьбу зарегаться
+  }
+
+  changeLibrary(library: string): void {
+    localStorage.setItem("Library", library);
+    this.selectedLibrary = library;
+    this.showlibraryMenu = !this.showlibraryMenu;
   }
 }

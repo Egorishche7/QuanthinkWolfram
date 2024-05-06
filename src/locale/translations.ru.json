@@ -8,8 +8,7 @@
   "Sign out": "Выйти",
   "Resources & Tools About Contact Connect": "Ресурсы и инструменты О нас Контакты Подключиться",
   "Terms Privacy": "Условия Конфиденциальность",
-"Enter what you want to calculate or know about": "Введите то, что вы хотите вычислить или узнать",
-  "Clear": "Очистить",
+"Enter what you want to calculate or know about": "Введите свои расчеты",
   "Backspace": "Назад",
   "Result": "Результат",
 "email": "электронная почта",
@@ -28,5 +27,15 @@
 "Confirm the password": "Подтвердите пароль",
 "Already have an account?": "Уже есть аккаунт?",
 "Full Name": "Полное имя",
-"Enter a valid name.": "Введите корректное имя."
+"Enter a valid name.": "Введите корректное имя.",
+"Basic arithmetics":"Базовая арифметика",
+"Equations":"Уравнения",
+"Matrix":"Матрицы",
+"Clear":"Очистить",
+"Transpose":"Транспонировать",
+"Determinant":"Найти определитель",
+"Size":"Размер",
+"Multiply by":"Умножить на",
+"Reversed":"Обратная матрица",
+"Thread":"Кол-во потоков"
 }

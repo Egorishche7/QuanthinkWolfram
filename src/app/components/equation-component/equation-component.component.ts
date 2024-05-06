@@ -1,19 +1,21 @@
 import { Component } from '@angular/core';
 import { CalculationService } from "../../services/calc.service";
+import { Equation } from "../../interfaces/calculation";
 import { Router } from "@angular/router";
 import { LanguageService } from '../../services/language.service';
+import { Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'app-input',
-  templateUrl: './input-component.component.html',
-  styleUrls: ['./input-component.component.css']
+  selector: 'app-equation-component',
+  templateUrl: './equation-component.component.html',
+  styleUrls: ['./equation-component.component.css']
 })
-export class InputComponent {
-  selectedCalculations: string = "BA";
+export class EquationComponentComponent {
   inputValue: string = '';
   isInputFocused: boolean = false;
   calculationResult: string | undefined;
-  
+  @Output() resultEvent = new EventEmitter<string>();
+
 inputError: string = '';
   constructor(
     private calcService: CalculationService,
@@ -51,21 +53,26 @@ inputError: string = '';
     this.inputValue = '';
   }
 
-
-  showResult(result: string) {
-    console.log(result);
-    this.calculationResult = result;
-  }
-
+  
 getTranslation(key: string): string {
-    return this.languageService.getTranslation(key);
-  }
-
-changeCalc(key: string){
-  this.selectedCalculations = key;
+  return this.languageService.getTranslation(key);
 }
+calculateEquation() {
+  const userId = localStorage.getItem('userId');
 
+  const calcData: Equation = {
+    userId: userId,
+    equation: this.inputValue,
+    library: localStorage.getItem("Library") as string
+  };
 
-
+  this.calcService.createCalculationEquation(calcData as Equation).subscribe(
+    response => {
+      this.resultEvent.emit(response.data);
+    },
+    error => {
+      this.resultEvent.emit(error.error.error);
+    }
+  );
 }
-
+}

@@ -20,6 +20,9 @@ import { HistoryComponent } from './components/history/history.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { OnlineChatComponent } from './components/online-chat/online-chat.component';
 import { LanguageSwitchComponent } from './components/language-switch/language-switch.component';
+import { BasicArithemticComponentComponent } from './components/basic-arithemtic-component/basic-arithemtic-component.component';
+import { EquationComponentComponent } from './components/equation-component/equation-component.component';
+import { MatrixComponentComponent } from './components/matrix-component/matrix-component.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -31,7 +34,10 @@ import { LanguageSwitchComponent } from './components/language-switch/language-s
     HistoryComponent,
     SettingsComponent,
     OnlineChatComponent,
-    LanguageSwitchComponent
+    LanguageSwitchComponent,
+    BasicArithemticComponentComponent,
+    EquationComponentComponent,
+    MatrixComponentComponent
   ],
   imports: [
 ReactiveFormsModule,
