@@ -1,5 +1,6 @@
 package by.quantumquartet.quanthink.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
@@ -13,15 +14,16 @@ public class Calculation {
     private long id;
 
     @NotBlank
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String type;
+    private ECalculation type;
 
     @NotBlank
-    @Column(nullable = false)
-    private String expression;
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String inputData;
 
     @NotBlank
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String result;
 
     @NotBlank
@@ -29,9 +31,15 @@ public class Calculation {
     private Timestamp date;
 
     @NotBlank
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ELibrary library;
+
+    @NotBlank
     @Column(nullable = false)
     private int threadsUsed;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -39,10 +47,15 @@ public class Calculation {
     public Calculation() {
     }
 
-    public Calculation(String type, String expression, int threadsUsed) {
+    public Calculation(ECalculation type, String inputData, String result,
+                       Timestamp date, ELibrary library, int threadsUsed, User user) {
         this.type = type;
-        this.expression = expression;
+        this.inputData = inputData;
+        this.result = result;
+        this.date = date;
+        this.library = library;
         this.threadsUsed = threadsUsed;
+        this.user = user;
     }
 
     public long getId() {
@@ -53,20 +66,20 @@ public class Calculation {
         this.id = id;
     }
 
-    public String getType() {
+    public ECalculation getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(ECalculation type) {
         this.type = type;
     }
 
-    public String getExpression() {
-        return expression;
+    public String getInputData() {
+        return inputData;
     }
 
-    public void setExpression(String expression) {
-        this.expression = expression;
+    public void setInputData(String inputData) {
+        this.inputData = inputData;
     }
 
     public String getResult() {
@@ -83,6 +96,14 @@ public class Calculation {
 
     public void setDate(Timestamp date) {
         this.date = date;
+    }
+
+    public ELibrary getLibrary() {
+        return library;
+    }
+
+    public void setLibrary(ELibrary library) {
+        this.library = library;
     }
 
     public int getThreadsUsed() {

@@ -25,30 +25,42 @@ public class User {
     private String username;
 
     @NotBlank
+    @JsonIgnore
     @Column(nullable = false)
     private String password;
 
+    @NotBlank
+    @Column(nullable = false)
+    private boolean isEnabled;
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private ConfirmationToken confirmationToken;
+
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Calculation> calculations = new HashSet<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Message> messages = new HashSet<>();
 
     public User() {
     }
 
-    public User(String email, String username, String password) {
+    public User(String email, String username, String password, boolean isEnabled, Set<Role> roles) {
         this.email = email;
         this.username = username;
         this.password = password;
+        this.isEnabled = isEnabled;
+        this.roles = roles;
     }
 
     public long getId() {
@@ -81,6 +93,22 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean isEnabled() {
+        return isEnabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
+    }
+
+    public ConfirmationToken getConfirmationToken() {
+        return confirmationToken;
+    }
+
+    public void setConfirmationToken(ConfirmationToken confirmationToken) {
+        this.confirmationToken = confirmationToken;
     }
 
     public Set<Role> getRoles() {

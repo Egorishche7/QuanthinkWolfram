@@ -1,4 +1,4 @@
-package by.quantumquartet.quanthink.rest.request;
+package by.quantumquartet.quanthink.rest.requests.messages;
 
 import jakarta.validation.constraints.NotBlank;
 

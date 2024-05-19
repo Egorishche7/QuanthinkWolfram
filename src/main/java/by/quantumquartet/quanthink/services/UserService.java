@@ -1,84 +1,148 @@
 package by.quantumquartet.quanthink.services;
 
+import static by.quantumquartet.quanthink.services.AppLogger.logError;
+
 import by.quantumquartet.quanthink.models.ERole;
 import by.quantumquartet.quanthink.models.Role;
 import by.quantumquartet.quanthink.models.User;
+import by.quantumquartet.quanthink.repositories.RoleRepository;
 import by.quantumquartet.quanthink.repositories.UserRepository;
-import by.quantumquartet.quanthink.rest.request.RegisterRequest;
+import by.quantumquartet.quanthink.rest.requests.users.RegisterRequest;
+import by.quantumquartet.quanthink.rest.requests.users.UpdateUserRequest;
+import by.quantumquartet.quanthink.rest.responses.users.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class UserService {
     private final PasswordEncoder encoder;
-    private final RoleService roleService;
+    private final RoleRepository roleRepository;
     private final UserRepository userRepository;
 
     @Autowired
-    public UserService(PasswordEncoder encoder, RoleService roleService, UserRepository userRepository) {
+    public UserService(PasswordEncoder encoder, RoleRepository roleRepository, UserRepository userRepository) {
         this.encoder = encoder;
-        this.roleService = roleService;
+        this.roleRepository = roleRepository;
         this.userRepository = userRepository;
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserDto> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        List<UserDto> usersDto = new ArrayList<>();
+
+        for (User user : users) {
+            UserDto userDto = convertToDto(user);
+            usersDto.add(userDto);
+        }
+
+        return usersDto;
     }
 
-    public Optional<User> getUserById(long id) {
-        return userRepository.findById(id);
+    public Optional<UserDto> getUserById(long id) {
+        Optional<User> userData = userRepository.findById(id);
+        return userData.map(this::convertToDto);
     }
 
-    public Optional<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public boolean isEmailAlreadyExists(String email) {
+        return userRepository.existsByEmail(email);
     }
 
-    public User createUser(User user) {
-        return userRepository.save(user);
-    }
-
-    public long registerUser(RegisterRequest registerRequest) {
-        User newUser = new User(
-                registerRequest.getEmail(),
-                registerRequest.getUsername(),
-                encoder.encode(registerRequest.getPassword())
-        );
-
+    public UserDto registerUser(RegisterRequest registerRequest) {
         Set<Role> roles = new HashSet<>();
-        Optional<Role> roleData = roleService.findRoleByName(ERole.ROLE_USER);
+        Optional<Role> roleData = roleRepository.findByName(ERole.ROLE_USER);
         if (roleData.isPresent()) {
             roles.add(roleData.get());
         } else {
-            throw new RuntimeException("Role not found");
+            logError(UserService.class, "Role " + ERole.ROLE_USER + " not found");
+            throw new RuntimeException("Role " + ERole.ROLE_USER + " not found");
         }
-        newUser.setRoles(roles);
 
-        return userRepository.save(newUser).getId();
+        User newUser = new User(
+                registerRequest.getEmail(),
+                registerRequest.getUsername(),
+                encoder.encode(registerRequest.getPassword()),
+                false,
+                roles
+        );
+
+        return convertToDto(userRepository.save(newUser));
     }
 
-    public User updateUser(long id, User user) {
+    public boolean confirmAccount(long id) {
+        Optional<User> userData = userRepository.findById(id);
+        if (userData.isPresent()) {
+            User user = userData.get();
+            user.setEnabled(true);
+            userRepository.save(user);
+            return true;
+        } else {
+            logError(UserService.class, "User with id = " + id + " not found");
+            throw new RuntimeException("User with id = " + id + " not found");
+        }
+    }
+
+    public UserDto updateUser(long id, UpdateUserRequest updateUserRequest) {
         Optional<User> userData = userRepository.findById(id);
         if (userData.isPresent()) {
             User existingUser = userData.get();
-            existingUser.setEmail(user.getEmail());
-            existingUser.setUsername(user.getUsername());
-            existingUser.setPassword(user.getPassword());
-            existingUser.setRoles(user.getRoles());
-            existingUser.setCalculations(user.getCalculations());
-            existingUser.setMessages(user.getMessages());
-            return userRepository.save(existingUser);
+            String newEmail = updateUserRequest.getEmail();
+            String newUsername = updateUserRequest.getUsername();
+            String newPassword = updateUserRequest.getPassword();
+            if (newEmail != null) {
+                existingUser.setEmail(newEmail);
+            }
+            if (newUsername != null) {
+                existingUser.setUsername(newUsername);
+            }
+            if (newPassword != null) {
+                existingUser.setPassword(encoder.encode(newPassword));
+            }
+            return convertToDto(userRepository.save(existingUser));
         } else {
-            throw new RuntimeException("User not found");
+            logError(UserService.class, "User with id = " + id + " not found");
+            throw new RuntimeException("User with id = " + id + " not found");
+        }
+    }
+
+    public UserDto assignAdminRole(long id) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            User existingUser = user.get();
+            Set<Role> roles = existingUser.getRoles();
+
+            Optional<Role> roleData = roleRepository.findByName(ERole.ROLE_ADMIN);
+            if (roleData.isPresent()) {
+                roles.add(roleData.get());
+            } else {
+                throw new RuntimeException("Role " + ERole.ROLE_ADMIN + " not found");
+            }
+            existingUser.setRoles(roles);
+            return convertToDto(userRepository.save(existingUser));
+        } else {
+            logError(UserService.class, "User with id = " + id + " not found");
+            throw new RuntimeException("User with id = " + id + " not found");
         }
     }
 
     public void deleteUser(long id) {
         userRepository.deleteById(id);
+    }
+
+    private UserDto convertToDto(User user) {
+        UserDto userDto = new UserDto();
+        userDto.setId(user.getId());
+        userDto.setEmail(user.getEmail());
+        userDto.setUsername(user.getUsername());
+
+        Set<ERole> roles = new HashSet<>();
+        for (Role role : user.getRoles()) {
+            roles.add(role.getName());
+        }
+        userDto.setRoles(roles);
+
+        return userDto;
     }
 }

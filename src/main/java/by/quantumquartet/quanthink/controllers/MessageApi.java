@@ -1,7 +1,7 @@
 package by.quantumquartet.quanthink.controllers;
 
 import by.quantumquartet.quanthink.models.Message;
-import by.quantumquartet.quanthink.rest.request.MessageRequest;
+import by.quantumquartet.quanthink.rest.requests.messages.MessageRequest;
 import by.quantumquartet.quanthink.services.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;

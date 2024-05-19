@@ -1,8 +1,8 @@
 package by.quantumquartet.quanthink.config;
 
-import by.quantumquartet.quanthink.security.jwt.JwtAuthEntryPoint;
-import by.quantumquartet.quanthink.security.jwt.JwtAuthTokenFilter;
-import by.quantumquartet.quanthink.security.services.UserDetailsServiceImpl;
+import by.quantumquartet.quanthink.security.JwtAuthEntryPoint;
+import by.quantumquartet.quanthink.security.JwtAuthTokenFilter;
+import by.quantumquartet.quanthink.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -58,11 +58,27 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        final HttpMethod GET = HttpMethod.GET;
+        final HttpMethod POST = HttpMethod.POST;
+        final HttpMethod PUT = HttpMethod.PUT;
+        final HttpMethod DELETE = HttpMethod.DELETE;
+
         http.csrf(AbstractHttpConfigurer::disable)
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.GET, "/users").hasRole("ADMIN")
+                        .requestMatchers(GET, "/users").hasRole("ADMIN")
+                        .requestMatchers(GET, "/users/{id}").hasRole("ADMIN")
+                        .requestMatchers(PUT, "/users/{id}").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(PUT, "/users/{id}/assignAdminRole").hasRole("ADMIN")
+                        .requestMatchers(DELETE, "/users/{id}").hasRole("ADMIN")
+
+                        .requestMatchers(GET, "calculations").hasRole("ADMIN")
+                        .requestMatchers(GET, "/calculations/{id}").hasRole("ADMIN")
+                        .requestMatchers(GET, "/calculations/user/{userId}").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(DELETE, "/calculations/{id}").hasRole("ADMIN")
+                        .requestMatchers(DELETE, "/calculations/user/{userId}").hasAnyRole("ADMIN", "USER")
+
                         .anyRequest().permitAll()
                 )
                 .logout(logout -> logout
