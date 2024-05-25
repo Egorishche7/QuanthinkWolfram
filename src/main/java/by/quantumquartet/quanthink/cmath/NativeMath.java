@@ -5,23 +5,23 @@ public class NativeMath {
         System.loadLibrary("nativeMathLib");
     }
 
-    public static native String solveExpressionC(String expr);
+    public static native TimeStruct solveExpressionC(String expr);
 
-    public static native String solveEquationC(String expr);
+    public static native TimeStruct solveEquationC(String expr);
 
     //с++ не поддерживает многие символы ASCII, поэтому нужна заглушка
-    public static String solveEquationCStub(String expr){
+    public static TimeStruct solveEquationCStub(String expr){
         String tmp = replacePI(expr);
-        tmp = solveEquationC(tmp);
-        tmp = replaceHashTag(tmp);
-        return tmp;
+        TimeStruct tmpC = solveEquationC(tmp);
+        tmp = replaceHashTag(tmpC.getStringResult());
+        return new TimeStruct(tmp, tmpC.getTime());
     }
 
     //с++ не поддерживает многие символы ASCII, поэтому нужна заглушка
-    public static String solveExpressionCStub(String expr){
+    public static TimeStruct solveExpressionCStub(String expr){
         String tmp = replacePI(expr);
-        tmp = solveExpressionC(tmp);
-        return tmp;
+        TimeStruct tmpC = solveExpressionC(tmp);
+        return tmpC;
     }
 
     private static String replacePI(String expr){
@@ -50,4 +50,19 @@ public class NativeMath {
         return tmp;
     }
 
+    public static native TimeStruct MatrixSumC(MatrixC m1, MatrixC m2, int threads);
+
+    public static native TimeStruct MatrixSubC(MatrixC m1, MatrixC m2, int threads);
+
+    public static native TimeStruct MatrixMulC(MatrixC m1, MatrixC m2, int threads);
+
+    public static native TimeStruct MatrixMulC(MatrixC m, double num, int threads);
+
+    public static native TimeStruct GetTransposeMatrixC(MatrixC m);
+
+    public static native TimeStruct GetReverseMatrixC(MatrixC m);
+
+    public static native TimeStruct GetDeterminantC(MatrixC m, int threads);
+
+    public static native TimeStruct SolveSystemC(MatrixC A, MatrixC f, int threads);
 }

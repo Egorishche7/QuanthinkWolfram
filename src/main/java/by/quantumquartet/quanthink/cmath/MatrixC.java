@@ -1,16 +1,14 @@
-package by.quantumquartet.quanthink.math;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+package by.quantumquartet.quanthink.cmath;
 
-public class Matrix {
+public class MatrixC {
+
     private int rows;
     private int cols;
     private double[][] data;
 
-    @JsonCreator
-    public Matrix(@JsonProperty("rows") int rows,
-                  @JsonProperty("cols") int cols,
-                  @JsonProperty("data") double[][] data) {
+    public MatrixC(int rows,
+                  int cols,
+                  double[][] data) {
         setRows(rows);
         setCols(cols);
         setData(data);
@@ -59,4 +57,3 @@ public class Matrix {
         return column;
     }
 }
-

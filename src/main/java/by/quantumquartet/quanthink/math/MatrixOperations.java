@@ -116,7 +116,7 @@ public class MatrixOperations {
         }
         else {
             double[][] res_data = new double[size1[0]][size1[1]];
-            for (int i = 0; i < size2[0]; i++){
+            for (int i = 0; i < size1[0]; i++){
                 double[] row = m1.getRow(i);
                 for (int j = 0; j < size2[1]; j++) {
                     double [] column = m2.getColumn(j);

@@ -5,12 +5,14 @@
 #include <stdexcept>
 #include <limits>
 #include <math.h>
+#include <chrono>
+#include <algorithm>
 #include "../includeC/by_quantumquartet_quanthink_cmath_NativeMath_BasicArithmetic.h"
 #include "../includeC/by_quantumquartet_quanthink_cmath_NativeMath_UtilFunctions.h"
 
 const char order[] = { 'e','(', '^', '*', '+'};
 
-JNIEXPORT jstring JNICALL Java_by_quantumquartet_quanthink_cmath_NativeMath_solveExpressionC
+JNIEXPORT jobject JNICALL Java_by_quantumquartet_quanthink_cmath_NativeMath_solveExpressionC
   (JNIEnv *env, jobject, jstring jStr){
       const jclass stringClass = env->GetObjectClass(jStr);
       const jmethodID getBytes = env->GetMethodID(stringClass, "getBytes", "(Ljava/lang/String;)[B");
@@ -25,17 +27,24 @@ JNIEXPORT jstring JNICALL Java_by_quantumquartet_quanthink_cmath_NativeMath_solv
       env->DeleteLocalRef(stringJbytes);
       env->DeleteLocalRef(stringClass);
       std::string result;
+      auto begin = std::chrono::steady_clock::now();
       try{
         result = SolveExpression(ret);
         } catch(ThrownJavaException* e) { //do not let C++ exceptions outside of this function
         std::string info = e->what();
-        std::cout << info << std::endl;
         int sep = info.find('|');
         const char* message = info.substr(0,sep).c_str();
         std::string ex_type = "java/lang/" + info.substr(sep+1);
         NewJavaException(env, ex_type.c_str(), message);
       }
-      return env->NewStringUTF(result.c_str());
+      auto end = std::chrono::steady_clock::now();
+      auto elapsed_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin);
+      long duration = elapsed_ms.count();
+      jmethodID cnstrctrTimeC;
+      jclass cc = env->FindClass("by/quantumquartet/quanthink/cmath/TimeStruct");
+      cnstrctrTimeC = env->GetMethodID(cc, "<init>", "(Ljava/lang/String;J)V");
+      jstring s = env->NewStringUTF(result.c_str());
+      return env->NewObject(cc, cnstrctrTimeC, s, (jlong)duration);
   }
 
 std::string SolveExpression(std::string expr) {
