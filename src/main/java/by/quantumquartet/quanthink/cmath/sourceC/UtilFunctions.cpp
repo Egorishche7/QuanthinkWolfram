@@ -193,14 +193,14 @@ double UtilFunctions::Determinant(double** A, int n) {
     else {
         res = 0;
         for (int i = 0; i < n; i++) {
-            double** subArray = generateSubArray(A, n, i);
+            double** subArray = GenerateSubArray(A, n, i);
             res += pow(-1.0, 1.0 + i + 1.0) * A[0][i] * Determinant(subArray, n - 1);
         }
     }
     return res;
 }
 
-double** UtilFunctions::generateSubArray(double** A, int n, int j1) {
+double** UtilFunctions::GenerateSubArray(double** A, int n, int j1) {
     double** m = new double*[n - 1];
     for (int k = 0; k < (n - 1); k++)
         m[k] = new double[n - 1];

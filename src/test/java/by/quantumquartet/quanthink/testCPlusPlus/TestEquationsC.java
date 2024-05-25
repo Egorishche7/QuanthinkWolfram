@@ -19,7 +19,7 @@ class TestEquationsC {
             "x*5+35, -7",
     })
     void TestSolveLinearEquations(String equation, String answer) {
-        Assertions.assertEquals(answer, solveEquationCStub(equation));
+        Assertions.assertEquals(answer, solveEquationCStub(equation).getStringResult());
     }
 
 
@@ -36,7 +36,7 @@ class TestEquationsC {
             "x^2-5x+6, 2 3",
     })
     void TestSolveSquareEquations(String equation, String answer) {
-        Assertions.assertEquals(answer, solveEquationCStub(equation));
+        Assertions.assertEquals(answer, solveEquationCStub(equation).getStringResult());
     }
 
     @ParameterizedTest
@@ -64,7 +64,7 @@ class TestEquationsC {
 
     })
     void TestSolveCubeEquations(String equation, String answer) {
-        Assertions.assertEquals(answer, solveEquationCStub(equation));
+        Assertions.assertEquals(answer, solveEquationCStub(equation).getStringResult());
     }
 
     @ParameterizedTest
@@ -80,7 +80,7 @@ class TestEquationsC {
             "x^4-2x^3+x^2-x, 0 1.754878 0.122561±0.744862i",
     })
     void TestSolveQuadraticEquations(String equation, String answer) {
-        Assertions.assertEquals(answer, solveEquationCStub(equation));
+        Assertions.assertEquals(answer, solveEquationCStub(equation).getStringResult());
     }
 
     @ParameterizedTest
@@ -97,7 +97,7 @@ class TestEquationsC {
             "x^5-15x^4+105x^3-225x^2+315x-243, 1.444527 0.509549±1.461173i 6.268188±5.564002i",
     })
     void TestSolvePentaEquations(String equation, String answer) {
-        Assertions.assertEquals(answer, solveEquationCStub(equation));
+        Assertions.assertEquals(answer, solveEquationCStub(equation).getStringResult());
     }
 
 }
