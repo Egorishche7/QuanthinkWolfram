@@ -53,7 +53,7 @@ inputError: string = '';
     this.inputValue = '';
   }
 
-  
+
 getTranslation(key: string): string {
   return this.languageService.getTranslation(key);
 }
@@ -68,7 +68,7 @@ getTranslation(key: string): string {
 
     this.calcService.createCalculationBasicArithmetic(calcData as BasicArithmetic).subscribe(
       response => {
-        this.resultEvent.emit(response.data);
+        this.resultEvent.emit(response.data.result);
       },
       error => {
         this.resultEvent.emit(error.error.error);
