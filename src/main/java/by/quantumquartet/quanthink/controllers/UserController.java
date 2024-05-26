@@ -8,6 +8,11 @@ import by.quantumquartet.quanthink.rest.responses.ErrorResponse;
 import by.quantumquartet.quanthink.rest.responses.SuccessResponse;
 import by.quantumquartet.quanthink.rest.responses.users.UserDto;
 import by.quantumquartet.quanthink.services.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +20,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
+@Tag(name = "Users Management", description = "Endpoints for managing users")
 public class UserController {
     private final UserService userService;
 
@@ -26,6 +33,14 @@ public class UserController {
         this.userService = userService;
     }
 
+    @Operation(summary = "Get all users",
+            description = "Retrieve a list of all users.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Users retrieved successfully",
+                            content = @Content(schema = @Schema(implementation = SuccessResponse.class))),
+                    @ApiResponse(responseCode = "404", description = "No users found",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            })
     @GetMapping("/users")
     public ResponseEntity<?> getAllUsers() {
         List<UserDto> users = userService.getAllUsers();
@@ -39,6 +54,14 @@ public class UserController {
                 .body(new SuccessResponse<>("Users retrieved successfully", users));
     }
 
+    @Operation(summary = "Get user by ID",
+            description = "Retrieve user information by user ID.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "User retrieved successfully",
+                            content = @Content(schema = @Schema(implementation = SuccessResponse.class))),
+                    @ApiResponse(responseCode = "404", description = "User not found",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            })
     @GetMapping("/users/{id}")
     public ResponseEntity<?> getUserById(@PathVariable("id") long id) {
         Optional<UserDto> userData = userService.getUserById(id);
@@ -52,6 +75,39 @@ public class UserController {
                 .body(new SuccessResponse<>("User retrieved successfully", userData.get()));
     }
 
+    @Operation(summary = "Get online users",
+            description = "Retrieve a list of online users.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Online users retrieved successfully",
+                            content = @Content(schema = @Schema(implementation = SuccessResponse.class))),
+                    @ApiResponse(responseCode = "404", description = "No online users found",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            })
+    @GetMapping("/users/online")
+    public ResponseEntity<?> getOnlineUsers() {
+        Set<UserDto> onlineUsers = userService.getOnlineUsers();
+        if (onlineUsers.isEmpty()) {
+            logWarn(UserController.class, "No online users found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse("No online users found"));
+        }
+        logInfo(UserController.class, "Online users retrieved successfully");
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new SuccessResponse<>("Online users retrieved successfully", onlineUsers));
+    }
+
+    @Operation(summary = "Update user",
+            description = "Update user information by user ID.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "User updated successfully",
+                            content = @Content(schema = @Schema(implementation = SuccessResponse.class))),
+                    @ApiResponse(responseCode = "400", description = "Email already exists",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "404", description = "User not found",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "500", description = "Internal server error",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            })
     @PutMapping("/users/{id}")
     public ResponseEntity<?> updateUser(@PathVariable("id") long id, @RequestBody UpdateUserRequest updateUserRequest) {
         Optional<UserDto> userData = userService.getUserById(id);
@@ -79,6 +135,18 @@ public class UserController {
         }
     }
 
+    @Operation(summary = "Assign admin role",
+            description = "Assign the admin role to a user by user ID.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Admin role assigned successfully",
+                            content = @Content(schema = @Schema(implementation = SuccessResponse.class))),
+                    @ApiResponse(responseCode = "400", description = "User is already an admin",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "404", description = "User not found",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "500", description = "Internal server error",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            })
     @PutMapping("/users/{id}/assignAdminRole")
     public ResponseEntity<?> assignAdminRole(@PathVariable("id") long id) {
         Optional<UserDto> userData = userService.getUserById(id);
@@ -107,6 +175,16 @@ public class UserController {
         }
     }
 
+    @Operation(summary = "Delete user",
+            description = "Delete a user by user ID.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "User deleted successfully",
+                            content = @Content(schema = @Schema(implementation = SuccessResponse.class))),
+                    @ApiResponse(responseCode = "404", description = "User not found",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "500", description = "Internal server error",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            })
     @DeleteMapping("/users/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable("id") long id) {
         Optional<UserDto> userData = userService.getUserById(id);

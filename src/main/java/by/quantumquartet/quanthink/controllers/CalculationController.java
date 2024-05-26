@@ -9,6 +9,11 @@ import by.quantumquartet.quanthink.rest.responses.SuccessResponse;
 import by.quantumquartet.quanthink.rest.responses.calculations.CalculationDto;
 import by.quantumquartet.quanthink.rest.responses.calculations.CalculationResult;
 import by.quantumquartet.quanthink.services.CalculationService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +26,7 @@ import java.util.Optional;
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/calculations")
+@Tag(name = "Calculations Management", description = "Endpoints for managing calculations")
 public class CalculationController {
     private final CalculationService calculationService;
 
@@ -29,6 +35,14 @@ public class CalculationController {
         this.calculationService = calculationService;
     }
 
+    @Operation(summary = "Get all calculations",
+            description = "Retrieve a list of all calculations.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Calculations retrieved successfully",
+                            content = @Content(schema = @Schema(implementation = SuccessResponse.class))),
+                    @ApiResponse(responseCode = "404", description = "No calculations found",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            })
     @GetMapping
     public ResponseEntity<?> getAllCalculations() {
         List<CalculationDto> calculations = calculationService.getAllCalculations();
@@ -42,6 +56,14 @@ public class CalculationController {
                 .body(new SuccessResponse<>("Calculations retrieved successfully", calculations));
     }
 
+    @Operation(summary = "Get calculation by ID",
+            description = "Retrieve calculation information by calculation ID.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Calculation retrieved successfully",
+                            content = @Content(schema = @Schema(implementation = SuccessResponse.class))),
+                    @ApiResponse(responseCode = "404", description = "Calculation not found",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            })
     @GetMapping("/{id}")
     public ResponseEntity<?> getCalculationById(@PathVariable("id") long id) {
         Optional<CalculationDto> calculationData = calculationService.getCalculationById(id);
@@ -55,6 +77,14 @@ public class CalculationController {
                 .body(new SuccessResponse<>("Calculation retrieved successfully", calculationData.get()));
     }
 
+    @Operation(summary = "Get calculations by user ID",
+            description = "Retrieve a list of calculations by user ID.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "User calculations retrieved successfully",
+                            content = @Content(schema = @Schema(implementation = SuccessResponse.class))),
+                    @ApiResponse(responseCode = "404", description = "No calculations found for user",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            })
     @GetMapping("/user/{userId}")
     public ResponseEntity<?> getCalculationsByUserId(@PathVariable("userId") long userId) {
         List<CalculationDto> calculations = calculationService.getCalculationsByUserId(userId);
@@ -69,6 +99,16 @@ public class CalculationController {
                 .body(new SuccessResponse<>("User calculations retrieved successfully", calculations));
     }
 
+    @Operation(summary = "Delete calculation",
+            description = "Delete a calculation by ID.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Calculation deleted successfully",
+                            content = @Content(schema = @Schema(implementation = SuccessResponse.class))),
+                    @ApiResponse(responseCode = "404", description = "Calculation not found",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "500", description = "Internal server error",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            })
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteCalculation(@PathVariable("id") long id) {
         Optional<CalculationDto> calculationData = calculationService.getCalculationById(id);
@@ -89,6 +129,16 @@ public class CalculationController {
         }
     }
 
+    @Operation(summary = "Delete calculations by user ID",
+            description = "Delete all calculations by user ID.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "User calculations deleted successfully",
+                            content = @Content(schema = @Schema(implementation = SuccessResponse.class))),
+                    @ApiResponse(responseCode = "404", description = "No calculations found for user",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "500", description = "Internal server error",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            })
     @DeleteMapping("/user/{userId}")
     public ResponseEntity<?> deleteCalculationsByUserId(@PathVariable("userId") long userId) {
         List<CalculationDto> calculations = calculationService.getCalculationsByUserId(userId);
@@ -110,6 +160,16 @@ public class CalculationController {
         }
     }
 
+    @Operation(summary = "Solve basic arithmetic",
+            description = "Perform a basic arithmetic operation.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Calculation performed successfully",
+                            content = @Content(schema = @Schema(implementation = SuccessResponse.class))),
+                    @ApiResponse(responseCode = "400", description = "Bad request",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "500", description = "Internal server error",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            })
     @PostMapping("/basicArithmetic")
     public ResponseEntity<?> solveBasicArithmetic(@Valid @RequestBody BasicArithmeticRequest basicArithmeticRequest) {
         try {
@@ -128,6 +188,16 @@ public class CalculationController {
         }
     }
 
+    @Operation(summary = "Solve equation",
+            description = "Solve a mathematical equation.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Calculation performed successfully",
+                            content = @Content(schema = @Schema(implementation = SuccessResponse.class))),
+                    @ApiResponse(responseCode = "400", description = "Bad request",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "500", description = "Internal server error",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            })
     @PostMapping("/equation")
     public ResponseEntity<?> solveEquation(@Valid @RequestBody EquationRequest equationRequest) {
         try {
@@ -146,6 +216,16 @@ public class CalculationController {
         }
     }
 
+    @Operation(summary = "Solve matrix sum",
+            description = "Calculate the sum of two matrices.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Calculation performed successfully",
+                            content = @Content(schema = @Schema(implementation = SuccessResponse.class))),
+                    @ApiResponse(responseCode = "400", description = "Bad request",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "500", description = "Internal server error",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            })
     @PostMapping("/matrixSum")
     public ResponseEntity<?> solveMatrixSum(@Valid @RequestBody MatrixSumRequest matrixSumRequest) {
         try {
@@ -164,6 +244,16 @@ public class CalculationController {
         }
     }
 
+    @Operation(summary = "Solve matrix subtraction",
+            description = "Calculate the subtraction of two matrices.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Calculation performed successfully",
+                            content = @Content(schema = @Schema(implementation = SuccessResponse.class))),
+                    @ApiResponse(responseCode = "400", description = "Bad request",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "500", description = "Internal server error",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            })
     @PostMapping("/matrixSub")
     public ResponseEntity<?> solveMatrixSub(@Valid @RequestBody MatrixSubRequest matrixSubRequest) {
         try {
@@ -182,6 +272,16 @@ public class CalculationController {
         }
     }
 
+    @Operation(summary = "Solve matrix multiplication",
+            description = "Calculate the multiplication of two matrices.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Calculation performed successfully",
+                            content = @Content(schema = @Schema(implementation = SuccessResponse.class))),
+                    @ApiResponse(responseCode = "400", description = "Bad request",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "500", description = "Internal server error",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            })
     @PostMapping("/matrixMul")
     public ResponseEntity<?> solveMatrixMul(@Valid @RequestBody MatrixMulRequest matrixMulRequest) {
         try {
@@ -200,6 +300,16 @@ public class CalculationController {
         }
     }
 
+    @Operation(summary = "Solve matrix multiplication by number",
+            description = "Calculate the multiplication of a matrix by a number.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Calculation performed successfully",
+                            content = @Content(schema = @Schema(implementation = SuccessResponse.class))),
+                    @ApiResponse(responseCode = "400", description = "Bad request",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "500", description = "Internal server error",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            })
     @PostMapping("/matrixMulByNum")
     public ResponseEntity<?> solveMatrixMulByNum(@Valid @RequestBody MatrixMulByNumRequest matrixMulByNumRequest) {
         try {
@@ -219,6 +329,16 @@ public class CalculationController {
         }
     }
 
+    @Operation(summary = "Solve matrix transpose",
+            description = "Calculate the transpose of a matrix.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Calculation performed successfully",
+                            content = @Content(schema = @Schema(implementation = SuccessResponse.class))),
+                    @ApiResponse(responseCode = "400", description = "Bad request",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "500", description = "Internal server error",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            })
     @PostMapping("/matrixTranspose")
     public ResponseEntity<?> solveMatrixTranspose(@Valid @RequestBody MatrixTransposeRequest matrixTransposeRequest) {
         try {
@@ -237,6 +357,16 @@ public class CalculationController {
         }
     }
 
+    @Operation(summary = "Solve matrix reverse",
+            description = "Calculate the reverse of a matrix.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Calculation performed successfully",
+                            content = @Content(schema = @Schema(implementation = SuccessResponse.class))),
+                    @ApiResponse(responseCode = "400", description = "Bad request",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "500", description = "Internal server error",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            })
     @PostMapping("/matrixReverse")
     public ResponseEntity<?> solveMatrixReverse(@Valid @RequestBody MatrixReverseRequest matrixReverseRequest) {
         try {
@@ -255,6 +385,16 @@ public class CalculationController {
         }
     }
 
+    @Operation(summary = "Solve matrix determinant",
+            description = "Calculate the determinant of a matrix.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Calculation performed successfully",
+                            content = @Content(schema = @Schema(implementation = SuccessResponse.class))),
+                    @ApiResponse(responseCode = "400", description = "Bad request",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "500", description = "Internal server error",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            })
     @PostMapping("/matrixDeterminant")
     public ResponseEntity<?> solveMatrixDeterminant(@Valid @RequestBody MatrixDeterminantRequest
                                                             matrixDeterminantRequest) {
@@ -274,6 +414,16 @@ public class CalculationController {
         }
     }
 
+    @Operation(summary = "Solve matrix system of equations",
+            description = "Solve a system of equations represented by matrices.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Calculation performed successfully",
+                            content = @Content(schema = @Schema(implementation = SuccessResponse.class))),
+                    @ApiResponse(responseCode = "400", description = "Bad request",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "500", description = "Internal server error",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            })
     @PostMapping("/matrixSystem")
     public ResponseEntity<?> solveSystem(@Valid @RequestBody MatrixSystemRequest matrixSystemRequest) {
         try {

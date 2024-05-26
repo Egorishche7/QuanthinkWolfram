@@ -14,6 +14,11 @@ import by.quantumquartet.quanthink.models.UserDetailsImpl;
 import by.quantumquartet.quanthink.services.ConfirmationTokenService;
 import by.quantumquartet.quanthink.services.EmailService;
 import by.quantumquartet.quanthink.services.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,6 +33,7 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
+@Tag(name = "Authentication", description = "Endpoints for user authentication and registration")
 public class AuthenticationController {
     private final AuthenticationManager authenticationManager;
     private final ConfirmationTokenService confirmationTokenService;
@@ -48,17 +54,31 @@ public class AuthenticationController {
         this.jwtUtils = jwtUtils;
     }
 
+    @Operation(summary = "Register a new user",
+            description = "Registers a new user and sends a confirmation email.",
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "User registered successfully",
+                            content = @Content(schema = @Schema(implementation = SuccessResponse.class))),
+                    @ApiResponse(responseCode = "400", description = "Email already exists",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "500", description = "Internal server error",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            })
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
+        if (userService.isEmailAlreadyExists(registerRequest.getEmail())) {
+            logWarn(AuthenticationController.class,
+                    "Email " + registerRequest.getEmail() + " already exists");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrorResponse("Email already exists"));
+        }
         try {
-            if (userService.isEmailAlreadyExists(registerRequest.getEmail())) {
-                logWarn(AuthenticationController.class,
-                        "Email " + registerRequest.getEmail() + " already exists");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(new ErrorResponse("Email already exists"));
-            }
+            UserDto newUser = userService.registerUser(registerRequest);
 
-            long newUserId = userService.registerUser(registerRequest).getId();
+//            ConfirmationToken confirmationToken = confirmationTokenService.createToken(newUser);
+//            emailService.sendSimpleEmail(newUser.getEmail(), confirmationToken.getToken());
+
+            long newUserId = newUser.getId();
             logInfo(AuthenticationController.class,
                     "User registered with id = " + newUserId);
             return ResponseEntity.status(HttpStatus.CREATED)
@@ -70,29 +90,17 @@ public class AuthenticationController {
         }
     }
 
-//    @PostMapping("/register")
-//    public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
-//        if (userService.isEmailAlreadyExists(registerRequest.getEmail())) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-//                    .body(new ErrorResponse("Email already exists"));
-//        }
-//        try {
-//            UserDto newUser = userService.registerUser(registerRequest);
-//
-//            ConfirmationToken confirmationToken = confirmationTokenService.createToken(newUser);
-//            emailService.sendSimpleEmail(newUser.getEmail(), confirmationToken.getToken());
-//
-//            long newUserId = newUser.getId();
-//            return ResponseEntity.status(HttpStatus.CREATED)
-//                    .body(new SuccessResponse<>("User registered successfully", newUserId));
-//        } catch (Exception e) {
-//            logError(AuthenticationController.class, e.getMessage());
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                    .body(new ErrorResponse("Internal server error"));
-//        }
-//    }
-
-    @RequestMapping(value = "/confirmAccount", method = {RequestMethod.GET, RequestMethod.POST})
+    @Operation(summary = "Confirm user account",
+            description = "Confirms the user account using the provided token.",
+            responses = {
+                    @ApiResponse(responseCode = "202", description = "User account confirmed successfully",
+                            content = @Content(schema = @Schema(implementation = SuccessResponse.class))),
+                    @ApiResponse(responseCode = "404", description = "Confirmation token not found",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "500", description = "Internal server error",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            })
+    @GetMapping("/confirmAccount")
     public ResponseEntity<?> confirmUserAccount(@RequestParam("token") String token) {
         Optional<ConfirmationToken> confirmationTokenData = confirmationTokenService.findByToken(token);
         if (confirmationTokenData.isEmpty()) {
@@ -124,6 +132,16 @@ public class AuthenticationController {
         }
     }
 
+    @Operation(summary = "Login user",
+            description = "Authenticates the user and returns a JWT token.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Login successful",
+                            content = @Content(schema = @Schema(implementation = SuccessResponse.class))),
+                    @ApiResponse(responseCode = "401", description = "Bad credentials",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    @ApiResponse(responseCode = "500", description = "Internal server error",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            })
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@Valid @RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
@@ -137,8 +155,8 @@ public class AuthenticationController {
         Optional<UserDto> userData = userService.getUserById(userDetails.getId());
         if (userData.isEmpty()) {
             logWarn(AuthenticationController.class, "User with id = " + userDetails.getId() + " not found");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ErrorResponse("User not found"));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new ErrorResponse("Bad credentials"));
         }
         userService.setUserOnline(userData.get());
 

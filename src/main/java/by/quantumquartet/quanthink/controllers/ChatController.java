@@ -63,6 +63,9 @@ public class ChatController {
             if (userData.isPresent()) {
                 String userId = String.valueOf(receiverId);
                 simpMessagingTemplate.convertAndSendToUser(userId, "/private", messageDto);
+                logInfo(ChatController.class, "Received private message from user with id = "
+                        + senderId + " to user with id = "
+                        + receiverId + ": " + privateMessageRequest.getContent());
             } else {
                 logError(ChatController.class, "User with id = "
                         + receiverId + " not found");

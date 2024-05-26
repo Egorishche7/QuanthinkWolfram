@@ -25,6 +25,6 @@ public class EmailService {
         message.setText("To confirm your account, please click here: "
                 + "http://localhost:8080/confirmAccount?token=" + token);
         javaMailSender.send(message);
-        logInfo(EmailService.class, "Account confirmation message sended to " + email);
+        logInfo(EmailService.class, "Account confirmation message sent to " + email);
     }
 }
