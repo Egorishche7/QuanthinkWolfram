@@ -2,17 +2,17 @@
 #include <jni.h>
 /* Header for class by_quantumquartet_quanthink_cmath_NativeMath_BasicArithemtic */
 
-#ifndef _Included_by_quantumquartet_quanthink_cmath_NativeMath_BasicArithemtic
-#define _Included_by_quantumquartet_quanthink_cmath_NativeMath_BasicArithemtic
+#ifndef _Included_by_quantumquartet_quanthink_cmath_NativeMath_Equations
+#define _Included_by_quantumquartet_quanthink_cmath_NativeMath_Equations
 #ifdef __cplusplus
 extern "C" {
 #endif
 /*
  * Class:     by_quantumquartet_quanthink_cmath_NativeMath
  * Method:    solveExpressionC
- * Signature: (Ljava/lang/String;)Ljava/lang/String;
+ * Signature: (Ljava/lang/String;)Lby/quantumquartet/quanthink/cmath/TimeStruct;
  */
-JNIEXPORT jstring JNICALL Java_by_quantumquartet_quanthink_cmath_NativeMath_solveEquationC
+JNIEXPORT jobject JNICALL Java_by_quantumquartet_quanthink_cmath_NativeMath_solveEquationC
   (JNIEnv *, jobject, jstring);
 
 std::string SolveEquation(std::string equation);
