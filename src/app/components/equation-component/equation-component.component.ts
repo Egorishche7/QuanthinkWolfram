@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CalculationService } from "../../services/calc.service";
-import { Equation } from "../../interfaces/calculation";
+import { Equation, Result } from "../../interfaces/calculation";
 import { Router } from "@angular/router";
 import { LanguageService } from '../../services/language.service';
 import { Output, EventEmitter } from '@angular/core';
@@ -14,7 +14,7 @@ export class EquationComponentComponent {
   inputValue: string = '';
   isInputFocused: boolean = false;
   calculationResult: string | undefined;
-  @Output() resultEvent = new EventEmitter<string>();
+  @Output() resultEvent = new EventEmitter<Result>();
 
 inputError: string = '';
   constructor(
@@ -68,7 +68,11 @@ calculateEquation() {
 
   this.calcService.createCalculationEquation(calcData as Equation).subscribe(
     response => {
-      this.resultEvent.emit(response.data);
+      const obj : Result = {
+        time : response.data.time,
+        result : response.data.result
+      }
+      this.resultEvent.emit(obj);
     },
     error => {
       this.resultEvent.emit(error.error.error);

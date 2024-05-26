@@ -14,8 +14,8 @@
         <tbody>
             <tr>
                 <td>
-                    <div style="border:1px solid rgb(128, 114, 114); border-radius: 8px;">
-                        <table style="margin-top: 20px; margin-left: 20px; margin-right: 20px;">
+                    <div style="border:1px solid rgb(255, 207, 50); border-radius: 8px;">
+                        <table class="matrix-table">
                             <tbody>
                                 <tr >
                                     <td><input id="A00" type="number" class="matrix-el" [(ngModel)]="Matrix1[0][0]" (focus)="onInputFocus()" (blur)="onInputBlur()"></td>
@@ -86,7 +86,7 @@
                             <tbody>
                                 <tr>
                                     <td><button class="btn" (click)="clear(Matrix1)">{{ getTranslation('Clear') }}</button></td>
-                                    <td> <div style="border:1px solid rgb(128, 114, 114); border-radius: 8px; padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px">
+                                    <td> <div style="color:white; border:1px solid rgb(255, 207, 50); border-radius: 8px; padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px">
                                         {{ getTranslation('Size') }}:<select class="Arows" id="selectArows" (change)="onChangeA()" [(ngModel)]="Arows">
                                             <option value=1>1</option>
                                             <option value=2>2</option>
@@ -123,26 +123,24 @@
                     <table>
                         <tbody>
                             <tr>
-                                <button class="btn" (click)="matrixSum()">A + B</button>
+                                <td><button class="btn-op" (click)="matrixSum()">A + B</button></td>
+                                <td><button class="btn-op" (click)="matrixSub()">A - B</button></td>
+                                
                             </tr>
                             <tr>
-                                <button class="btn" (click)="matrixSub()">A - B</button>
+                                <td><button class="btn-op" (click)="matrixMul()">A x B</button></td>
+                                <td><button class="btn-op" (click)="matrixSystem()">Ax=B</button></td>
+                                
                             </tr>
-                            <tr>
-                                <button class="btn" (click)="matrixMul()">A x B</button>
-                            </tr>
-                            <tr>
-                                <button class="btn" (click)="matrixSystem()">Ax=B</button>
-                            </tr>
-                            <tr>
+                            <tr style="color:white"><td colspan="2">
                                 {{getTranslation("Thread")}}: <input type="number" class="matrix-el" [(ngModel)]="ThreadCount" (focus)="onInputFocus()" (blur)="onInputBlur()">
-                            </tr>
+                            </td></tr>
                         </tbody>
                     </table>
                 </td>
                 <td>
-                    <div style="border:1px solid rgb(128, 114, 114); border-radius: 8px;">
-                        <table style="margin-top: 20px; margin-left: 20px; margin-right: 20px;">
+                    <div style="border:1px solid rgb(255, 207, 50); border-radius: 8px;">
+                        <table class="matrix-table">
                             <tbody>
                                 <tr>
                                     <td><input id="B00" type="number" class="matrix-el" [(ngModel)]="Matrix2[0][0]" (focus)="onInputFocus()" (blur)="onInputBlur()"></td>
@@ -213,7 +211,7 @@
                             <tbody>
                                 <tr>
                                     <td><button class="btn" (click)="clear(Matrix2)">{{ getTranslation('Clear') }}</button></td>
-                                    <td> <div style="border:1px solid rgb(128, 114, 114); border-radius: 8px; padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px">
+                                    <td> <div style="color:white; border:1px solid rgb(255, 207, 50); border-radius: 8px; padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px">
                                         {{ getTranslation('Size') }}:<select class="Arows" id="selectArows" (change)="onChangeB()" [(ngModel)]="Brows">
                                             <option value=1>1</option>
                                             <option value=2>2</option>

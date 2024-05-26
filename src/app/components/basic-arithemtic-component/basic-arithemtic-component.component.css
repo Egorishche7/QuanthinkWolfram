@@ -10,11 +10,16 @@
   }
   .math-input-container {
     display: flex;
+    flex-direction: column;
+    vertical-align: middle;
     align-items: center;
+    justify-content: center;
     padding: 10px;
     width: 100%;
-  margin-top: 0px;
+  margin-top: 8px;
   margin-bottom: 0px;
+  border-radius: 8px;
+  border: 1px solid orange;
   background-color: orange;
   }
   
@@ -27,26 +32,17 @@
   .btn {
     min-height:36px;
     min-width:36px;
-    padding: 8px 8px 8px 8px;
+    padding: 6px 6px 6px 6px;
     margin-left: 4px;
-    border: none;
-    border-radius: 4px;
+    border: 2px solid rgb(255, 207, 50);
+    border-radius: 8px;
     cursor: pointer;
-  margin-bottom: 0px;
-  }
-  
-  .btn-choice {
-    min-height:64px;
-    min-width:96px;
-    padding: 8px 8px 8px 8px;
-    margin-left: 16px;
-    border-radius: 16px;
-    cursor: pointer;
+    background-color: rgb(255, 207, 50);
+    color: white;
+    font-weight:bold;
     margin-bottom: 0px;
-    font-size: larger;
-    background-color: white;
-    border-color: orange;
   }
+
   
   .orange-bg {
     background-color: orange;

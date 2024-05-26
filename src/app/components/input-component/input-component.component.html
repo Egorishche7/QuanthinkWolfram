@@ -1,8 +1,18 @@
-<table class="flex justify-content-center align-items-center h-full" width="80%">
+<table  class="math-table">
   <tbody>
     <tr>
-      <td width="80%">
-
+      <td>
+        <button class="btn-choice" (click)="changeCalc('BA')">{{ getTranslation('Basic arithmetics') }}</button>
+      </td>
+      <td>
+        <button class="btn-choice" (click)="changeCalc('Eq')">{{ getTranslation('Equations') }}</button>
+      </td>
+      <td>
+        <button class="btn-choice" (click)="changeCalc('M')">{{ getTranslation('Matrix') }}</button>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3">
         <div [ngSwitch]="selectedCalculations">
           <span *ngSwitchCase="'BA'">
             <app-basic-arithemtic-component (resultEvent)="showResult($event)"></app-basic-arithemtic-component>
@@ -13,15 +23,8 @@
             <span  *ngSwitchCase="'M'">           
                 <app-matrix-component (resultEventM)="showResult($event)"></app-matrix-component>
             </span>
+          
         </div>
-
-      </td>
-      <td width="20%">
-          <ul>
-            <li style="display:inline"><button class="btn-choice" (click)="changeCalc('BA')">{{ getTranslation('Basic Arithmetics') }}</button></li>
-            <li style="display:inline"><button class="btn-choice" (click)="changeCalc('Eq')">{{ getTranslation('Equations') }}</button></li>
-            <li style="display:inline"><button class="btn-choice" (click)="changeCalc('M')">{{ getTranslation('Matrix') }}</button></li>
-          </ul>
       </td>
     </tr>
   </tbody>
@@ -29,6 +32,6 @@
 
 
 <div name="result" class="result-container" *ngIf="calculationResult !== ''">
-  <p>{{ getTranslation('Result') }}:</p>
-  <p>{{ calculationResult }}</p>
+  <p>{{ getTranslation('Result') }}: {{ calculationResult }}</p>
+  <p>{{ getTranslation('Time') }}: {{ calculationTime }} {{ getTranslation('Sec') }}</p>
 </div>

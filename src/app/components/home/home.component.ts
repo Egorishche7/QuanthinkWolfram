@@ -56,7 +56,8 @@ export class HomeComponent implements OnInit {
   }
 
   isLoggedIn(): boolean {
-    return !!sessionStorage.getItem('email');
+    console.log(localStorage.getItem('email'));
+    return !!localStorage.getItem('email');
   }
 
   getTranslation(key: string): string {

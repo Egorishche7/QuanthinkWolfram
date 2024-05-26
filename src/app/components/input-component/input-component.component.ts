@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CalculationService } from "../../services/calc.service";
 import { Router } from "@angular/router";
 import { LanguageService } from '../../services/language.service';
-
+import { Result } from "../../interfaces/calculation";
 @Component({
   selector: 'app-input',
   templateUrl: './input-component.component.html',
@@ -13,6 +13,7 @@ export class InputComponent {
   inputValue: string = '';
   isInputFocused: boolean = false;
   calculationResult: string | undefined;
+  calculationTime: number | undefined;
   
 inputError: string = '';
   constructor(
@@ -52,10 +53,11 @@ inputError: string = '';
   }
 
 
-  showResult(result: string) {
-    console.log(result);
-    this.calculationResult = result;
+  showResult(result: Result) {
+    this.calculationResult = result.result;
+    this.calculationTime = result.time / 1000;
   }
+
 
 getTranslation(key: string): string {
     return this.languageService.getTranslation(key);

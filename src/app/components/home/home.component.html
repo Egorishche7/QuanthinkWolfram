@@ -1,24 +1,27 @@
-<div class="header">
-  <div class="icon-container">
-    <p-button *ngIf="isLoggedIn(); else loginButton" label="{{ getTranslation('Sign out') }}" (onClick)="logOut()" class="sign-in-button"></p-button>
-    <ng-template #loginButton>
-      <p-button label="{{ getTranslation('Sign in') }}" (onClick)="logOut()" class="sign-in-button"></p-button>
-    </ng-template>
-    <img src="assets/icons/5.png" alt="Logo" class="logo-image">
+<div class="toolBar"> 
+  <div class="header">
+    <div class="icon-container" >
+      <p-button *ngIf="isLoggedIn(); else loginButton" [outlined]="true"  severity="secondary"  label="{{ getTranslation('Sign out') }}" (onClick)="logOut()" class="sign-in-button"></p-button>
+      <ng-template #loginButton>
+        <p-button label="{{ getTranslation('Sign in') }}" (onClick)="logOut()" [outlined]="true" severity="warning" class="sign-in-button"></p-button>
+      </ng-template>   
+    </div>
+
+  </div>
+  <div class="language-container">
+    <button class="language-button" (click)="toggleLanguageMenu()">
+      <img src="assets/icons/change_language.png" alt="Language" class="language-image">
+    </button>
+    <div *ngIf="showLanguageMenu" class="language-menu">
+      <button (click)="changeLanguage('ru')">{{ getTranslation('Русский') }}</button>
+      <button (click)="changeLanguage('by')">{{ getTranslation('Белорусский') }}</button>
+      <button (click)="changeLanguage('en')">{{ getTranslation('English') }}</button>
+    </div>
   </div>
 </div>
-
-<div class="language-container">
-  <button class="language-button" (click)="toggleLanguageMenu()">
-    <img src="assets/icons/change_language.png" alt="Language" class="language-image">
-  </button>
-  <div *ngIf="showLanguageMenu" class="language-menu">
-    <button (click)="changeLanguage('ru')">{{ getTranslation('Русский') }}</button>
-    <button (click)="changeLanguage('by')">{{ getTranslation('Белорусский') }}</button>
-    <button (click)="changeLanguage('en')">{{ getTranslation('English') }}</button>
-  </div>
+<div class="logo-image">
+<img src="assets/icons/5.png" alt="Logo" >
 </div>
-
 <div class="center-content">
   <app-input>    
   </app-input>
@@ -32,11 +35,16 @@
       </div>
     <span class="purple-text" (click)="toggleLibraryMenu()">{{ getTranslation('Choose your library') }} &gt;</span>
     <div *ngIf="showlibraryMenu" class="library-menu">
-      <button (click)="changeLibrary('JAVA')">Java</button>
-      <button (click)="changeLibrary('C_PLUS_PLUS')">C++</button>     
+      <button (click)="changeLibrary('JAVA')">
+        <img src="assets/icons/java.png" alt="LibLogoJava" style="vertical-align: middle;">
+        <span style="vertical-align: middle;">Java</span>
+      </button>
+      <button (click)="changeLibrary('C_PLUS_PLUS')">
+        <img src="assets/icons/cpp.png" alt="LibLogoC++" style="vertical-align: middle;">
+        <span style="vertical-align: middle;">C++</span>
+      </button>     
     </div>
     <span class="green-text">{{ getTranslation('History') }} &gt;</span>
-    <span class="yellow-text">{{ getTranslation('Settings') }} &gt;</span>
     <span class="turquoise-text" (click)="goToChat()">{{ getTranslation('Online Chat') }} &gt;</span>
   </div>
 </div>

@@ -3,10 +3,11 @@
     <button class="btn orange-bg" (click)="calculateEquation()">{{ getTranslation('=') }}</button>
   </div>            
   <div class="math-input-container" [hidden]="!isInputFocused">
-    <table>
+    <div style="width:100%; color: white">{{getTranslation('Input')}}</div>
+    <table style="background-color: orange;">
       <tbody>
         <tr>
-          <td><button class="btn" (click)="addCharacter('1')">2</button></td>
+          <td><button class="btn" (click)="addCharacter('1')">1</button></td>
           <td><button class="btn" (click)="addCharacter('2')">2</button></td>
           <td><button class="btn" (click)="addCharacter('3')">3</button></td>
           <td><button class="btn" (click)="addCharacter('(')">(</button></td>

@@ -2,9 +2,11 @@
     <input type="text" placeholder="{{ getTranslation('Enter what you want to calculate or know about') }}" [(ngModel)]="inputValue" (focus)="onInputFocus()" (blur)="onInputBlur()">
     <button class="btn orange-bg" (click)="calculateBasicArithmetic()">{{ getTranslation('=') }}</button>
   </div>            
-  <div class="math-input-container" [hidden]="!isInputFocused">
-    <table>
+  <div class="math-input-container" [hidden]="!isInputFocused">    
+    <div style="width:100%; color: white">{{getTranslation('Input')}}</div>
+    <table style="background-color: orange;">
       <tbody>
+        
         <tr>
           <td><button class="btn" (click)="addCharacter('1')">1</button></td>
           <td><button class="btn" (click)="addCharacter('2')">2</button></td>

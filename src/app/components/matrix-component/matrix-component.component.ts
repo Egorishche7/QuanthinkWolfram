@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CalculationService } from "../../services/calc.service";
-import {  MatrixSum, Matrix, MatrixSub, MatrixMul, MatrixSystem, MatrixReverse, MatrixTranspose, MatrixMulByNum, MatrixDeterminant } from "../../interfaces/calculation";
+import {  Result, MatrixSum, Matrix, MatrixSub, MatrixMul, MatrixSystem, MatrixReverse, MatrixTranspose, MatrixMulByNum, MatrixDeterminant } from "../../interfaces/calculation";
 import { Router } from "@angular/router";
 import { LanguageService } from '../../services/language.service';
 import { Output, EventEmitter } from '@angular/core';
@@ -17,7 +17,7 @@ export class MatrixComponentComponent {
   isInputFocused: boolean = false;
   inputError: string = '';
   ThreadCount: number = 1;
-  @Output() resultEventM = new EventEmitter<string>();
+  @Output() resultEventM = new EventEmitter<Result>();
   Matrix1: number[][] = [[0,0,0,0,0,0,0],
   [0,0,0,0,0,0,0],
   [0,0,0,0,0,0,0],
@@ -103,17 +103,20 @@ matrixSum(){
     this.calcService.createCalculationMatrixSum(calcData as MatrixSum).subscribe(
       response => {
         let result: string = "";
-        for(let i = 0; i < response.data.size[0]; i++){
+        for(let i = 0; i < response.data.result.size[0]; i++){
           result += "[";
-          for(let j = 0; j < response.data.size[1]; j++){
-            result += response.data.data[i][j] + ", "
+          for(let j = 0; j < response.data.result.size[1]; j++){
+            result += response.data.result.data[i][j] + ", "
           }
           result = result.slice(0,result.length - 2)
           result += "], ";
         }
         result = result.slice(0,result.length - 2)
-        console.log(result);
-        this.resultEventM.emit(result);
+        const obj : Result = {
+          time : response.data.time,
+          result : result
+        }
+        this.resultEventM.emit(obj);
       },
       error => {
         this.resultEventM.emit(error.error.error);
@@ -145,17 +148,20 @@ matrixSum(){
       this.calcService.createCalculationMatrixSub(calcData as MatrixSub).subscribe(
         response => {
           let result: string = "";
-          for(let i = 0; i < response.data.size[0]; i++){
+          for(let i = 0; i < response.data.result.size[0]; i++){
             result += "[";
-            for(let j = 0; j < response.data.size[1]; j++){
-              result += response.data.data[i][j] + ", "
+            for(let j = 0; j < response.data.result.size[1]; j++){
+              result += response.data.result.data[i][j] + ", "
             }
             result = result.slice(0,result.length - 2)
             result += "], ";
           }
           result = result.slice(0,result.length - 2)
-          console.log(result);
-          this.resultEventM.emit(result);
+          const obj : Result = {
+            time : response.data.time,
+            result : result
+          }
+          this.resultEventM.emit(obj);
         },
         error => {
           this.resultEventM.emit(error.error.error);
@@ -187,17 +193,20 @@ matrixSum(){
       this.calcService.createCalculationMatrixMul(calcData as MatrixMul).subscribe(
         response => {
           let result: string = "";
-          for(let i = 0; i < response.data.size[0]; i++){
+          for(let i = 0; i < response.data.result.size[0]; i++){
             result += "[";
-            for(let j = 0; j < response.data.size[1]; j++){
-              result += response.data.data[i][j] + ", "
+            for(let j = 0; j < response.data.result.size[1]; j++){
+              result += response.data.result.data[i][j] + ", "
             }
             result = result.slice(0,result.length - 2)
             result += "], ";
           }
           result = result.slice(0,result.length - 2)
-          console.log(result);
-          this.resultEventM.emit(result);
+          const obj : Result = {
+            time : response.data.time,
+            result : result
+          }
+          this.resultEventM.emit(obj);
         },
         error => {
           this.resultEventM.emit(error.error.error);
@@ -228,8 +237,11 @@ matrixSum(){
   
       this.calcService.createCalculationMatrixSystem(calcData as MatrixSystem).subscribe(
         response => {
-          console.log(response.data);
-          this.resultEventM.emit(response.data);
+          const obj : Result = {
+            time : response.data.time,
+            result : response.data.result
+          }
+          this.resultEventM.emit(obj);
         },
         error => {
           this.resultEventM.emit(error.error.error);
@@ -261,17 +273,20 @@ matrixSum(){
       this.calcService.createCalculationMatrixTranspose(calcData as MatrixTranspose).subscribe(
         response => {
           let result: string = "";
-          for(let i = 0; i < response.data.size[0]; i++){
+          for(let i = 0; i < response.data.result.size[0]; i++){
             result += "[";
-            for(let j = 0; j < response.data.size[1]; j++){
-              result += response.data.data[i][j] + ", "
+            for(let j = 0; j < response.data.result.size[1]; j++){
+              result += response.data.result.data[i][j] + ", "
             }
             result = result.slice(0,result.length - 2)
             result += "], ";
           }
           result = result.slice(0,result.length - 2)
-          console.log(result);
-          this.resultEventM.emit(result);
+          const obj : Result = {
+            time : response.data.time,
+            result : result
+          }
+          this.resultEventM.emit(obj);
         },
         error => {
           this.resultEventM.emit(error.error.error);
@@ -298,17 +313,20 @@ matrixSum(){
       this.calcService.createCalculationMatrixMulByNum(calcData as MatrixMulByNum).subscribe(
         response => {
           let result: string = "";
-          for(let i = 0; i < response.data.size[0]; i++){
+          for(let i = 0; i < response.data.result.size[0]; i++){
             result += "[";
-            for(let j = 0; j < response.data.size[1]; j++){
-              result += response.data.data[i][j] + ", "
+            for(let j = 0; j < response.data.result.size[1]; j++){
+              result += response.data.result.data[i][j] + ", "
             }
             result = result.slice(0,result.length - 2)
             result += "], ";
           }
           result = result.slice(0,result.length - 2)
-          console.log(result);
-          this.resultEventM.emit(result);
+          const obj : Result = {
+            time : response.data.time,
+            result : result
+          }
+          this.resultEventM.emit(obj);
         },
         error => {
           this.resultEventM.emit(error.error.error);
@@ -333,8 +351,11 @@ matrixSum(){
   
       this.calcService.createCalculationMatrixDeterminant(calcData as MatrixDeterminant).subscribe(
         response => {
-          console.log(response.data);
-          this.resultEventM.emit(response.data);
+          const obj : Result = {
+            time : response.data.time,
+            result : response.data.result
+          }
+          this.resultEventM.emit(obj);
         },
         error => {
           this.resultEventM.emit(error.error.error);
@@ -358,17 +379,21 @@ matrixSum(){
       this.calcService.createCalculationMatrixReverse(calcData as MatrixReverse).subscribe(
         response => {
           let result: string = "";
-          for(let i = 0; i < response.data.size[0]; i++){
+          for(let i = 0; i < response.data.result.size[0]; i++){
             result += "[";
-            for(let j = 0; j < response.data.size[1]; j++){
-              result += response.data.data[i][j] + ", "
+            for(let j = 0; j < response.data.result.size[1]; j++){
+              result += response.data.result.data[i][j] + ", "
             }
             result = result.slice(0,result.length - 2)
             result += "], ";
           }
           result = result.slice(0,result.length - 2)
           console.log(result);
-          this.resultEventM.emit(result);
+          const obj : Result = {
+            time : response.data.time,
+            result : result
+          }
+          this.resultEventM.emit(obj);
         },
         error => {
           this.resultEventM.emit(error.error.error);

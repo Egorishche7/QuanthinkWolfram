@@ -74,3 +74,8 @@ export interface Matrix{
   cols: number;
   data: number[][];
 }
+
+export interface Result {
+  time: number;
+  result: string;
+}
