@@ -103,7 +103,7 @@ public class AuthenticationController {
         }
 
         ConfirmationToken confirmationToken = confirmationTokenData.get();
-        Optional<UserDto> userData = userService.getUserById(confirmationToken.getId());
+        Optional<UserDto> userData = userService.getUserById(confirmationToken.getUser().getId());
         if (userData.isEmpty()) {
             logWarn(AuthenticationController.class,
                     "User with id = " + confirmationToken.getId() + " not found");
@@ -133,6 +133,14 @@ public class AuthenticationController {
 
         String jwt = jwtUtils.generateJwtToken(authentication);
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
+        Optional<UserDto> userData = userService.getUserById(userDetails.getId());
+        if (userData.isEmpty()) {
+            logWarn(AuthenticationController.class, "User with id = " + userDetails.getId() + " not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse("User not found"));
+        }
+        userService.setUserOnline(userData.get());
 
         JwtResponse jwtResponse = new JwtResponse(jwt, userDetails.getId(), userDetails.getEmail());
         logInfo(AuthenticationController.class,

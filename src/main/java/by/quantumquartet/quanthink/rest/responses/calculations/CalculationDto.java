@@ -8,6 +8,7 @@ public class CalculationDto {
     private ECalculation type;
     private String inputData;
     private String result;
+    private long time;
     private String date;
     private ELibrary library;
     private int threadsUsed;
@@ -16,12 +17,13 @@ public class CalculationDto {
     public CalculationDto() {
     }
 
-    public CalculationDto(long id, ECalculation type, String inputData, String result,
+    public CalculationDto(long id, ECalculation type, String inputData, String result, long time,
                           String date, ELibrary library, int threadsUsed, long userId) {
         this.id = id;
         this.type = type;
         this.inputData = inputData;
         this.result = result;
+        this.time = time;
         this.date = date;
         this.library = library;
         this.threadsUsed = threadsUsed;
@@ -58,6 +60,14 @@ public class CalculationDto {
 
     public void setResult(String result) {
         this.result = result;
+    }
+
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
     }
 
     public String getDate() {
