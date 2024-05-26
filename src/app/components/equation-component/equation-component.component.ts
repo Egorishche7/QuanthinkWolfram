@@ -53,7 +53,7 @@ inputError: string = '';
     this.inputValue = '';
   }
 
-  
+
 getTranslation(key: string): string {
   return this.languageService.getTranslation(key);
 }

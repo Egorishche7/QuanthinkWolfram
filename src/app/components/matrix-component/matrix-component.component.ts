@@ -74,7 +74,7 @@ Bcols:number = 3;
     this.inputValue = '';
   }
 
-  
+
 getTranslation(key: string): string {
   return this.languageService.getTranslation(key);
 }
@@ -103,7 +103,7 @@ matrixSum(){
     this.calcService.createCalculationMatrixSum(calcData as MatrixSum).subscribe(
       response => {
         let result: string = "";
-        for(let i = 0; i < response.data.result.size[0]; i++){
+        for(let i = 0; i < response.data.result.result.size[0]; i++){
           result += "[";
           for(let j = 0; j < response.data.result.size[1]; j++){
             result += response.data.result.data[i][j] + ", "
@@ -144,7 +144,7 @@ matrixSum(){
         threadsUsed: this.ThreadCount,
         library: localStorage.getItem("Library") as string
       };
-  
+
       this.calcService.createCalculationMatrixSub(calcData as MatrixSub).subscribe(
         response => {
           let result: string = "";
@@ -189,7 +189,7 @@ matrixSum(){
         threadsUsed: this.ThreadCount,
         library: localStorage.getItem("Library") as string
       };
-  
+
       this.calcService.createCalculationMatrixMul(calcData as MatrixMul).subscribe(
         response => {
           let result: string = "";
@@ -234,7 +234,7 @@ matrixSum(){
         threadsUsed: this.ThreadCount,
         library: localStorage.getItem("Library") as string
       };
-  
+
       this.calcService.createCalculationMatrixSystem(calcData as MatrixSystem).subscribe(
         response => {
           const obj : Result = {
@@ -269,7 +269,7 @@ matrixSum(){
         matrix: matrix1,
         library: localStorage.getItem("Library") as string
       };
-  
+
       this.calcService.createCalculationMatrixTranspose(calcData as MatrixTranspose).subscribe(
         response => {
           let result: string = "";
@@ -309,7 +309,7 @@ matrixSum(){
         threadsUsed: this.ThreadCount,
         library: localStorage.getItem("Library") as string
       };
-  
+
       this.calcService.createCalculationMatrixMulByNum(calcData as MatrixMulByNum).subscribe(
         response => {
           let result: string = "";
@@ -348,7 +348,7 @@ matrixSum(){
         threadsUsed: this.ThreadCount,
         library: localStorage.getItem("Library") as string
       };
-  
+
       this.calcService.createCalculationMatrixDeterminant(calcData as MatrixDeterminant).subscribe(
         response => {
           const obj : Result = {
@@ -375,7 +375,7 @@ matrixSum(){
         matrix: matrix1,
         library: localStorage.getItem("Library") as string
       };
-  
+
       this.calcService.createCalculationMatrixReverse(calcData as MatrixReverse).subscribe(
         response => {
           let result: string = "";

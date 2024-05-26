@@ -52,7 +52,7 @@ inputError: string = '';
     this.inputValue = '';
   }
 
-  
+
 getTranslation(key: string): string {
   return this.languageService.getTranslation(key);
 }
@@ -71,7 +71,7 @@ getTranslation(key: string): string {
           time: response.data.time,
           result :response.data.result
         }
-        this.resultEvent.emit(obj);
+        this.resultEvent.emit(obj.result);
       },
       error => {
         this.resultEvent.emit(error.error.error);
