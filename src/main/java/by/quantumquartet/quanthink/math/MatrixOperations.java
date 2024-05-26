@@ -128,7 +128,7 @@ public class MatrixOperations {
                 }
             }
 
-            return new Matrix(size1[0], size1[1], res_data);
+            return new Matrix(size1[0], size2[1], res_data);
         }
     }
 
