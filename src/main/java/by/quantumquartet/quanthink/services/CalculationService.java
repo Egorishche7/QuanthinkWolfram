@@ -6,12 +6,15 @@ import by.quantumquartet.quanthink.cmath.NativeMath;
 import by.quantumquartet.quanthink.math.Equations;
 import by.quantumquartet.quanthink.math.Matrix;
 import by.quantumquartet.quanthink.math.MatrixOperations;
-import by.quantumquartet.quanthink.models.*;
 import by.quantumquartet.quanthink.math.BasicArithmetic;
+import by.quantumquartet.quanthink.models.Calculation;
+import by.quantumquartet.quanthink.models.ECalculation;
+import by.quantumquartet.quanthink.models.User;
 import by.quantumquartet.quanthink.repositories.CalculationRepository;
 import by.quantumquartet.quanthink.repositories.UserRepository;
 import by.quantumquartet.quanthink.rest.requests.calculations.*;
 import by.quantumquartet.quanthink.rest.responses.calculations.CalculationDto;
+import by.quantumquartet.quanthink.rest.responses.calculations.CalculationResult;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
@@ -73,10 +76,11 @@ public class CalculationService {
         calculationRepository.deleteCalculationsByUserId(userId);
     }
 
-    public String solveBasicArithmetic(BasicArithmeticRequest basicArithmeticRequest) {
+    public CalculationResult<String> solveBasicArithmetic(BasicArithmeticRequest basicArithmeticRequest) {
         String expression = basicArithmeticRequest.getExpression();
 
         String result;
+        long startTime = System.nanoTime();
         try {
             switch (basicArithmeticRequest.getLibrary()) {
                 case JAVA -> result = BasicArithmetic.solveExpression(expression);
@@ -87,6 +91,8 @@ public class CalculationService {
             logError(CalculationService.class, e.getMessage());
             throw e;
         }
+        long endTime = System.nanoTime();
+        long elapsedTime = endTime - startTime;
 
         Optional<User> userData = userRepository.findById(basicArithmeticRequest.getUserId());
         if (userData.isPresent()) {
@@ -95,6 +101,7 @@ public class CalculationService {
                     ECalculation.BASIC_ARITHMETIC,
                     expression,
                     result,
+                    elapsedTime,
                     new Timestamp(System.currentTimeMillis()),
                     basicArithmeticRequest.getLibrary(),
                     THREADS_USED,
@@ -103,13 +110,14 @@ public class CalculationService {
             calculationRepository.save(newCalculation);
         }
 
-        return result;
+        return new CalculationResult<>(result, elapsedTime);
     }
 
-    public String solveEquation(EquationRequest equationRequest) {
+    public CalculationResult<String> solveEquation(EquationRequest equationRequest) {
         String equation = equationRequest.getEquation();
 
         String result;
+        long startTime = System.nanoTime();
         try {
             switch (equationRequest.getLibrary()) {
                 case JAVA -> result = Equations.SolveEquation(equation);
@@ -120,6 +128,8 @@ public class CalculationService {
             logError(CalculationService.class, e.getMessage());
             throw e;
         }
+        long endTime = System.nanoTime();
+        long elapsedTime = endTime - startTime;
 
         Optional<User> userData = userRepository.findById(equationRequest.getUserId());
         if (userData.isPresent()) {
@@ -128,6 +138,7 @@ public class CalculationService {
                     ECalculation.EQUATION,
                     equation,
                     result,
+                    elapsedTime,
                     new Timestamp(System.currentTimeMillis()),
                     equationRequest.getLibrary(),
                     THREADS_USED,
@@ -136,11 +147,12 @@ public class CalculationService {
             calculationRepository.save(newCalculation);
         }
 
-        return result;
+        return new CalculationResult<>(result, elapsedTime);
     }
 
-    public Matrix solveMatrixSum(MatrixSumRequest matrixSumRequest) throws JsonProcessingException {
+    public CalculationResult<Matrix> solveMatrixSum(MatrixSumRequest matrixSumRequest) throws JsonProcessingException {
         Matrix result;
+        long startTime = System.nanoTime();
         try {
             switch (matrixSumRequest.getLibrary()) {
                 case JAVA -> result = MatrixOperations.MatrixSum(
@@ -156,6 +168,8 @@ public class CalculationService {
             logError(CalculationService.class, e.getMessage());
             throw e;
         }
+        long endTime = System.nanoTime();
+        long elapsedTime = endTime - startTime;
 
         String jsonInputData = objectMapper.writeValueAsString(matrixSumRequest.getMatrix1().getData())
                 + " " + objectMapper.writeValueAsString(matrixSumRequest.getMatrix2().getData());
@@ -167,6 +181,7 @@ public class CalculationService {
                     ECalculation.MATRIX_SUM,
                     jsonInputData,
                     jsonResult,
+                    elapsedTime,
                     new Timestamp(System.currentTimeMillis()),
                     matrixSumRequest.getLibrary(),
                     matrixSumRequest.getThreadsUsed(),
@@ -175,11 +190,12 @@ public class CalculationService {
             calculationRepository.save(newCalculation);
         }
 
-        return result;
+        return new CalculationResult<>(result, elapsedTime);
     }
 
-    public Matrix solveMatrixSub(MatrixSubRequest matrixSubRequest) throws JsonProcessingException {
+    public CalculationResult<Matrix> solveMatrixSub(MatrixSubRequest matrixSubRequest) throws JsonProcessingException {
         Matrix result;
+        long startTime = System.nanoTime();
         try {
             switch (matrixSubRequest.getLibrary()) {
                 case JAVA -> result = MatrixOperations.MatrixSub(
@@ -195,6 +211,8 @@ public class CalculationService {
             logError(CalculationService.class, e.getMessage());
             throw e;
         }
+        long endTime = System.nanoTime();
+        long elapsedTime = endTime - startTime;
 
         String jsonInputData = objectMapper.writeValueAsString(matrixSubRequest.getMatrix1().getData())
                 + " " + objectMapper.writeValueAsString(matrixSubRequest.getMatrix2().getData());
@@ -206,6 +224,7 @@ public class CalculationService {
                     ECalculation.MATRIX_SUB,
                     jsonInputData,
                     jsonResult,
+                    elapsedTime,
                     new Timestamp(System.currentTimeMillis()),
                     matrixSubRequest.getLibrary(),
                     matrixSubRequest.getThreadsUsed(),
@@ -214,11 +233,12 @@ public class CalculationService {
             calculationRepository.save(newCalculation);
         }
 
-        return result;
+        return new CalculationResult<>(result, elapsedTime);
     }
 
-    public Matrix solveMatrixMul(MatrixMulRequest matrixMulRequest) throws JsonProcessingException {
+    public CalculationResult<Matrix> solveMatrixMul(MatrixMulRequest matrixMulRequest) throws JsonProcessingException {
         Matrix result;
+        long startTime = System.nanoTime();
         try {
             switch (matrixMulRequest.getLibrary()) {
                 case JAVA -> result = MatrixOperations.MatrixMul(
@@ -234,6 +254,8 @@ public class CalculationService {
             logError(CalculationService.class, e.getMessage());
             throw e;
         }
+        long endTime = System.nanoTime();
+        long elapsedTime = endTime - startTime;
 
         String jsonInputData = objectMapper.writeValueAsString(matrixMulRequest.getMatrix1().getData())
                 + " " + objectMapper.writeValueAsString(matrixMulRequest.getMatrix2().getData());
@@ -245,6 +267,7 @@ public class CalculationService {
                     ECalculation.MATRIX_MUL,
                     jsonInputData,
                     jsonResult,
+                    elapsedTime,
                     new Timestamp(System.currentTimeMillis()),
                     matrixMulRequest.getLibrary(),
                     matrixMulRequest.getThreadsUsed(),
@@ -253,11 +276,12 @@ public class CalculationService {
             calculationRepository.save(newCalculation);
         }
 
-        return result;
+        return new CalculationResult<>(result, elapsedTime);
     }
 
-    public Matrix solveMatrixMulByNum(MatrixMulByNumRequest matrixMulByNumRequest) throws JsonProcessingException {
+    public CalculationResult<Matrix> solveMatrixMulByNum(MatrixMulByNumRequest matrixMulByNumRequest) throws JsonProcessingException {
         Matrix result;
+        long startTime = System.nanoTime();
         try {
             switch (matrixMulByNumRequest.getLibrary()) {
                 case JAVA -> result = MatrixOperations.MatrixMul(
@@ -273,6 +297,8 @@ public class CalculationService {
             logError(CalculationService.class, e.getMessage());
             throw e;
         }
+        long endTime = System.nanoTime();
+        long elapsedTime = endTime - startTime;
 
         String jsonInputData = objectMapper.writeValueAsString(matrixMulByNumRequest.getMatrix().getData())
                 + " " + objectMapper.writeValueAsString(matrixMulByNumRequest.getNumber());
@@ -284,6 +310,7 @@ public class CalculationService {
                     ECalculation.MATRIX_MUL_BY_NUM,
                     jsonInputData,
                     jsonResult,
+                    elapsedTime,
                     new Timestamp(System.currentTimeMillis()),
                     matrixMulByNumRequest.getLibrary(),
                     matrixMulByNumRequest.getThreadsUsed(),
@@ -292,11 +319,12 @@ public class CalculationService {
             calculationRepository.save(newCalculation);
         }
 
-        return result;
+        return new CalculationResult<>(result, elapsedTime);
     }
 
-    public Matrix solveMatrixTranspose(MatrixTransposeRequest matrixTransposeRequest) throws JsonProcessingException {
+    public CalculationResult<Matrix> solveMatrixTranspose(MatrixTransposeRequest matrixTransposeRequest) throws JsonProcessingException {
         Matrix result;
+        long startTime = System.nanoTime();
         try {
             switch (matrixTransposeRequest.getLibrary()) {
                 case JAVA -> result = MatrixOperations.GetTransposeMatrix(matrixTransposeRequest.getMatrix());
@@ -308,6 +336,8 @@ public class CalculationService {
             logError(CalculationService.class, e.getMessage());
             throw e;
         }
+        long endTime = System.nanoTime();
+        long elapsedTime = endTime - startTime;
 
         String jsonInputData = objectMapper.writeValueAsString(matrixTransposeRequest.getMatrix().getData());
         String jsonResult = objectMapper.writeValueAsString(result.getData());
@@ -319,6 +349,7 @@ public class CalculationService {
                     ECalculation.MATRIX_TRANSPOSE,
                     jsonInputData,
                     jsonResult,
+                    elapsedTime,
                     new Timestamp(System.currentTimeMillis()),
                     matrixTransposeRequest.getLibrary(),
                     THREADS_USED,
@@ -327,11 +358,12 @@ public class CalculationService {
             calculationRepository.save(newCalculation);
         }
 
-        return result;
+        return new CalculationResult<>(result, elapsedTime);
     }
 
-    public Matrix solveMatrixReverse(MatrixReverseRequest matrixReverseRequest) throws JsonProcessingException {
+    public CalculationResult<Matrix> solveMatrixReverse(MatrixReverseRequest matrixReverseRequest) throws JsonProcessingException {
         Matrix result;
+        long startTime = System.nanoTime();
         try {
             switch (matrixReverseRequest.getLibrary()) {
                 case JAVA -> result = MatrixOperations.GetReverseMatrix(matrixReverseRequest.getMatrix());
@@ -343,6 +375,8 @@ public class CalculationService {
             logError(CalculationService.class, e.getMessage());
             throw e;
         }
+        long endTime = System.nanoTime();
+        long elapsedTime = endTime - startTime;
 
         String jsonInputData = objectMapper.writeValueAsString(matrixReverseRequest.getMatrix().getData());
         String jsonResult = objectMapper.writeValueAsString(result.getData());
@@ -354,6 +388,7 @@ public class CalculationService {
                     ECalculation.MATRIX_REVERSE,
                     jsonInputData,
                     jsonResult,
+                    elapsedTime,
                     new Timestamp(System.currentTimeMillis()),
                     matrixReverseRequest.getLibrary(),
                     THREADS_USED,
@@ -362,12 +397,13 @@ public class CalculationService {
             calculationRepository.save(newCalculation);
         }
 
-        return result;
+        return new CalculationResult<>(result, elapsedTime);
     }
 
-    public double solveMatrixDeterminant(MatrixDeterminantRequest matrixDeterminantRequest)
+    public CalculationResult<Double> solveMatrixDeterminant(MatrixDeterminantRequest matrixDeterminantRequest)
             throws JsonProcessingException {
         double result;
+        long startTime = System.nanoTime();
         try {
             switch (matrixDeterminantRequest.getLibrary()) {
                 case JAVA -> result = MatrixOperations.GetDeterminant(
@@ -382,6 +418,8 @@ public class CalculationService {
             logError(CalculationService.class, e.getMessage());
             throw e;
         }
+        long endTime = System.nanoTime();
+        long elapsedTime = endTime - startTime;
 
         String jsonInputData = objectMapper.writeValueAsString(matrixDeterminantRequest.getMatrix().getData());
         String jsonResult = objectMapper.writeValueAsString(result);
@@ -392,6 +430,7 @@ public class CalculationService {
                     ECalculation.MATRIX_DETERMINANT,
                     jsonInputData,
                     jsonResult,
+                    elapsedTime,
                     new Timestamp(System.currentTimeMillis()),
                     matrixDeterminantRequest.getLibrary(),
                     matrixDeterminantRequest.getThreadsUsed(),
@@ -400,11 +439,12 @@ public class CalculationService {
             calculationRepository.save(newCalculation);
         }
 
-        return result;
+        return new CalculationResult<>(result, elapsedTime);
     }
 
-    public String solveSystem(MatrixSystemRequest matrixSystemRequest) throws JsonProcessingException {
+    public CalculationResult<String> solveSystem(MatrixSystemRequest matrixSystemRequest) throws JsonProcessingException {
         String result;
+        long startTime = System.nanoTime();
         try {
             switch (matrixSystemRequest.getLibrary()) {
                 case JAVA -> result = MatrixOperations.SolveSystem(
@@ -420,6 +460,8 @@ public class CalculationService {
             logError(CalculationService.class, e.getMessage());
             throw e;
         }
+        long endTime = System.nanoTime();
+        long elapsedTime = endTime - startTime;
 
         String jsonInputData = objectMapper.writeValueAsString(matrixSystemRequest.getMatrix1().getData())
                 + " " + objectMapper.writeValueAsString(matrixSystemRequest.getMatrix2().getData());
@@ -431,6 +473,7 @@ public class CalculationService {
                     ECalculation.MATRIX_SYSTEM,
                     jsonInputData,
                     jsonResult,
+                    elapsedTime,
                     new Timestamp(System.currentTimeMillis()),
                     matrixSystemRequest.getLibrary(),
                     matrixSystemRequest.getThreadsUsed(),
@@ -439,7 +482,7 @@ public class CalculationService {
             calculationRepository.save(newCalculation);
         }
 
-        return result;
+        return new CalculationResult<>(result, elapsedTime);
     }
 
     private CalculationDto convertToDto(Calculation calculation) {
@@ -448,6 +491,7 @@ public class CalculationService {
         calculationDto.setType(calculation.getType());
         calculationDto.setInputData(calculation.getInputData());
         calculationDto.setResult(calculation.getResult());
+        calculationDto.setTime(calculation.getTime());
         calculationDto.setDate((calculation.getDate()).toString());
         calculationDto.setLibrary(calculation.getLibrary());
         calculationDto.setThreadsUsed(calculation.getThreadsUsed());

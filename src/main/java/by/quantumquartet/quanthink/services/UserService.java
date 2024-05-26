@@ -15,12 +15,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class UserService {
     private final PasswordEncoder encoder;
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
+    private final Set<UserDto> onlineUsers = ConcurrentHashMap.newKeySet();
 
     @Autowired
     public UserService(PasswordEncoder encoder, RoleRepository roleRepository, UserRepository userRepository) {
@@ -43,6 +45,11 @@ public class UserService {
 
     public Optional<UserDto> getUserById(long id) {
         Optional<User> userData = userRepository.findById(id);
+        return userData.map(this::convertToDto);
+    }
+
+    public Optional<UserDto> getUserByEmail(String email) {
+        Optional<User> userData = userRepository.findByEmail(email);
         return userData.map(this::convertToDto);
     }
 
@@ -129,6 +136,22 @@ public class UserService {
 
     public void deleteUser(long id) {
         userRepository.deleteById(id);
+    }
+
+    public void setUserOnline(UserDto userDto) {
+        onlineUsers.add(userDto);
+    }
+
+    public void setUserOffline(UserDto userDto) {
+        onlineUsers.remove(userDto);
+    }
+
+    public boolean isUserOnline(UserDto userDto) {
+        return onlineUsers.contains(userDto);
+    }
+
+    public Set<UserDto> getOnlineUsers() {
+        return new HashSet<>(onlineUsers);
     }
 
     private UserDto convertToDto(User user) {
