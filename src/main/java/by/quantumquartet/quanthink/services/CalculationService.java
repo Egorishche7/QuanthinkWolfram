@@ -2,7 +2,9 @@ package by.quantumquartet.quanthink.services;
 
 import static by.quantumquartet.quanthink.services.AppLogger.logError;
 
+import by.quantumquartet.quanthink.cmath.MatrixC;
 import by.quantumquartet.quanthink.cmath.NativeMath;
+import by.quantumquartet.quanthink.cmath.TimeStruct;
 import by.quantumquartet.quanthink.math.Equations;
 import by.quantumquartet.quanthink.math.Matrix;
 import by.quantumquartet.quanthink.math.MatrixOperations;
@@ -26,6 +28,9 @@ import java.util.*;
 
 @Service
 public class CalculationService {
+    private final int ROWS_INDEX = 0;
+    private final int COLS_INDEX = 1;
+
     private final CalculationRepository calculationRepository;
     private final UserRepository userRepository;
     private final ObjectMapper objectMapper;
@@ -80,19 +85,26 @@ public class CalculationService {
         String expression = basicArithmeticRequest.getExpression();
 
         String result;
-        long startTime = System.nanoTime();
+        long elapsedTime;
         try {
             switch (basicArithmeticRequest.getLibrary()) {
-                case JAVA -> result = BasicArithmetic.solveExpression(expression);
-                case C_PLUS_PLUS -> result = NativeMath.solveExpressionCStub(expression).getStringResult();
+                case JAVA -> {
+                    long startTime = System.currentTimeMillis();
+                    result = BasicArithmetic.solveExpression(expression);
+                    long endTime = System.currentTimeMillis();
+                    elapsedTime = endTime - startTime;
+                }
+                case C_PLUS_PLUS -> {
+                    TimeStruct struct = NativeMath.solveExpressionCStub(expression);
+                    result = struct.getStringResult();
+                    elapsedTime = struct.getTime();
+                }
                 default -> throw new IllegalArgumentException("Not a valid library");
             }
         } catch (IllegalArgumentException e) {
             logError(CalculationService.class, e.getMessage());
             throw e;
         }
-        long endTime = System.nanoTime();
-        long elapsedTime = endTime - startTime;
 
         Optional<User> userData = userRepository.findById(basicArithmeticRequest.getUserId());
         if (userData.isPresent()) {
@@ -117,19 +129,26 @@ public class CalculationService {
         String equation = equationRequest.getEquation();
 
         String result;
-        long startTime = System.nanoTime();
+        long elapsedTime;
         try {
             switch (equationRequest.getLibrary()) {
-                case JAVA -> result = Equations.SolveEquation(equation);
-                case C_PLUS_PLUS -> result = NativeMath.solveEquationCStub(equation).getStringResult();
+                case JAVA -> {
+                    long startTime = System.currentTimeMillis();
+                    result = Equations.SolveEquation(equation);
+                    long endTime = System.currentTimeMillis();
+                    elapsedTime = endTime - startTime;
+                }
+                case C_PLUS_PLUS -> {
+                    TimeStruct struct = NativeMath.solveEquationCStub(equation);
+                    result = struct.getStringResult();
+                    elapsedTime = struct.getTime();
+                }
                 default -> throw new IllegalArgumentException("Not a valid library");
             }
         } catch (IllegalArgumentException e) {
             logError(CalculationService.class, e.getMessage());
             throw e;
         }
-        long endTime = System.nanoTime();
-        long elapsedTime = endTime - startTime;
 
         Optional<User> userData = userRepository.findById(equationRequest.getUserId());
         if (userData.isPresent()) {
@@ -152,24 +171,34 @@ public class CalculationService {
 
     public CalculationResult<Matrix> solveMatrixSum(MatrixSumRequest matrixSumRequest) throws JsonProcessingException {
         Matrix result;
-        long startTime = System.nanoTime();
+        long elapsedTime;
         try {
             switch (matrixSumRequest.getLibrary()) {
-                case JAVA -> result = MatrixOperations.MatrixSum(
-                        matrixSumRequest.getMatrix1(),
-                        matrixSumRequest.getMatrix2(),
-                        matrixSumRequest.getThreadsUsed()
-                );
-                // Подключить C++ библиотеку
-                case C_PLUS_PLUS -> result = new Matrix(0, 0, new double[0][0]);
+                case JAVA -> {
+                    long startTime = System.currentTimeMillis();
+                    result = MatrixOperations.MatrixSum(
+                            matrixSumRequest.getMatrix1(),
+                            matrixSumRequest.getMatrix2(),
+                            matrixSumRequest.getThreadsUsed()
+                    );
+                    long endTime = System.currentTimeMillis();
+                    elapsedTime = endTime - startTime;
+                }
+                case C_PLUS_PLUS -> {
+                    TimeStruct struct = NativeMath.MatrixSumC(
+                            convertToCppMatrix(matrixSumRequest.getMatrix1()),
+                            convertToCppMatrix(matrixSumRequest.getMatrix2()),
+                            matrixSumRequest.getThreadsUsed()
+                    );
+                    result = convertToJavaMatrix(struct.getMatrixResult());
+                    elapsedTime = struct.getTime();
+                }
                 default -> throw new IllegalArgumentException("Not a valid library");
             }
         } catch (IllegalArgumentException e) {
             logError(CalculationService.class, e.getMessage());
             throw e;
         }
-        long endTime = System.nanoTime();
-        long elapsedTime = endTime - startTime;
 
         String jsonInputData = objectMapper.writeValueAsString(matrixSumRequest.getMatrix1().getData())
                 + " " + objectMapper.writeValueAsString(matrixSumRequest.getMatrix2().getData());
@@ -195,24 +224,34 @@ public class CalculationService {
 
     public CalculationResult<Matrix> solveMatrixSub(MatrixSubRequest matrixSubRequest) throws JsonProcessingException {
         Matrix result;
-        long startTime = System.nanoTime();
+        long elapsedTime;
         try {
             switch (matrixSubRequest.getLibrary()) {
-                case JAVA -> result = MatrixOperations.MatrixSub(
-                        matrixSubRequest.getMatrix1(),
-                        matrixSubRequest.getMatrix2(),
-                        matrixSubRequest.getThreadsUsed()
-                );
-                // Подключить C++ библиотеку
-                case C_PLUS_PLUS -> result = new Matrix(0, 0, new double[0][0]);
+                case JAVA -> {
+                    long startTime = System.currentTimeMillis();
+                    result = MatrixOperations.MatrixSub(
+                            matrixSubRequest.getMatrix1(),
+                            matrixSubRequest.getMatrix2(),
+                            matrixSubRequest.getThreadsUsed()
+                    );
+                    long endTime = System.currentTimeMillis();
+                    elapsedTime = endTime - startTime;
+                }
+                case C_PLUS_PLUS -> {
+                    TimeStruct struct = NativeMath.MatrixSubC(
+                            convertToCppMatrix(matrixSubRequest.getMatrix1()),
+                            convertToCppMatrix(matrixSubRequest.getMatrix2()),
+                            matrixSubRequest.getThreadsUsed()
+                    );
+                    result = convertToJavaMatrix(struct.getMatrixResult());
+                    elapsedTime = struct.getTime();
+                }
                 default -> throw new IllegalArgumentException("Not a valid library");
             }
         } catch (IllegalArgumentException e) {
             logError(CalculationService.class, e.getMessage());
             throw e;
         }
-        long endTime = System.nanoTime();
-        long elapsedTime = endTime - startTime;
 
         String jsonInputData = objectMapper.writeValueAsString(matrixSubRequest.getMatrix1().getData())
                 + " " + objectMapper.writeValueAsString(matrixSubRequest.getMatrix2().getData());
@@ -238,24 +277,34 @@ public class CalculationService {
 
     public CalculationResult<Matrix> solveMatrixMul(MatrixMulRequest matrixMulRequest) throws JsonProcessingException {
         Matrix result;
-        long startTime = System.nanoTime();
+        long elapsedTime;
         try {
             switch (matrixMulRequest.getLibrary()) {
-                case JAVA -> result = MatrixOperations.MatrixMul(
-                        matrixMulRequest.getMatrix1(),
-                        matrixMulRequest.getMatrix2(),
-                        matrixMulRequest.getThreadsUsed()
-                );
-                // Подключить C++ библиотеку
-                case C_PLUS_PLUS -> result = new Matrix(0, 0, new double[0][0]);
+                case JAVA -> {
+                    long startTime = System.currentTimeMillis();
+                    result = MatrixOperations.MatrixMul(
+                            matrixMulRequest.getMatrix1(),
+                            matrixMulRequest.getMatrix2(),
+                            matrixMulRequest.getThreadsUsed()
+                    );
+                    long endTime = System.currentTimeMillis();
+                    elapsedTime = endTime - startTime;
+                }
+                case C_PLUS_PLUS -> {
+                    TimeStruct struct = NativeMath.MatrixMulC(
+                            convertToCppMatrix(matrixMulRequest.getMatrix1()),
+                            convertToCppMatrix(matrixMulRequest.getMatrix2()),
+                            matrixMulRequest.getThreadsUsed()
+                    );
+                    result = convertToJavaMatrix(struct.getMatrixResult());
+                    elapsedTime = struct.getTime();
+                }
                 default -> throw new IllegalArgumentException("Not a valid library");
             }
         } catch (IllegalArgumentException e) {
             logError(CalculationService.class, e.getMessage());
             throw e;
         }
-        long endTime = System.nanoTime();
-        long elapsedTime = endTime - startTime;
 
         String jsonInputData = objectMapper.writeValueAsString(matrixMulRequest.getMatrix1().getData())
                 + " " + objectMapper.writeValueAsString(matrixMulRequest.getMatrix2().getData());
@@ -279,26 +328,37 @@ public class CalculationService {
         return new CalculationResult<>(result, elapsedTime);
     }
 
-    public CalculationResult<Matrix> solveMatrixMulByNum(MatrixMulByNumRequest matrixMulByNumRequest) throws JsonProcessingException {
+    public CalculationResult<Matrix> solveMatrixMulByNum(MatrixMulByNumRequest matrixMulByNumRequest)
+            throws JsonProcessingException {
         Matrix result;
-        long startTime = System.nanoTime();
+        long elapsedTime;
         try {
             switch (matrixMulByNumRequest.getLibrary()) {
-                case JAVA -> result = MatrixOperations.MatrixMul(
-                        matrixMulByNumRequest.getMatrix(),
-                        matrixMulByNumRequest.getNumber(),
-                        matrixMulByNumRequest.getThreadsUsed()
-                );
-                // Подключить C++ библиотеку
-                case C_PLUS_PLUS -> result = new Matrix(0, 0, new double[0][0]);
+                case JAVA -> {
+                    long startTime = System.currentTimeMillis();
+                    result = MatrixOperations.MatrixMul(
+                            matrixMulByNumRequest.getMatrix(),
+                            matrixMulByNumRequest.getNumber(),
+                            matrixMulByNumRequest.getThreadsUsed()
+                    );
+                    long endTime = System.currentTimeMillis();
+                    elapsedTime = endTime - startTime;
+                }
+                case C_PLUS_PLUS -> {
+                    TimeStruct struct = NativeMath.MatrixMulC(
+                            convertToCppMatrix(matrixMulByNumRequest.getMatrix()),
+                            matrixMulByNumRequest.getNumber(),
+                            matrixMulByNumRequest.getThreadsUsed()
+                    );
+                    result = convertToJavaMatrix(struct.getMatrixResult());
+                    elapsedTime = struct.getTime();
+                }
                 default -> throw new IllegalArgumentException("Not a valid library");
             }
         } catch (IllegalArgumentException e) {
             logError(CalculationService.class, e.getMessage());
             throw e;
         }
-        long endTime = System.nanoTime();
-        long elapsedTime = endTime - startTime;
 
         String jsonInputData = objectMapper.writeValueAsString(matrixMulByNumRequest.getMatrix().getData())
                 + " " + objectMapper.writeValueAsString(matrixMulByNumRequest.getNumber());
@@ -322,22 +382,31 @@ public class CalculationService {
         return new CalculationResult<>(result, elapsedTime);
     }
 
-    public CalculationResult<Matrix> solveMatrixTranspose(MatrixTransposeRequest matrixTransposeRequest) throws JsonProcessingException {
+    public CalculationResult<Matrix> solveMatrixTranspose(MatrixTransposeRequest matrixTransposeRequest)
+            throws JsonProcessingException {
         Matrix result;
-        long startTime = System.nanoTime();
+        long elapsedTime;
         try {
             switch (matrixTransposeRequest.getLibrary()) {
-                case JAVA -> result = MatrixOperations.GetTransposeMatrix(matrixTransposeRequest.getMatrix());
-                // Подключить C++ библиотеку
-                case C_PLUS_PLUS -> result = new Matrix(0, 0, new double[0][0]);
+                case JAVA -> {
+                    long startTime = System.currentTimeMillis();
+                    result = MatrixOperations.GetTransposeMatrix(matrixTransposeRequest.getMatrix());
+                    long endTime = System.currentTimeMillis();
+                    elapsedTime = endTime - startTime;
+                }
+                case C_PLUS_PLUS -> {
+                    TimeStruct struct = NativeMath.GetTransposeMatrixC(
+                            convertToCppMatrix(matrixTransposeRequest.getMatrix())
+                    );
+                    result = convertToJavaMatrix(struct.getMatrixResult());
+                    elapsedTime = struct.getTime();
+                }
                 default -> throw new IllegalArgumentException("Not a valid library");
             }
         } catch (IllegalArgumentException e) {
             logError(CalculationService.class, e.getMessage());
             throw e;
         }
-        long endTime = System.nanoTime();
-        long elapsedTime = endTime - startTime;
 
         String jsonInputData = objectMapper.writeValueAsString(matrixTransposeRequest.getMatrix().getData());
         String jsonResult = objectMapper.writeValueAsString(result.getData());
@@ -361,22 +430,31 @@ public class CalculationService {
         return new CalculationResult<>(result, elapsedTime);
     }
 
-    public CalculationResult<Matrix> solveMatrixReverse(MatrixReverseRequest matrixReverseRequest) throws JsonProcessingException {
+    public CalculationResult<Matrix> solveMatrixReverse(MatrixReverseRequest matrixReverseRequest)
+            throws JsonProcessingException {
         Matrix result;
-        long startTime = System.nanoTime();
+        long elapsedTime;
         try {
             switch (matrixReverseRequest.getLibrary()) {
-                case JAVA -> result = MatrixOperations.GetReverseMatrix(matrixReverseRequest.getMatrix());
-                // Подключить C++ библиотеку
-                case C_PLUS_PLUS -> result = new Matrix(0, 0, new double[0][0]);
+                case JAVA -> {
+                    long startTime = System.currentTimeMillis();
+                    result = MatrixOperations.GetReverseMatrix(matrixReverseRequest.getMatrix());
+                    long endTime = System.currentTimeMillis();
+                    elapsedTime = endTime - startTime;
+                }
+                case C_PLUS_PLUS -> {
+                    TimeStruct struct = NativeMath.GetReverseMatrixC(
+                            convertToCppMatrix(matrixReverseRequest.getMatrix())
+                    );
+                    result = convertToJavaMatrix(struct.getMatrixResult());
+                    elapsedTime = struct.getTime();
+                }
                 default -> throw new IllegalArgumentException("Not a valid library");
             }
         } catch (IllegalArgumentException e) {
             logError(CalculationService.class, e.getMessage());
             throw e;
         }
-        long endTime = System.nanoTime();
-        long elapsedTime = endTime - startTime;
 
         String jsonInputData = objectMapper.writeValueAsString(matrixReverseRequest.getMatrix().getData());
         String jsonResult = objectMapper.writeValueAsString(result.getData());
@@ -403,23 +481,32 @@ public class CalculationService {
     public CalculationResult<Double> solveMatrixDeterminant(MatrixDeterminantRequest matrixDeterminantRequest)
             throws JsonProcessingException {
         double result;
-        long startTime = System.nanoTime();
+        long elapsedTime;
         try {
             switch (matrixDeterminantRequest.getLibrary()) {
-                case JAVA -> result = MatrixOperations.GetDeterminant(
-                        matrixDeterminantRequest.getMatrix(),
-                        matrixDeterminantRequest.getThreadsUsed()
-                );
-                // Подключить C++ библиотеку
-                case C_PLUS_PLUS -> result = 0;
+                case JAVA -> {
+                    long startTime = System.currentTimeMillis();
+                    result = MatrixOperations.GetDeterminant(
+                            matrixDeterminantRequest.getMatrix(),
+                            matrixDeterminantRequest.getThreadsUsed()
+                    );
+                    long endTime = System.currentTimeMillis();
+                    elapsedTime = endTime - startTime;
+                }
+                case C_PLUS_PLUS -> {
+                    TimeStruct struct = NativeMath.GetDeterminantC(
+                            convertToCppMatrix(matrixDeterminantRequest.getMatrix()),
+                            matrixDeterminantRequest.getThreadsUsed()
+                    );
+                    result = struct.getDoubleResult();
+                    elapsedTime = struct.getTime();
+                }
                 default -> throw new IllegalArgumentException("Not a valid library");
             }
         } catch (IllegalArgumentException e) {
             logError(CalculationService.class, e.getMessage());
             throw e;
         }
-        long endTime = System.nanoTime();
-        long elapsedTime = endTime - startTime;
 
         String jsonInputData = objectMapper.writeValueAsString(matrixDeterminantRequest.getMatrix().getData());
         String jsonResult = objectMapper.writeValueAsString(result);
@@ -442,26 +529,37 @@ public class CalculationService {
         return new CalculationResult<>(result, elapsedTime);
     }
 
-    public CalculationResult<String> solveSystem(MatrixSystemRequest matrixSystemRequest) throws JsonProcessingException {
+    public CalculationResult<String> solveSystem(MatrixSystemRequest matrixSystemRequest)
+            throws JsonProcessingException {
         String result;
-        long startTime = System.nanoTime();
+        long elapsedTime;
         try {
             switch (matrixSystemRequest.getLibrary()) {
-                case JAVA -> result = MatrixOperations.SolveSystem(
-                        matrixSystemRequest.getMatrix1(),
-                        matrixSystemRequest.getMatrix2(),
-                        matrixSystemRequest.getThreadsUsed()
-                );
-                // Подключить C++ библиотеку
-                case C_PLUS_PLUS -> result = "";
+                case JAVA -> {
+                    long startTime = System.currentTimeMillis();
+                    result = MatrixOperations.SolveSystem(
+                            matrixSystemRequest.getMatrix1(),
+                            matrixSystemRequest.getMatrix2(),
+                            matrixSystemRequest.getThreadsUsed()
+                    );
+                    long endTime = System.currentTimeMillis();
+                    elapsedTime = endTime - startTime;
+                }
+                case C_PLUS_PLUS -> {
+                    TimeStruct struct = NativeMath.SolveSystemC(
+                            convertToCppMatrix(matrixSystemRequest.getMatrix1()),
+                            convertToCppMatrix(matrixSystemRequest.getMatrix2()),
+                            matrixSystemRequest.getThreadsUsed()
+                    );
+                    result = struct.getStringResult();
+                    elapsedTime = struct.getTime();
+                }
                 default -> throw new IllegalArgumentException("Not a valid library");
             }
         } catch (IllegalArgumentException e) {
             logError(CalculationService.class, e.getMessage());
             throw e;
         }
-        long endTime = System.nanoTime();
-        long elapsedTime = endTime - startTime;
 
         String jsonInputData = objectMapper.writeValueAsString(matrixSystemRequest.getMatrix1().getData())
                 + " " + objectMapper.writeValueAsString(matrixSystemRequest.getMatrix2().getData());
@@ -483,6 +581,20 @@ public class CalculationService {
         }
 
         return new CalculationResult<>(result, elapsedTime);
+    }
+
+    private MatrixC convertToCppMatrix(Matrix matrix) {
+        int rows = matrix.getSize()[ROWS_INDEX];
+        int cols = matrix.getSize()[COLS_INDEX];
+        double[][] data = matrix.getData();
+        return new MatrixC(rows, cols, data);
+    }
+
+    private Matrix convertToJavaMatrix(MatrixC matrixC) {
+        int rows = matrixC.getSize()[ROWS_INDEX];
+        int cols = matrixC.getSize()[COLS_INDEX];
+        double[][] data = matrixC.getData();
+        return new Matrix(rows, cols, data);
     }
 
     private CalculationDto convertToDto(Calculation calculation) {
