@@ -47,7 +47,7 @@ public:
 	static std::string AddOneBeforeX(std::string);
 	static std::string SimplifyMul(std::string);
 	static double Determinant(double**, int);
-	static double** generateSubArray(double**, int, int);
+	static double** GenerateSubArray(double**, int, int);
 	static bool CheckDouble(double);
 	static double GetDelta();
 

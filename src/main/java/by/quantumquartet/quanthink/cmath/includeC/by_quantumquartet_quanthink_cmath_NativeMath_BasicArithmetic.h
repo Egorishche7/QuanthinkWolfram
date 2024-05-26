@@ -10,9 +10,9 @@ extern "C" {
 /*
  * Class:     by_quantumquartet_quanthink_cmath_NativeMath
  * Method:    solveExpressionC
- * Signature: (Ljava/lang/String;)Ljava/lang/String;
+ * Signature: (Ljava/lang/String;)Lby/quantumquartet/quanthink/cmath/TimeStruct;
  */
-JNIEXPORT jstring JNICALL Java_by_quantumquartet_quanthink_cmath_NativeMath_solveExpressionC
+JNIEXPORT jobject JNICALL Java_by_quantumquartet_quanthink_cmath_NativeMath_solveExpressionC
   (JNIEnv *, jobject, jstring);
 
 std::string SolveExpression(std::string expr);

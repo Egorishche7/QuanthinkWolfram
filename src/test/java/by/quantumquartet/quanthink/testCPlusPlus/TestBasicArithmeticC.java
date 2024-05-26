@@ -1,5 +1,6 @@
 package by.quantumquartet.quanthink.testCPlusPlus;
 
+import by.quantumquartet.quanthink.cmath.TimeStruct;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -32,7 +33,7 @@ class TestBasicArithmeticC {
     })
     void testSolveExpressionSimpleSum(String expr) {
         Object[] data = convertor(expr);
-        Assertions.assertEquals(data[0], NativeMath.solveExpressionCStub((String)data[1]));
+        Assertions.assertEquals(data[0], NativeMath.solveExpressionCStub((String)data[1]).getStringResult());
     }
 
     @ParameterizedTest
@@ -55,7 +56,7 @@ class TestBasicArithmeticC {
     })
     void testSolveExpressionSimpleSub(String expr) {
         Object[] data = convertor(expr);
-        Assertions.assertEquals(data[0], NativeMath.solveExpressionCStub((String)data[1]));
+        Assertions.assertEquals(data[0], NativeMath.solveExpressionCStub((String)data[1]).getStringResult());
     }
 
     @ParameterizedTest
@@ -80,7 +81,7 @@ class TestBasicArithmeticC {
     })
     void testSolveExpressionSimpleMul(String expr) {
         Object[] data = convertor(expr);
-        Assertions.assertEquals(data[0], NativeMath.solveExpressionCStub((String)data[1]));
+        Assertions.assertEquals(data[0], NativeMath.solveExpressionCStub((String)data[1]).getStringResult());
     }
 
     @ParameterizedTest
@@ -103,7 +104,7 @@ class TestBasicArithmeticC {
     })
     void testSolveExpressionSimpleDel(String expr) {
         Object[] data = convertor(expr);
-        Assertions.assertEquals(data[0], NativeMath.solveExpressionCStub((String)data[1]));
+        Assertions.assertEquals(data[0], NativeMath.solveExpressionCStub((String)data[1]).getStringResult());
     }
 
     @ParameterizedTest
@@ -129,7 +130,7 @@ class TestBasicArithmeticC {
     })
     void testSolveExpressionSimplePow(String expr) {
         Object[] data = convertor(expr);
-        Assertions.assertEquals(data[0], NativeMath.solveExpressionCStub((String)data[1]));
+        Assertions.assertEquals(data[0], NativeMath.solveExpressionCStub((String)data[1]).getStringResult());
     }
 
     @ParameterizedTest
@@ -142,7 +143,7 @@ class TestBasicArithmeticC {
     })
     void testSolveExpressionConstants(String expr) {
         Object[] data = convertor(expr);
-        Assertions.assertEquals(data[0], NativeMath.solveExpressionCStub((String)data[1]));
+        Assertions.assertEquals(data[0], NativeMath.solveExpressionCStub((String)data[1]).getStringResult());
     }
 
     @ParameterizedTest
@@ -175,7 +176,10 @@ class TestBasicArithmeticC {
     })
     void testSolveExpressionComplex(String expr) {
         Object[] data = convertor(expr);
-        Assertions.assertEquals(data[0], NativeMath.solveExpressionCStub((String)data[1]));
+        TimeStruct s = NativeMath.solveExpressionCStub((String)data[1]);
+        System.out.println(s.getStringResult());
+        String ss = s.getStringResult();
+        Assertions.assertEquals(data[0], ss);
     }
 
 

@@ -49,8 +49,12 @@ public class User {
     private Set<Calculation> calculations = new HashSet<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<Message> messages = new HashSet<>();
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
+    private Set<Message> sentMessages = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL)
+    private Set<Message> receivedMessages = new HashSet<>();
 
     public User() {
     }
@@ -127,11 +131,19 @@ public class User {
         this.calculations = calculations;
     }
 
-    public Set<Message> getMessages() {
-        return messages;
+    public Set<Message> getSentMessages() {
+        return sentMessages;
     }
 
-    public void setMessages(Set<Message> messages) {
-        this.messages = messages;
+    public void setSentMessages(Set<Message> sentMessages) {
+        this.sentMessages = sentMessages;
+    }
+
+    public Set<Message> getReceivedMessages() {
+        return receivedMessages;
+    }
+
+    public void setReceivedMessages(Set<Message> receivedMessages) {
+        this.receivedMessages = receivedMessages;
     }
 }

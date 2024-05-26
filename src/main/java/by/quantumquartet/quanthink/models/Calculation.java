@@ -28,6 +28,10 @@ public class Calculation {
 
     @NotBlank
     @Column(nullable = false)
+    private long time;
+
+    @NotBlank
+    @Column(nullable = false)
     private Timestamp date;
 
     @NotBlank
@@ -47,11 +51,12 @@ public class Calculation {
     public Calculation() {
     }
 
-    public Calculation(ECalculation type, String inputData, String result,
+    public Calculation(ECalculation type, String inputData, String result, long time,
                        Timestamp date, ELibrary library, int threadsUsed, User user) {
         this.type = type;
         this.inputData = inputData;
         this.result = result;
+        this.time = time;
         this.date = date;
         this.library = library;
         this.threadsUsed = threadsUsed;
@@ -88,6 +93,14 @@ public class Calculation {
 
     public void setResult(String result) {
         this.result = result;
+    }
+
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
     }
 
     public Timestamp getDate() {

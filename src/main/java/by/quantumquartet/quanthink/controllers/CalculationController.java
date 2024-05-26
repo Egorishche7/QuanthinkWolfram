@@ -7,6 +7,7 @@ import by.quantumquartet.quanthink.rest.requests.calculations.*;
 import by.quantumquartet.quanthink.rest.responses.ErrorResponse;
 import by.quantumquartet.quanthink.rest.responses.SuccessResponse;
 import by.quantumquartet.quanthink.rest.responses.calculations.CalculationDto;
+import by.quantumquartet.quanthink.rest.responses.calculations.CalculationResult;
 import by.quantumquartet.quanthink.services.CalculationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,7 +113,7 @@ public class CalculationController {
     @PostMapping("/basicArithmetic")
     public ResponseEntity<?> solveBasicArithmetic(@Valid @RequestBody BasicArithmeticRequest basicArithmeticRequest) {
         try {
-            String result = calculationService.solveBasicArithmetic(basicArithmeticRequest);
+            CalculationResult<String> result = calculationService.solveBasicArithmetic(basicArithmeticRequest);
             logInfo(CalculationController.class, "Basic arithmetic calculation performed successfully");
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new SuccessResponse<>("Calculation performed successfully", result));
@@ -130,7 +131,7 @@ public class CalculationController {
     @PostMapping("/equation")
     public ResponseEntity<?> solveEquation(@Valid @RequestBody EquationRequest equationRequest) {
         try {
-            String result = calculationService.solveEquation(equationRequest);
+            CalculationResult<String> result = calculationService.solveEquation(equationRequest);
             logInfo(CalculationController.class, "Equation calculation performed successfully");
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new SuccessResponse<>("Calculation performed successfully", result));
@@ -148,7 +149,7 @@ public class CalculationController {
     @PostMapping("/matrixSum")
     public ResponseEntity<?> solveMatrixSum(@Valid @RequestBody MatrixSumRequest matrixSumRequest) {
         try {
-            Matrix result = calculationService.solveMatrixSum(matrixSumRequest);
+            CalculationResult<Matrix> result = calculationService.solveMatrixSum(matrixSumRequest);
             logInfo(CalculationController.class, "Matrix sum calculation performed successfully");
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new SuccessResponse<>("Calculation performed successfully", result));
@@ -166,7 +167,7 @@ public class CalculationController {
     @PostMapping("/matrixSub")
     public ResponseEntity<?> solveMatrixSub(@Valid @RequestBody MatrixSubRequest matrixSubRequest) {
         try {
-            Matrix result = calculationService.solveMatrixSub(matrixSubRequest);
+            CalculationResult<Matrix> result = calculationService.solveMatrixSub(matrixSubRequest);
             logInfo(CalculationController.class, "Matrix subtraction calculation performed successfully");
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new SuccessResponse<>("Calculation performed successfully", result));
@@ -184,7 +185,7 @@ public class CalculationController {
     @PostMapping("/matrixMul")
     public ResponseEntity<?> solveMatrixMul(@Valid @RequestBody MatrixMulRequest matrixMulRequest) {
         try {
-            Matrix result = calculationService.solveMatrixMul(matrixMulRequest);
+            CalculationResult<Matrix> result = calculationService.solveMatrixMul(matrixMulRequest);
             logInfo(CalculationController.class, "Matrix multiplication calculation performed successfully");
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new SuccessResponse<>("Calculation performed successfully", result));
@@ -202,7 +203,7 @@ public class CalculationController {
     @PostMapping("/matrixMulByNum")
     public ResponseEntity<?> solveMatrixMulByNum(@Valid @RequestBody MatrixMulByNumRequest matrixMulByNumRequest) {
         try {
-            Matrix result = calculationService.solveMatrixMulByNum(matrixMulByNumRequest);
+            CalculationResult<Matrix> result = calculationService.solveMatrixMulByNum(matrixMulByNumRequest);
             logInfo(CalculationController.class,
                     "Matrix multiplication by number calculation performed successfully");
             return ResponseEntity.status(HttpStatus.OK)
@@ -221,7 +222,7 @@ public class CalculationController {
     @PostMapping("/matrixTranspose")
     public ResponseEntity<?> solveMatrixTranspose(@Valid @RequestBody MatrixTransposeRequest matrixTransposeRequest) {
         try {
-            Matrix result = calculationService.solveMatrixTranspose(matrixTransposeRequest);
+            CalculationResult<Matrix> result = calculationService.solveMatrixTranspose(matrixTransposeRequest);
             logInfo(CalculationController.class, "Matrix transpose calculation performed successfully");
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new SuccessResponse<>("Calculation performed successfully", result));
@@ -239,7 +240,7 @@ public class CalculationController {
     @PostMapping("/matrixReverse")
     public ResponseEntity<?> solveMatrixReverse(@Valid @RequestBody MatrixReverseRequest matrixReverseRequest) {
         try {
-            Matrix result = calculationService.solveMatrixReverse(matrixReverseRequest);
+            CalculationResult<Matrix> result = calculationService.solveMatrixReverse(matrixReverseRequest);
             logInfo(CalculationController.class, "Matrix reverse calculation performed successfully");
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new SuccessResponse<>("Calculation performed successfully", result));
@@ -258,7 +259,7 @@ public class CalculationController {
     public ResponseEntity<?> solveMatrixDeterminant(@Valid @RequestBody MatrixDeterminantRequest
                                                             matrixDeterminantRequest) {
         try {
-            double result = calculationService.solveMatrixDeterminant(matrixDeterminantRequest);
+            CalculationResult<Double> result = calculationService.solveMatrixDeterminant(matrixDeterminantRequest);
             logInfo(CalculationController.class, "Matrix determinant calculation performed successfully");
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new SuccessResponse<>("Calculation performed successfully", result));
@@ -276,7 +277,7 @@ public class CalculationController {
     @PostMapping("/matrixSystem")
     public ResponseEntity<?> solveSystem(@Valid @RequestBody MatrixSystemRequest matrixSystemRequest) {
         try {
-            String result = calculationService.solveSystem(matrixSystemRequest);
+            CalculationResult<String> result = calculationService.solveSystem(matrixSystemRequest);
             logInfo(CalculationController.class, "Matrix system calculation performed successfully");
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new SuccessResponse<>("Calculation performed successfully", result));
