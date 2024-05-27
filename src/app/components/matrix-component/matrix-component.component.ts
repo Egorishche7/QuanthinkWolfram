@@ -81,16 +81,28 @@ getTranslation(key: string): string {
 
 matrixSum(){
   const userId = localStorage.getItem('userId');
-
+  let M1: number[][] = [];
+  for (let i = 0 ; i < this.Arows; i ++){
+    M1[i] = [];
+    for (let j = 0 ; j < this.Acols; j ++)
+        M1[i][j] =  this.Matrix1[i][j];
+  }
+  
   const matrix1: Matrix = {
       rows: this.Arows,
       cols: this.Acols,
-      data: this.Matrix1
+      data: M1
   };
+  let M2: number[][] = [];
+  for (let i = 0 ; i < this.Brows; i ++){
+    M2[i] = [];
+    for (let j = 0 ; j < this.Bcols; j ++)
+        M2[i][j] =  this.Matrix2[i][j];
+  }
   const matrix2: Matrix = {
     rows: this.Brows,
       cols: this.Bcols,
-    data: this.Matrix2
+    data: M2
 };
     const calcData: MatrixSum = {
       userId: userId,
@@ -103,7 +115,7 @@ matrixSum(){
     this.calcService.createCalculationMatrixSum(calcData as MatrixSum).subscribe(
       response => {
         let result: string = "";
-        for(let i = 0; i < response.data.result.result.size[0]; i++){
+        for(let i = 0; i < response.data.result.size[0]; i++){
           result += "[";
           for(let j = 0; j < response.data.result.size[1]; j++){
             result += response.data.result.data[i][j] + ", "
@@ -126,16 +138,27 @@ matrixSum(){
 
   matrixSub(){
     const userId = localStorage.getItem('userId');
-
+    let M1: number[][] = [];
+  for (let i = 0 ; i < this.Arows; i ++){
+    M1[i] = [];
+    for (let j = 0 ; j < this.Acols; j ++)
+        M1[i][j] =  this.Matrix1[i][j];
+  }
     const matrix1: Matrix = {
         rows: this.Arows,
         cols: this.Acols,
-        data: this.Matrix1
+        data: M1
     };
+    let M2: number[][] = [];
+  for (let i = 0 ; i < this.Brows; i ++){
+    M2[i] = [];
+    for (let j = 0 ; j < this.Bcols; j ++)
+        M2[i][j] =  this.Matrix2[i][j];
+  }
     const matrix2: Matrix = {
       rows: this.Brows,
         cols: this.Bcols,
-      data: this.Matrix2
+      data: M2
   };
       const calcData: MatrixSub = {
         userId: userId,
@@ -171,12 +194,23 @@ matrixSum(){
 
   matrixMul(){
     const userId = localStorage.getItem('userId');
-
+    let M1: number[][] = [];
+    for (let i = 0 ; i < this.Arows; i ++){
+      M1[i] = [];
+      for (let j = 0 ; j < this.Acols; j ++)
+          M1[i][j] =  this.Matrix1[i][j];
+    }
     const matrix1: Matrix = {
         rows: this.Arows,
         cols: this.Acols,
-        data: this.Matrix1
+        data: M1
     };
+    let M2: number[][] = [];
+  for (let i = 0 ; i < this.Brows; i ++){
+    M2[i] = [];
+    for (let j = 0 ; j < this.Bcols; j ++)
+        M2[i][j] =  this.Matrix2[i][j];
+  }
     const matrix2: Matrix = {
       rows: this.Brows,
         cols: this.Bcols,
@@ -216,16 +250,27 @@ matrixSum(){
 
   matrixSystem(){
     const userId = localStorage.getItem('userId');
-
+    let M1: number[][] = [];
+    for (let i = 0 ; i < this.Arows; i ++){
+      M1[i] = [];
+      for (let j = 0 ; j < this.Acols; j ++)
+          M1[i][j] =  this.Matrix1[i][j];
+    }
     const matrix1: Matrix = {
         rows: this.Arows,
         cols: this.Acols,
-        data: this.Matrix1
+        data: M1
     };
+    let M2: number[][] = [];
+  for (let i = 0 ; i < this.Brows; i ++){
+    M2[i] = [];
+    for (let j = 0 ; j < this.Bcols; j ++)
+        M2[i][j] =  this.Matrix2[i][j];
+  }
     const matrix2: Matrix = {
       rows: this.Brows,
         cols: this.Bcols,
-      data: this.Matrix2
+      data: M2
   };
       const calcData: MatrixSystem = {
         userId: userId,
@@ -258,11 +303,16 @@ matrixSum(){
   transpose(matrix: number[][], rows: number , cols: number){
 
     const userId = localStorage.getItem('userId');
-
+    let M: number[][] = [];
+  for (let i = 0 ; i < rows; i ++){
+    M[i] = [];
+    for (let j = 0 ; j < cols; j ++)
+        M[i][j] =  matrix[i][j];
+  }
     const matrix1: Matrix = {
         rows: rows,
         cols: cols,
-        data: matrix
+        data: M
     };
       const calcData: MatrixTranspose = {
         userId: userId,
@@ -296,11 +346,16 @@ matrixSum(){
 
   mulBy(matrix: number[][], rows: number , cols: number, num: number){
     const userId = localStorage.getItem('userId');
-
+    let M : number[][] = [];
+    for (let i = 0 ; i < rows; i ++){
+      M[i] = [];
+      for (let j = 0 ; j < cols; j ++)
+          M[i][j] =  matrix[i][j];
+    }
     const matrix1: Matrix = {
         rows: rows,
         cols: cols,
-        data: matrix
+        data: M
     };
       const calcData: MatrixMulByNum = {
         userId: userId,
@@ -336,11 +391,16 @@ matrixSum(){
 
   determinant(matrix: number[][], rows: number , cols: number){
     const userId = localStorage.getItem('userId');
-
+    let M : number[][] = [];
+    for (let i = 0 ; i < rows; i ++){
+      M[i] = [];
+      for (let j = 0 ; j < cols; j ++)
+          M[i][j] =  matrix[i][j];
+    }
     const matrix1: Matrix = {
         rows: rows,
         cols: cols,
-        data: matrix
+        data: M
     };
       const calcData: MatrixDeterminant = {
         userId: userId,
@@ -365,10 +425,16 @@ matrixSum(){
 
   reverse(matrix: number[][], rows: number , cols: number){
     const userId = localStorage.getItem('userId');
+    let M : number[][] = [];
+    for (let i = 0 ; i < rows; i ++){
+      M[i] = [];
+      for (let j = 0 ; j < cols; j ++)
+          M[i][j] =  matrix[i][j];
+    }
     const matrix1: Matrix = {
         rows: rows,
         cols: cols,
-        data: matrix
+        data: M
     };
       const calcData: MatrixReverse = {
         userId: userId,
@@ -388,7 +454,6 @@ matrixSum(){
             result += "], ";
           }
           result = result.slice(0,result.length - 2)
-          console.log(result);
           const obj : Result = {
             time : response.data.time,
             result : result

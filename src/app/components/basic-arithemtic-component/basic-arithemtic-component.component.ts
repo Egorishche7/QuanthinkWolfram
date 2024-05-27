@@ -71,7 +71,7 @@ getTranslation(key: string): string {
           time: response.data.time,
           result :response.data.result
         }
-        this.resultEvent.emit(obj.result);
+        this.resultEvent.emit(obj);
       },
       error => {
         this.resultEvent.emit(error.error.error);

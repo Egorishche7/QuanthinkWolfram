@@ -40,5 +40,20 @@
 "Thread":"Thread number",
 "Input":"Input",
 "Time":"computation time",
-"Sec": "sec."
+"Sec": "sec.",
+"calcType": "Calculation type",
+"BASIC_ARITHMETIC":"Basic Arithmetic",
+"EQUATION":"Solving an equation",
+"MATRIX_SUM": "Matrix sum",
+"MATRIX_SUB": "Matrix subtraction",
+"MATRIX_MUL": "Matrix multiplication",
+"MATRIX_MUL_BY_NUM": "Multiplying a matrix by a number",
+"MATRIX_TRANSPOSE": "Matrix Transpose",
+"MATRIX_REVERSE": "Matrix inverse calculation",
+"MATRIX_DETERMINANT": "Determinant calculation",
+"MATRIX_SYSTEM": "Solving a system of equations",
+"CHistory": "Calculations history",
+"Date":"Date/time",
+"Lib":"Library",
+"inputData":"Input data"
 }

@@ -1,0 +1,48 @@
+
+.list-container {
+    width: 100%;
+    /*margin-left: 0;*/
+    padding-left: 10px;
+    overflow: auto;
+    max-height : 500px;
+    margin-right: 4px;
+    margin-left: 4px;
+}
+
+.history {
+    display: flex;
+    flex-direction: column;
+    vertical-align: middle;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  margin-top: 8px;
+  margin-bottom: 0px;
+  border-radius: 8px;
+  border: 1px solid orange;
+  background-color: rgb(255, 207, 50); 
+}
+
+::-webkit-scrollbar {
+    width: 15px;
+    height: 15px;
+    }
+    ::-webkit-scrollbar-track-piece  {
+    background-color: rgb(255, 207, 50);
+    }
+    ::-webkit-scrollbar-thumb:vertical {
+    height: 30px;
+    background-color: orange;
+    }
+
+.header{
+    Color:white;
+    background-color: orange;
+    text-align: center;
+    border-radius: 8px;
+    border: 1px solid orange;
+    width: 90%;
+    margin-left: 10px;
+    margin-right: 10px;
+    
+}
