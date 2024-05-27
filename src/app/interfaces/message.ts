@@ -1,6 +1,6 @@
 export interface Message {
-id: number;
-content: string;
-timestamp: string;
-sender: string;
+  content: string | undefined;
+  senderId: number;
+  receiverId?: number;
+  time?: string;
 }
