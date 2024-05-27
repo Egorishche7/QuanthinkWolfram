@@ -4,7 +4,7 @@ import { LanguageService } from '../../services/language.service';
 import { Subscription } from 'rxjs';
 import { EventEmitter } from '@angular/core';
 import {AuthService} from "../../services/auth.service";
-
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -12,13 +12,15 @@ import {AuthService} from "../../services/auth.service";
 })
 export class HomeComponent implements OnInit {
   selectedLanguage: string;
+  
   selectedLibrary: string = "";
   showLanguageMenu: boolean = false;
   showlibraryMenu: boolean = false;
+  showhistory: boolean = false;
   languageChanged: EventEmitter<string> = new EventEmitter<string>();
   private languageSubscription: Subscription | undefined;
 
-  constructor(private router: Router, private languageService: LanguageService, private authService: AuthService) {
+  constructor(private router: Router, private languageService: LanguageService, private authService: AuthService, private msgService: MessageService) {
     this.selectedLanguage = this.languageService.getLanguage();
     this.authService = authService;
   }
@@ -56,7 +58,6 @@ export class HomeComponent implements OnInit {
   }
 
   isLoggedIn(): boolean {
-    console.log(localStorage.getItem('email'));
     return !!localStorage.getItem('email');
   }
 
@@ -69,15 +70,20 @@ export class HomeComponent implements OnInit {
   }
 
   toggleLibraryMenu(): void {
-    // console.log(this.isLoggedIn());
-    // if (this.isLoggedIn())
       this.showlibraryMenu = !this.showlibraryMenu;
-    // Добавить просьбу зарегаться
   }
 
   changeLibrary(library: string): void {
     localStorage.setItem("Library", library);
     this.selectedLibrary = library;
     this.showlibraryMenu = !this.showlibraryMenu;
+  }
+
+  toggleHistory(): void {
+    if (this.isLoggedIn())
+      this.showhistory = !this.showhistory;
+    else{
+      this.msgService.add({ severity: 'error', summary: 'Error', detail: 'You must be an authorized user' });
+    }
   }
 }

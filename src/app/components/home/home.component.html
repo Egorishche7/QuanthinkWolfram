@@ -44,7 +44,8 @@
         <span style="vertical-align: middle;">C++</span>
       </button>     
     </div>
-    <span class="green-text">{{ getTranslation('History') }} &gt;</span>
+    <span class="green-text" (click)="toggleHistory()">{{ getTranslation('History') }} &gt;</span>
+    <div *ngIf="showhistory" class="history-menu"> <app-history></app-history></div>
     <span class="turquoise-text" (click)="goToChat()">{{ getTranslation('Online Chat') }} &gt;</span>
   </div>
 </div>

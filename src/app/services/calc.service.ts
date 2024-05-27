@@ -50,4 +50,18 @@ export class CalculationService {
   createCalculationMatrixSum(calculationDetails: MatrixSum): Observable<any> {
     return this.http.post(this.apiUrl + "matrixSum", calculationDetails);
   }
+
+  createCalculationHistory(userId: number, header: Headers): Observable<any> {
+      return Observable.create((observer : any) => {
+          fetch(this.apiUrl + "user/" + userId, {
+        method: 'GET',
+        headers: header
+      }).then(response => response.json())
+      .then(body => {console.log(body); observer.next(body);
+        /*Complete the Observable as it won't produce any more event */
+        observer.complete();})
+      .catch(err => observer.error(err));
+    });
+  }
+
 }

@@ -14,10 +14,8 @@ export class InputComponent {
   inputValue: string = '';
   isInputFocused: boolean = false;
   calculationResult: string | undefined;
-  calculationTime: number | undefined;
-
+  calculationTime: number | undefined = 0; 
   inputError: string = '';
-
   constructor(
     private calcService: CalculationService,
     private router: Router,
