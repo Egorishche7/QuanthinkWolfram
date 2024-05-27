@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
-import { CalculationService } from "../../services/calc.service";
-import { Router } from "@angular/router";
-import { LanguageService } from '../../services/language.service';
-import { Result } from "../../interfaces/calculation";
+import {Component} from '@angular/core';
+import {CalculationService} from "../../services/calc.service";
+import {Router} from "@angular/router";
+import {LanguageService} from '../../services/language.service';
+import {Result} from "../../interfaces/calculation";
+
 @Component({
   selector: 'app-input',
   templateUrl: './input-component.component.html',
@@ -14,14 +15,17 @@ export class InputComponent {
   isInputFocused: boolean = false;
   calculationResult: string | undefined;
   calculationTime: number | undefined;
-  
-inputError: string = '';
+
+  inputError: string = '';
+
   constructor(
     private calcService: CalculationService,
     private router: Router,
     private languageService: LanguageService
-  ) { }
- ngOnInit() {
+  ) {
+  }
+
+  ngOnInit() {
     this.languageService.languageChanged.subscribe(() => {
       this.languageChangedCallback();
     });
@@ -30,6 +34,7 @@ inputError: string = '';
   languageChangedCallback() {
     this.inputError = '';
   }
+
   onInputFocus() {
     this.isInputFocused = true;
   }
@@ -59,15 +64,12 @@ inputError: string = '';
   }
 
 
-getTranslation(key: string): string {
+  getTranslation(key: string): string {
     return this.languageService.getTranslation(key);
   }
 
-changeCalc(key: string){
-  this.selectedCalculations = key;
-}
-
-
-
+  changeCalc(key: string) {
+    this.selectedCalculations = key;
+  }
 }
 
