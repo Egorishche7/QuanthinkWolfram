@@ -1,104 +1,71 @@
-// import {Component, OnInit} from '@angular/core';
-// import {ChatService} from '../../services/chat.service';
-// import {Message} from '../../interfaces/message';
-//
-// @Component({
-//   selector: 'app-online-chat',
-//   templateUrl: './online-chat.component.html',
-//   styleUrls: ['./online-chat.component.css']
-// })
-// export class OnlineChatComponent implements OnInit {
-//   messages: Message[] = [];
-//   newMessage: string = '';
-//
-//   constructor(private chatService: ChatService) {
-//   }
-//
-//   loadMessages() {
-//     this.chatService.getMessages().subscribe(
-//       (messages: Message[]) => {
-//         this.messages = messages;
-//         console.log('Previous messages:', this.messages);
-//       },
-//       (error) => {
-//         console.error('Failed to load messages:', error);
-//       }
-//     );
-//   }
-//
-//   sendMessage(senderId: string, message: string): void {
-//     // const senderId = localStorage.getItem("")
-//     const newMessage: Message = {
-//       senderId:
-//       content: message,
-//       timestamp: new Date().toISOString(),
-//       sender: ''
-//     };
-//     this.chatService.sendMessage(newMessage);
-//     console.log('Sent message:', newMessage);
-//     this.newMessage = '';
-//
-//   }
-//
-//   ngOnInit() {
-//     setTimeout(() => {
-//       this.loadMessages();
-//
-//       this.subscribeToNewMessages();
-//     }, 500); // Добавляем задержку в 500 миллисекунд
-//   }
-//
-//   subscribeToNewMessages() {
-//     this.chatService.receiveMessages().subscribe(
-//       (message: Message) => {
-//         this.messages.push(message); // Add new message received via WebSocket
-//         console.log('Received message:', message);
-//       },
-//       (error) => {
-//         console.error('Failed to receive message:', error);
-//       }
-//     );
-//   }
-// }
-
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import {ChatService} from "../../services/chat.service";
-import {Message} from '../../interfaces/message';
-import { Subscription } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { ChatService } from '../../services/chat.service';
+import { MessageService } from 'primeng/api';
+import { Message } from '../../interfaces/message';
 
 @Component({
   selector: 'app-online-chat',
   templateUrl: './online-chat.component.html',
   styleUrls: ['./online-chat.component.css']
 })
-export class OnlineChatComponent implements OnInit, OnDestroy {
-  messages: Message[] = [];
-  messageContent: string = '';
-  private messagesSubscription: Subscription | undefined;
-  private email: string | null = localStorage.getItem("email");
-  private senderId: string | null = localStorage.getItem("userId");
+export class OnlineChatComponent implements OnInit {
+  username: string | undefined;
+  text: string | undefined;
 
-  constructor(private chatService: ChatService) {}
+  received: Message[] = [];
+  sent: Message[] = [];
 
-  ngOnInit() {
-    //this.chatService.connect(this.email);
+  connected: boolean = false;
 
-    this.messagesSubscription = this.chatService.getMessages().subscribe(message => {
-      this.messages.push(message);
+  constructor(private chatService: ChatService, private messageService: MessageService) { }
+
+  ngOnInit(): void {
+    this.username = localStorage.getItem('userId') || undefined;
+
+    this.chatService.getMessages().subscribe((message: Message) => {
+      if (message.senderId !== parseInt(this.username || '', 10)) {
+        this.received.push(message);
+        this.messageService.add({
+          severity: 'info',
+          summary: 'New message from ' + message.senderId,
+          detail: message.content
+        });
+      }
     });
   }
 
-  ngOnDestroy() {
-    //this.chatService.disconnect(this.email);
-    if (this.messagesSubscription) {
-      this.messagesSubscription.unsubscribe();
+  connect() {
+    const email = localStorage.getItem('email') || '';
+    if (email) {
+      this.chatService.connect(email);
+      this.connected = true;
+    }
+  }
+
+  disconnect() {
+    const email = localStorage.getItem('email') || '';
+    if (this.connected && email) {
+      this.chatService.disconnect(email);
+      this.connected = false;
+      this.sent = [];
+      this.received = [];
+      this.username = '';
+      this.text = '';
     }
   }
 
   sendMessage() {
-    if (this.messageContent.trim() !== '') {
-      //this.chatService.sendPublicMessage({ senderId: this.senderId, content: this.messageContent });
-      this.messageContent = '';
+    const senderId = localStorage.getItem('userId');
+    // @ts-ignore
+    if (senderId && this.text.trim() !== '') {
+      const message: Message = {
+        senderId: parseInt(senderId, 10),
+        content: this.text,
+        time: new Date().toISOString()
+      };
+      this.chatService.sendPublicMessage(message);
+      this.received.push(message);  // Сразу отображаем сообщение
+      this.text = '';
     }
   }
 }

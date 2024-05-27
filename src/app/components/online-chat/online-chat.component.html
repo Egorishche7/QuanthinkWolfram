@@ -1,40 +1,58 @@
-<!--<div class="chat-container">-->
-
-<!--  &lt;!&ndash; Форма отображения предыдущих сообщений &ndash;&gt;-->
-<!--  <div class="previous-messages-container">-->
-<!--    <div *ngFor="let message of messages" class="previous-message">-->
-<!--      <div class="previous-message-sender">{{ message.sender }}</div>-->
-<!--      <div class="previous-message-content">{{ message.content }}</div>-->
-<!--      <div class="previous-message-timestamp">{{ message.timestamp }}</div>-->
-<!--    </div>-->
-<!--  </div>-->
-
-<!--  <div class="messages-container">-->
-<!--    <div *ngFor="let message of messages" class="message">-->
-<!--      <div class="message-sender">{{ message.sender }}</div>-->
-<!--      <div class="message-content">{{ message.content }}</div>-->
-<!--      <div class="message-timestamp">{{ message.timestamp }}</div>-->
-<!--    </div>-->
-<!--  </div>-->
-<!--  <div class="input-container">-->
-<!--    <input [(ngModel)]="newMessage" placeholder="Type a message..." class="message-input">-->
-<!--    <button (click)="sendMessage(newMessage)" class="send-button">Send</button>-->
-<!--  </div>-->
-<!--</div>-->
-
-<div class="chat-container">
-  <div class="message-list">
-    <div *ngFor="let message of messages">
-      <p [ngClass]="{
-        'public-message': !message.receiverId,
-        'private-message': message.receiverId
-      }">
-        <strong>{{ message.senderId }}</strong>: {{ message.content }}
-      </p>
+<p-toast></p-toast>
+<h1>Quanthink Wolfram Chat</h1>
+<div style="padding: 1em">
+  <div class="grid">
+    <span class="p-float-label">
+      <input type="text" id="username" pInputText [(ngModel)]="username" />
+      <label for="username">Username</label>
+    </span>
+    <p-button icon="pi pi-sign-in" class="m-1" [disabled]="connected || !username" (onClick)="connect()"></p-button>
+    <p-button icon="pi pi-sign-out" class="m-1" [disabled]="!connected" (onClick)="disconnect()"></p-button>
+  </div>
+  <div style="padding-top: 1em" *ngIf="connected">
+    <div class="grid">
+      <span class="p-float-label">
+        <input type="text" id="text" pInputText [(ngModel)]="text" />
+        <label for="text">Text</label>
+      </span>
+      <p-button icon="pi pi-send" class="m-1" [disabled]="!text" (onClick)="sendMessage()"></p-button>
     </div>
   </div>
-  <div class="message-input">
-    <input [(ngModel)]="messageContent" placeholder="Enter your message" />
-    <button (click)="sendMessage()">Send</button>
+</div>
+
+<div class="grid">
+  <div class="col">
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th><h3>Sent:</h3></th>
+      </tr>
+      </thead>
+      <tbody *ngFor="let message of sent">
+      <tr>
+        <td>
+          <b>{{message.time | date: 'dd.MM.yyyy hh:mm:ss'}}</b>
+          <p>{{message.content}}</p>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col">
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th><h3>Received:</h3></th>
+      </tr>
+      </thead>
+      <tbody *ngFor="let message of received">
+      <tr>
+        <td>
+          <b>{{message.time | date: 'dd.MM.yyyy hh:mm:ss'}}</b>
+          <p>{{message.senderId}}: {{message.content}}</p>
+        </td>
+      </tr>
+      </tbody>
+    </table>
   </div>
 </div>
