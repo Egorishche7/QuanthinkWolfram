@@ -1,6 +1,6 @@
 package by.quantumquartet.quanthink.rest.responses.messages;
 
-import by.quantumquartet.quanthink.models.EMessage;
+import by.quantumquartet.quanthink.models.messages.EMessage;
 
 public class MessageDto {
     private long id;

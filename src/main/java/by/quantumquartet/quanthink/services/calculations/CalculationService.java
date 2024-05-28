@@ -1,6 +1,6 @@
-package by.quantumquartet.quanthink.services;
+package by.quantumquartet.quanthink.services.calculations;
 
-import static by.quantumquartet.quanthink.services.AppLogger.logError;
+import static by.quantumquartet.quanthink.services.logging.AppLogger.logError;
 
 import by.quantumquartet.quanthink.cmath.MatrixC;
 import by.quantumquartet.quanthink.cmath.NativeMath;
@@ -9,9 +9,9 @@ import by.quantumquartet.quanthink.math.Equations;
 import by.quantumquartet.quanthink.math.Matrix;
 import by.quantumquartet.quanthink.math.MatrixOperations;
 import by.quantumquartet.quanthink.math.BasicArithmetic;
-import by.quantumquartet.quanthink.models.Calculation;
-import by.quantumquartet.quanthink.models.ECalculation;
-import by.quantumquartet.quanthink.models.User;
+import by.quantumquartet.quanthink.models.calculations.Calculation;
+import by.quantumquartet.quanthink.models.calculations.ECalculation;
+import by.quantumquartet.quanthink.models.users.User;
 import by.quantumquartet.quanthink.repositories.CalculationRepository;
 import by.quantumquartet.quanthink.repositories.UserRepository;
 import by.quantumquartet.quanthink.rest.requests.calculations.*;

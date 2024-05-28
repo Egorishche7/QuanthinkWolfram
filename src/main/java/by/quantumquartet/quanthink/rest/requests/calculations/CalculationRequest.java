@@ -1,6 +1,6 @@
 package by.quantumquartet.quanthink.rest.requests.calculations;
 
-import by.quantumquartet.quanthink.models.ELibrary;
+import by.quantumquartet.quanthink.models.calculations.ELibrary;
 
 public class CalculationRequest {
     private long userId;

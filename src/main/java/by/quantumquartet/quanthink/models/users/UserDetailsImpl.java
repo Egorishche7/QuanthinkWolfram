@@ -1,4 +1,4 @@
-package by.quantumquartet.quanthink.models;
+package by.quantumquartet.quanthink.models.users;
 
 import java.util.Collection;
 import java.util.List;

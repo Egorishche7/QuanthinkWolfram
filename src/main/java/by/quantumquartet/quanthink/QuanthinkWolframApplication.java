@@ -1,10 +1,10 @@
 package by.quantumquartet.quanthink;
 
-import by.quantumquartet.quanthink.models.ERole;
-import by.quantumquartet.quanthink.models.Role;
+import by.quantumquartet.quanthink.models.roles.ERole;
+import by.quantumquartet.quanthink.models.roles.Role;
 import by.quantumquartet.quanthink.rest.requests.users.RegisterRequest;
-import by.quantumquartet.quanthink.services.RoleService;
-import by.quantumquartet.quanthink.services.UserService;
+import by.quantumquartet.quanthink.services.roles.RoleService;
+import by.quantumquartet.quanthink.services.users.UserService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,10 +1,10 @@
-package by.quantumquartet.quanthink.services;
+package by.quantumquartet.quanthink.services.users;
 
-import static by.quantumquartet.quanthink.services.AppLogger.logError;
+import static by.quantumquartet.quanthink.services.logging.AppLogger.logError;
 
-import by.quantumquartet.quanthink.models.ERole;
-import by.quantumquartet.quanthink.models.Role;
-import by.quantumquartet.quanthink.models.User;
+import by.quantumquartet.quanthink.models.roles.ERole;
+import by.quantumquartet.quanthink.models.roles.Role;
+import by.quantumquartet.quanthink.models.users.User;
 import by.quantumquartet.quanthink.repositories.RoleRepository;
 import by.quantumquartet.quanthink.repositories.UserRepository;
 import by.quantumquartet.quanthink.rest.requests.users.RegisterRequest;

@@ -1,7 +1,7 @@
-package by.quantumquartet.quanthink.services;
+package by.quantumquartet.quanthink.services.messages;
 
-import by.quantumquartet.quanthink.models.VectorClock;
-import by.quantumquartet.quanthink.models.Message;
+import by.quantumquartet.quanthink.models.messages.VectorClock;
+import by.quantumquartet.quanthink.models.messages.Message;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;

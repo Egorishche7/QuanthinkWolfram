@@ -1,6 +1,6 @@
 package by.quantumquartet.quanthink.rest.responses.users;
 
-import by.quantumquartet.quanthink.models.ERole;
+import by.quantumquartet.quanthink.models.roles.ERole;
 
 import java.util.Set;
 

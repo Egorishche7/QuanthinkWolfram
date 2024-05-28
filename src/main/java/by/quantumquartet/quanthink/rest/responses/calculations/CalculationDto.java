@@ -1,7 +1,7 @@
 package by.quantumquartet.quanthink.rest.responses.calculations;
 
-import by.quantumquartet.quanthink.models.ECalculation;
-import by.quantumquartet.quanthink.models.ELibrary;
+import by.quantumquartet.quanthink.models.calculations.ECalculation;
+import by.quantumquartet.quanthink.models.calculations.ELibrary;
 
 public class CalculationDto {
     private long id;

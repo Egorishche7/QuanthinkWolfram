@@ -1,9 +1,9 @@
-package by.quantumquartet.quanthink.services;
+package by.quantumquartet.quanthink.services.roles;
 
-import static by.quantumquartet.quanthink.services.AppLogger.logError;
+import static by.quantumquartet.quanthink.services.logging.AppLogger.logError;
 
-import by.quantumquartet.quanthink.models.Role;
-import by.quantumquartet.quanthink.models.ERole;
+import by.quantumquartet.quanthink.models.roles.Role;
+import by.quantumquartet.quanthink.models.roles.ERole;
 import by.quantumquartet.quanthink.repositories.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

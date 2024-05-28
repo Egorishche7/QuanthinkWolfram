@@ -1,4 +1,4 @@
-package by.quantumquartet.quanthink.services;
+package by.quantumquartet.quanthink.services.logging;
 
 import org.apache.logging.log4j.LogManager;
 

@@ -1,11 +1,14 @@
-package by.quantumquartet.quanthink.services;
+package by.quantumquartet.quanthink.services.messages;
 
-import by.quantumquartet.quanthink.models.*;
+import by.quantumquartet.quanthink.models.messages.EMessage;
+import by.quantumquartet.quanthink.models.messages.Message;
+import by.quantumquartet.quanthink.models.users.User;
 import by.quantumquartet.quanthink.repositories.MessageRepository;
 import by.quantumquartet.quanthink.repositories.UserRepository;
 import by.quantumquartet.quanthink.rest.requests.messages.PrivateMessageRequest;
 import by.quantumquartet.quanthink.rest.requests.messages.PublicMessageRequest;
 import by.quantumquartet.quanthink.rest.responses.messages.MessageDto;
+import by.quantumquartet.quanthink.services.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -14,7 +17,7 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
-import static by.quantumquartet.quanthink.services.AppLogger.logError;
+import static by.quantumquartet.quanthink.services.logging.AppLogger.logError;
 
 @Service
 public class MessageService {

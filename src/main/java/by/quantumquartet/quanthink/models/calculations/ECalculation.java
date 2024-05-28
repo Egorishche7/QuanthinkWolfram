@@ -1,4 +1,4 @@
-package by.quantumquartet.quanthink.models;
+package by.quantumquartet.quanthink.models.calculations;
 
 public enum ECalculation {
     BASIC_ARITHMETIC,

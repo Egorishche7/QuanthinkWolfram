@@ -1,8 +1,8 @@
 package by.quantumquartet.quanthink.security;
 
-import static by.quantumquartet.quanthink.services.AppLogger.logError;
+import static by.quantumquartet.quanthink.services.logging.AppLogger.logError;
 
-import by.quantumquartet.quanthink.services.UserDetailsServiceImpl;
+import by.quantumquartet.quanthink.services.users.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

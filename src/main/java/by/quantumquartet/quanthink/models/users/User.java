@@ -1,5 +1,8 @@
-package by.quantumquartet.quanthink.models;
+package by.quantumquartet.quanthink.models.users;
 
+import by.quantumquartet.quanthink.models.messages.Message;
+import by.quantumquartet.quanthink.models.roles.Role;
+import by.quantumquartet.quanthink.models.calculations.Calculation;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;

@@ -1,8 +1,8 @@
 package by.quantumquartet.quanthink.controllers;
 
-import static by.quantumquartet.quanthink.services.AppLogger.*;
+import static by.quantumquartet.quanthink.services.logging.AppLogger.*;
 
-import by.quantumquartet.quanthink.models.ConfirmationToken;
+import by.quantumquartet.quanthink.models.users.ConfirmationToken;
 import by.quantumquartet.quanthink.rest.requests.users.LoginRequest;
 import by.quantumquartet.quanthink.rest.requests.users.RegisterRequest;
 import by.quantumquartet.quanthink.rest.responses.SuccessResponse;
@@ -10,10 +10,10 @@ import by.quantumquartet.quanthink.rest.responses.ErrorResponse;
 import by.quantumquartet.quanthink.rest.responses.jwt.JwtResponse;
 import by.quantumquartet.quanthink.rest.responses.users.UserDto;
 import by.quantumquartet.quanthink.security.JwtUtils;
-import by.quantumquartet.quanthink.models.UserDetailsImpl;
-import by.quantumquartet.quanthink.services.ConfirmationTokenService;
-import by.quantumquartet.quanthink.services.EmailService;
-import by.quantumquartet.quanthink.services.UserService;
+import by.quantumquartet.quanthink.models.users.UserDetailsImpl;
+import by.quantumquartet.quanthink.services.users.ConfirmationTokenService;
+import by.quantumquartet.quanthink.services.users.EmailService;
+import by.quantumquartet.quanthink.services.users.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

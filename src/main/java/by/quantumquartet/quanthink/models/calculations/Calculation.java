@@ -1,5 +1,6 @@
-package by.quantumquartet.quanthink.models;
+package by.quantumquartet.quanthink.models.calculations;
 
+import by.quantumquartet.quanthink.models.users.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;

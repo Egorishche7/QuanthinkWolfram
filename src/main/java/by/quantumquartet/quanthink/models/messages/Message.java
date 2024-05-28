@@ -1,5 +1,6 @@
-package by.quantumquartet.quanthink.models;
+package by.quantumquartet.quanthink.models.messages;
 
+import by.quantumquartet.quanthink.models.users.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

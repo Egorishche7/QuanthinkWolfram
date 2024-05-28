@@ -1,4 +1,4 @@
-package by.quantumquartet.quanthink.models;
+package by.quantumquartet.quanthink.models.messages;
 
 import java.util.HashMap;
 import java.util.HashSet;

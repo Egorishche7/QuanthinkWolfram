@@ -1,13 +1,13 @@
 package by.quantumquartet.quanthink.controllers;
 
-import static by.quantumquartet.quanthink.services.AppLogger.*;
+import static by.quantumquartet.quanthink.services.logging.AppLogger.*;
 
-import by.quantumquartet.quanthink.models.ERole;
+import by.quantumquartet.quanthink.models.roles.ERole;
 import by.quantumquartet.quanthink.rest.requests.users.UpdateUserRequest;
 import by.quantumquartet.quanthink.rest.responses.ErrorResponse;
 import by.quantumquartet.quanthink.rest.responses.SuccessResponse;
 import by.quantumquartet.quanthink.rest.responses.users.UserDto;
-import by.quantumquartet.quanthink.services.UserService;
+import by.quantumquartet.quanthink.services.users.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

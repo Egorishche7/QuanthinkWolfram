@@ -2,7 +2,7 @@ package by.quantumquartet.quanthink.config;
 
 import by.quantumquartet.quanthink.security.JwtAuthEntryPoint;
 import by.quantumquartet.quanthink.security.JwtAuthTokenFilter;
-import by.quantumquartet.quanthink.services.UserDetailsServiceImpl;
+import by.quantumquartet.quanthink.services.users.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

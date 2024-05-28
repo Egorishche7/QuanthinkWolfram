@@ -1,6 +1,6 @@
 package by.quantumquartet.quanthink.repositories;
 
-import by.quantumquartet.quanthink.models.Message;
+import by.quantumquartet.quanthink.models.messages.Message;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

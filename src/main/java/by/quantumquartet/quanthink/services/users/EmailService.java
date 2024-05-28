@@ -1,6 +1,6 @@
-package by.quantumquartet.quanthink.services;
+package by.quantumquartet.quanthink.services.users;
 
-import static by.quantumquartet.quanthink.services.AppLogger.logInfo;
+import static by.quantumquartet.quanthink.services.logging.AppLogger.logInfo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;

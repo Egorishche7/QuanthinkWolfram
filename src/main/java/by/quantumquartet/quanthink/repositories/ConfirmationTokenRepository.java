@@ -1,6 +1,6 @@
 package by.quantumquartet.quanthink.repositories;
 
-import by.quantumquartet.quanthink.models.ConfirmationToken;
+import by.quantumquartet.quanthink.models.users.ConfirmationToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

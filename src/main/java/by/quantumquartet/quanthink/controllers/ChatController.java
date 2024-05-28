@@ -1,16 +1,16 @@
 package by.quantumquartet.quanthink.controllers;
 
-import static by.quantumquartet.quanthink.services.AppLogger.*;
+import static by.quantumquartet.quanthink.services.logging.AppLogger.*;
 
-import by.quantumquartet.quanthink.models.Message;
+import by.quantumquartet.quanthink.models.messages.Message;
 import by.quantumquartet.quanthink.rest.requests.messages.PrivateMessageRequest;
 import by.quantumquartet.quanthink.rest.requests.messages.PublicMessageRequest;
 import by.quantumquartet.quanthink.rest.responses.messages.MessageDto;
 import by.quantumquartet.quanthink.rest.responses.users.UserDto;
-import by.quantumquartet.quanthink.services.VectorClockService;
-import by.quantumquartet.quanthink.services.MessageService;
+import by.quantumquartet.quanthink.services.messages.VectorClockService;
+import by.quantumquartet.quanthink.services.messages.MessageService;
 
-import by.quantumquartet.quanthink.services.UserService;
+import by.quantumquartet.quanthink.services.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;

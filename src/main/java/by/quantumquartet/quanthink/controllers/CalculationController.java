@@ -1,6 +1,6 @@
 package by.quantumquartet.quanthink.controllers;
 
-import static by.quantumquartet.quanthink.services.AppLogger.*;
+import static by.quantumquartet.quanthink.services.logging.AppLogger.*;
 
 import by.quantumquartet.quanthink.math.Matrix;
 import by.quantumquartet.quanthink.rest.requests.calculations.*;
@@ -8,7 +8,7 @@ import by.quantumquartet.quanthink.rest.responses.ErrorResponse;
 import by.quantumquartet.quanthink.rest.responses.SuccessResponse;
 import by.quantumquartet.quanthink.rest.responses.calculations.CalculationDto;
 import by.quantumquartet.quanthink.rest.responses.calculations.CalculationResult;
-import by.quantumquartet.quanthink.services.CalculationService;
+import by.quantumquartet.quanthink.services.calculations.CalculationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

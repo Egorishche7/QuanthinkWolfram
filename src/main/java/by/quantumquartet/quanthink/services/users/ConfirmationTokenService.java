@@ -1,9 +1,9 @@
-package by.quantumquartet.quanthink.services;
+package by.quantumquartet.quanthink.services.users;
 
-import static by.quantumquartet.quanthink.services.AppLogger.logError;
+import static by.quantumquartet.quanthink.services.logging.AppLogger.logError;
 
-import by.quantumquartet.quanthink.models.ConfirmationToken;
-import by.quantumquartet.quanthink.models.User;
+import by.quantumquartet.quanthink.models.users.ConfirmationToken;
+import by.quantumquartet.quanthink.models.users.User;
 import by.quantumquartet.quanthink.repositories.ConfirmationTokenRepository;
 import by.quantumquartet.quanthink.repositories.UserRepository;
 import by.quantumquartet.quanthink.rest.responses.users.UserDto;
